@@ -1,0 +1,35 @@
+{
+  "name": "galaxy-nerd",
+  "version": "1.0.0",
+  "description": "Plataforma de Cursos onlines para programadores e desenvolvedores, com o intuito de ajudar a comunidade de programadores e desenvolvedores a se tornarem melhores profissionais, através de cursos de programação e desenvolvimento de software, com foco em tecnologias atuais e de mercado.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsup src --out-dir build",
+    "start": "node build/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdilsonRogerioCuambe/galaxy-nerd-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EdilsonRogerioCuambe/galaxy-nerd-api/issues"
+  },
+  "homepage": "https://github.com/EdilsonRogerioCuambe/galaxy-nerd-api#readme",
+  "devDependencies": {
+    "@rocketseat/eslint-config": "2.1.0",
+    "@types/node": "20.5.9",
+    "eslint": "8.48.0",
+    "tsup": "7.2.0",
+    "tsx": "3.12.8",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "fastify": "4.22.2",
+    "zod": "3.22.2"
+  }
+}
