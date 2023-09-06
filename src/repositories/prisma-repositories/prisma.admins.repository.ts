@@ -3,6 +3,12 @@ import { Prisma } from '@prisma/client'
 import { AdminsRepository } from '../admins.repository'
 
 export class PrismaAdminsRepository implements AdminsRepository {
+  async delete(id: string) {
+    await prisma.administrator.delete({
+      where: { id },
+    })
+  }
+
   async findAll() {
     const admins = await prisma.administrator.findMany()
 

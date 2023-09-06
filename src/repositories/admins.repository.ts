@@ -5,4 +5,5 @@ export interface AdminsRepository {
   findByEmail(email: string): Promise<Administrator | null>
   findById(id: string): Promise<Administrator | null>
   findAll(): Promise<Administrator[]>
+  delete(id: string): Promise<void>
 }

@@ -2,6 +2,12 @@ import { Administrator, Prisma, Role } from '@prisma/client'
 import { AdminsRepository } from '../admins.repository'
 
 export class InMemoryAdminsRepository implements AdminsRepository {
+  async delete(id: string): Promise<void> {
+    const adminIndex = this.admins.findIndex((admin) => admin.id === id)
+
+    this.admins.splice(adminIndex, 1)
+  }
+
   async findAll() {
     const admins = this.admins
 
