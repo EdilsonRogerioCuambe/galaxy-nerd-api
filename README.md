@@ -5,8 +5,8 @@
 ### Administradores
 
 1. **Cadastrar Administrador**
-   - [ ] Cadastrar um novo administrador com informações como nome, email, senha, avatar, biografia, tópicos de interesse, localização e redes sociais.
-   - [ ] Evitar o cadastro de um administrador com o mesmo email de outro já existente.
+   - [x] Cadastrar um novo administrador com informações como nome, email, senha, avatar, biografia, tópicos de interesse, localização e redes sociais.
+   - [x] Evitar o cadastro de um administrador com o mesmo email de outro já existente.
 
 2. **Listar Administradores**
     - [ ] Listar todos os administradores cadastrados.
