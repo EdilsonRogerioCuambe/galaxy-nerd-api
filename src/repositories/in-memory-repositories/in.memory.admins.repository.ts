@@ -2,6 +2,16 @@ import { Administrator, Prisma, Role } from '@prisma/client'
 import { AdminsRepository } from '../admins.repository'
 
 export class InMemoryAdminsRepository implements AdminsRepository {
+  async findById(id: string) {
+    const admin = this.admins.find((admin) => admin.id === id)
+
+    if (!admin) {
+      return null
+    }
+
+    return admin
+  }
+
   public admins: Administrator[] = []
 
   async create(data: Prisma.AdministratorCreateInput) {

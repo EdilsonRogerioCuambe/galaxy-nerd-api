@@ -28,7 +28,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
   try {
     const registerAdminUseCase = makeRegisterAdminUseCase()
 
-    await registerAdminUseCase.execute({
+    const admin = await registerAdminUseCase.execute({
       name,
       email,
       password,
@@ -38,6 +38,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       socialLinks,
       role,
     })
+
+    return reply.status(201).send({ admin })
   } catch (error) {
     if (error instanceof AdminAlreadyExistsError) {
       return reply.status(409).send({
