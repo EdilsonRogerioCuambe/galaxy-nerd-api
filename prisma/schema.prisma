@@ -1,0 +1,203 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  INSTRUCTOR
+  STUDENT
+}
+
+model Administrator {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  password    String
+  avatar      String?
+  biography   String?
+  location    String?
+  socialLinks String[]
+  role        Role     @default(ADMIN)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("administrators")
+}
+
+model Instructor {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  password    String
+  avatar      String?
+  biography   String?
+  location    String?
+  socialLinks String[]
+  role        Role     @default(INSTRUCTOR)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  courses     Course[]
+
+  @@map("instructors")
+}
+
+model Course {
+  id             String           @id @default(uuid())
+  title          String
+  description    String?
+  price          Float
+  instructor     Instructor?      @relation(fields: [instructorId], references: [id])
+  instructorId   String?
+  topics         Topic[]
+  Category       Category?        @relation(fields: [categoryId], references: [id])
+  categoryId     String?
+  Student        Student?         @relation(fields: [studentId], references: [id])
+  studentId      String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  CourseProgress CourseProgress[]
+
+  @@map("courses")
+}
+
+model Topic {
+  id          String   @id @default(uuid())
+  title       String
+  icon        String?
+  description String?
+  order       Int
+  couse       Course?  @relation(fields: [courseId], references: [id])
+  courseId    String?
+  lessons     Lesson[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("topics")
+}
+
+model Lesson {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  videoUrl    String
+  duration    Int
+  order       Int
+  links       String[]
+  topic       Topic?     @relation(fields: [topicId], references: [id])
+  topicId     String?
+  documents   Document[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Quiz        Quiz[]
+  Forum       Forum[]
+
+  @@map("lessons")
+}
+
+model Document {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  fileUrl     String
+  order       Int
+  lesson      Lesson?  @relation(fields: [lessonId], references: [id])
+  lessonId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("documents")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  icon        String?
+  courses     Course[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Student {
+  id             String           @id @default(uuid())
+  name           String
+  email          String           @unique
+  password       String
+  avatar         String?
+  biography      String?
+  location       String?
+  courses        Course[]
+  role           Role             @default(STUDENT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  CourseProgress CourseProgress[]
+  Forum          Forum[]
+  Answers        Answers[]
+
+  @@map("students")
+}
+
+model Quiz {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  lesson      Lesson?  @relation(fields: [lessonId], references: [id])
+  lessonId    String?
+  options     String[]
+  answer      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("quizzes")
+}
+
+model CourseProgress {
+  id        String   @id @default(uuid())
+  progress  Int
+  course    Course?  @relation(fields: [courseId], references: [id])
+  courseId  String?
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("course_progress")
+}
+
+model Forum {
+  id        String    @id @default(uuid())
+  title     String
+  body      String
+  student   Student?  @relation(fields: [studentId], references: [id])
+  studentId String?
+  lesson    Lesson?   @relation(fields: [lessonId], references: [id])
+  lessonId  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Answers   Answers[]
+
+  @@map("forums")
+}
+
+model Answers {
+  id        String   @id @default(uuid())
+  body      String
+  forum     Forum?   @relation(fields: [forumId], references: [id])
+  forumId   String?
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("answers")
+}
