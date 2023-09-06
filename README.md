@@ -12,7 +12,6 @@
     - [ ] Listar todos os administradores cadastrados.
     - [ ] Listar administradores por tópicos de interesse.
     - [ ] Listar administradores por nome.
-    - [ ] Listar administradores por localização.
     - [ ] Listar administradores por data de criação.
     - [ ] Não permitir a listagem de todos os administradores sem autenticação.
     - [ ] Restringir a listagem de todos os administradores apenas a administradores.
@@ -29,7 +28,7 @@
     - [ ] Não permitir a exclusão sem autenticação.
 
 5. **Visualizar Administrador**
-    - [ ] Visualizar detalhes de um administrador, incluindo nome, email, avatar, biografia, tópicos de interesse, localização e redes sociais.
+    - [x] Visualizar detalhes de um administrador, incluindo nome, email, avatar, biografia, tópicos de interesse, localização e redes sociais.
     - [ ] O administrador só poderá visualizar os seus dados se estiver autenticado.
 
 ### Categoria
