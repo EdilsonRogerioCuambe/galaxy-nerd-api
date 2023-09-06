@@ -16,12 +16,12 @@ export async function getAdminProfile(
   try {
     const getAdminProfileUseCase = makeGetAdminProfileUseCase()
 
-    const response = await getAdminProfileUseCase.execute({
+    const { admin } = await getAdminProfileUseCase.execute({
       adminId,
     })
 
     return reply.status(200).send({
-      admin: response.admin,
+      admin,
     })
   } catch (error) {
     if (error instanceof AdminNotFoundError) {
