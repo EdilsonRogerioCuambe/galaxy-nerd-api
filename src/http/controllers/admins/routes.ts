@@ -6,6 +6,7 @@ import { createCloudinaryStorage } from '@/utils/storage'
 import { authenticateAdminController } from './authenticate.controller'
 import { getAdminProfile } from './get.admin.profile.controller'
 import { getAllAdmins } from './get.all.admins.controller'
+import { deleteAdminController } from './delete.admin.controller'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -16,4 +17,5 @@ export async function adminsRoutes(app: FastifyInstance) {
   app.post('/admins/sessions', authenticateAdminController)
   app.get('/admins/:adminId', getAdminProfile)
   app.get('/admins', getAllAdmins)
+  app.delete('/admins/:adminId', deleteAdminController)
 }
