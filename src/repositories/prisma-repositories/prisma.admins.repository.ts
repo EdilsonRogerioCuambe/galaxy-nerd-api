@@ -3,6 +3,14 @@ import { Prisma } from '@prisma/client'
 import { AdminsRepository } from '../admins.repository'
 
 export class PrismaAdminsRepository implements AdminsRepository {
+  async findById(id: string) {
+    const admin = await prisma.administrator.findUnique({
+      where: { id },
+    })
+
+    return admin
+  }
+
   async findByEmail(email: string) {
     const emailAlreadyExists = await prisma.administrator.findUnique({
       where: { email },

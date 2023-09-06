@@ -30,6 +30,7 @@
 
 5. **Visualizar Administrador**
     - [ ] Visualizar detalhes de um administrador, incluindo nome, email, avatar, biografia, tópicos de interesse, localização e redes sociais.
+    - [ ] O administrador só poderá visualizar os seus dados se estiver autenticado.
 
 ### Categoria
 
