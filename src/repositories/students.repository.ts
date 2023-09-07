@@ -5,5 +5,6 @@ export interface StudentsRepository {
   findById(id: string): Promise<Student | null>
   findByEmail(email: string): Promise<Student | null>
   update(id: string, data: Prisma.StudentUpdateInput): Promise<Student>
+  findAll(): Promise<Student[]>
   delete(id: string): Promise<void>
 }
