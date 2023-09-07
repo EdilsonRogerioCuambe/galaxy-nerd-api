@@ -38,4 +38,12 @@ describe('Delete Instructor Controller', () => {
     expect(response.statusCode).toBe(204)
     expect(response.body).toEqual({})
   })
+
+  it('should not be able to delete instructor with invalid id', async () => {
+    const response = await request(app.server).delete(
+      `/instructors/b811d218-417e-4720-bf2f-989f7338f30f`,
+    )
+
+    expect(response.statusCode).toBe(404)
+  })
 })

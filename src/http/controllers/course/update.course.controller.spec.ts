@@ -9,16 +9,16 @@ const avatar = fs.readFileSync(
   path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
 )
 
-describe('Register Course Controller', () => {
+describe('Update Course Controller', () => {
   beforeAll(async () => {
-    await app.ready()
+    app.ready()
   })
 
   afterAll(async () => {
     await app.close()
   })
 
-  it('should be able to register a new course', async () => {
+  it('should update a course', async () => {
     const instructor = await request(app.server)
       .post('/instructors')
       .field('name', 'John Doe')
@@ -38,7 +38,7 @@ describe('Register Course Controller', () => {
       .field('description', 'any_description')
       .attach('icon', avatar)
 
-    const response = await request(app.server)
+    const course = await request(app.server)
       .post('/courses')
       .field('title', 'Course title')
       .field('description', 'Course description')
@@ -47,6 +47,16 @@ describe('Register Course Controller', () => {
       .field('instructorId', instructor.body.instructor.instructor.id)
       .attach('thumbnail', avatar)
 
-    expect(response.statusCode).toBe(201)
+    const response = await request(app.server)
+      .put(`/courses/${course.body.course.course.id}`)
+      .field('courseId', course.body.course.course.id)
+      .field('title', 'new_title')
+      .field('description', 'new_description')
+      .field('price', 'new_price')
+      .field('categoryId', category.body.category.category.id)
+      .field('instructorId', instructor.body.instructor.instructor.id)
+      .attach('thumbnail', avatar)
+
+    expect(response.statusCode).toBe(200)
   })
 })
