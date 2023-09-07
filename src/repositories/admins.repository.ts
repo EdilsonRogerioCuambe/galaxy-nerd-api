@@ -6,4 +6,8 @@ export interface AdminsRepository {
   findById(id: string): Promise<Administrator | null>
   findAll(): Promise<Administrator[]>
   delete(id: string): Promise<void>
+  update(
+    id: string,
+    data: Prisma.AdministratorUncheckedUpdateInput,
+  ): Promise<Administrator>
 }
