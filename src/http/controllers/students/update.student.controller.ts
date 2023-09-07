@@ -1,7 +1,7 @@
+import { makeUpdateStudentUseCaseFactory } from '@/use-cases/factories/students/make.update.student.use.case'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
-import { AdminNotFoundError } from '@/use-cases/admins/err/admin.not.found.error'
-import { makeUpdateAdminUseCase } from '@/use-cases/factories/admins/make.update.admin.use.case'
+import { StudentNotFoundError } from '@/use-cases/students/err/student.not.found.error'
 
 interface MultipartFile {
   path: string
@@ -17,21 +17,30 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).optional(),
     biography: z.string().optional(),
     location: z.string().optional(),
+    interests: z.array(z.string()).optional(),
     socialLinks: z.array(z.string()).optional(),
   })
 
-  const { name, email, password, biography, location, socialLinks, role } =
-    schema.parse(request.body)
+  const {
+    name,
+    email,
+    password,
+    biography,
+    location,
+    socialLinks,
+    role,
+    interests,
+  } = schema.parse(request.body)
 
   const { path: avatar } = request.file as unknown as MultipartFile
 
-  const { adminId } = request.params as { adminId: string }
+  const { studentId } = request.params as { studentId: string }
 
   try {
-    const updateAdminUseCase = makeUpdateAdminUseCase()
+    const updateStudentUseCase = makeUpdateStudentUseCaseFactory()
 
-    const { admin } = await updateAdminUseCase.execute({
-      adminId,
+    const { student } = await updateStudentUseCase.execute({
+      studentId,
       name,
       email,
       password,
@@ -39,12 +48,13 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       biography,
       location,
       socialLinks,
+      interests,
       role,
     })
 
-    return reply.status(200).send({ admin })
+    return reply.status(200).send({ student })
   } catch (error) {
-    if (error instanceof AdminNotFoundError) {
+    if (error instanceof StudentNotFoundError) {
       return reply.status(404).send({
         message: error.message,
       })

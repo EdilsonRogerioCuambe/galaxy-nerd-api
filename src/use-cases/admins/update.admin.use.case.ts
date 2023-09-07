@@ -1,12 +1,13 @@
 import { AdminsRepository } from '@/repositories/admins.repository'
 import { AdminNotFoundError } from './err/admin.not.found.error'
 import { Administrator, Role } from '@prisma/client'
+import { hash } from 'bcryptjs'
 
 interface UpdateAdminUseCaseProps {
   adminId: string
   name?: string
   email?: string
-  password?: string
+  password: string
   avatar?: string
   biography?: string
   location?: string
@@ -32,6 +33,7 @@ export class UpdateAdminUseCase {
     socialLinks,
     role,
   }: UpdateAdminUseCaseProps): Promise<UpdateAdminUseCaseResponse> {
+    const hashedPassword = await hash(password, 10)
     const admin = await this.adminsRepository.findById(adminId)
 
     if (!admin) {
