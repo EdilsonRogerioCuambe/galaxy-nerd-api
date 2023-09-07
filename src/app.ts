@@ -4,6 +4,7 @@ import fastifyMultipart from '@fastify/multipart'
 import { adminsRoutes } from './http/controllers/admins/routes'
 import { ZodError } from 'zod'
 import { env } from './env'
+import { instructorsRoutes } from './http/controllers/instructors/routes'
 
 export const app = fastify()
 
@@ -14,6 +15,7 @@ app.register(fastifyMultipart, {
 })
 
 app.register(adminsRoutes)
+app.register(instructorsRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ZodError) {
