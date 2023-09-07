@@ -7,5 +7,5 @@ export interface CoursesRepository {
   delete(id: string): Promise<void>
   update(id: string, data: Prisma.CourseUncheckedUpdateInput): Promise<Course>
   findBySlug(slug: string): Promise<Course | null>
-  findByTitle(title: string): Promise<Course[] | null>
+  findByTitle(title: string): Promise<Course | null>
 }

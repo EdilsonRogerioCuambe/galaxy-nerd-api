@@ -51,7 +51,7 @@ model Instructor {
 
 model Course {
   id             String           @id @default(uuid())
-  title          String
+  title          String           @unique
   description    String?
   price          String
   slug           String           @unique
@@ -72,7 +72,7 @@ model Course {
 
 model Topic {
   id          String   @id @default(uuid())
-  title       String
+  title       String   @unique
   icon        String?
   description String?
   order       Int
@@ -87,7 +87,7 @@ model Topic {
 
 model Lesson {
   id          String     @id @default(uuid())
-  title       String
+  title       String     @unique
   description String?
   videoUrl    String
   duration    Int
@@ -106,7 +106,7 @@ model Lesson {
 
 model Document {
   id          String   @id @default(uuid())
-  title       String
+  title       String   @unique
   description String?
   fileUrl     String
   order       Int
@@ -120,7 +120,7 @@ model Document {
 
 model Category {
   id          String   @id @default(uuid())
-  name        String
+  name        String   @unique
   description String?
   icon        String?
   courses     Course[]
@@ -180,7 +180,7 @@ model CourseProgress {
 
 model Forum {
   id        String    @id @default(uuid())
-  title     String
+  title     String    @unique
   body      String
   student   Student?  @relation(fields: [studentId], references: [id])
   studentId String?
