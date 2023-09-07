@@ -136,7 +136,9 @@ model Student {
   avatar         String?
   biography      String?
   location       String?
+  socialLinks    String[]
   courses        Course[]
+  interests      String[]
   role           Role             @default(STUDENT)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
