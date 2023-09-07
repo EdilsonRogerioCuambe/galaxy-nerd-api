@@ -56,7 +56,11 @@ describe('Update Student Use Case', () => {
     expect(updatedStudent.student.biography).toBe('updated_biography')
     expect(updatedStudent.student.location).toBe('updated_location')
     expect(updatedStudent.student.socialLinks).toEqual(['updated_social_link'])
-    expect(updatedStudent.student.interests).toEqual(['updated_interest'])
+    expect(updatedStudent.student.interests).toEqual([
+      'updated_interest',
+      'updated_interest_2',
+      'updated_interest_3',
+    ])
   })
 
   it('should not be able to update a student if it does not exist', async () => {
