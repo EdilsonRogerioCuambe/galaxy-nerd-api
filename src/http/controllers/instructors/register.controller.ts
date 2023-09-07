@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
-import { AdminAlreadyExistsError } from '@/use-cases/admins/err/admin.already.exists.error'
-import { makeRegisterAdminUseCase } from '@/use-cases/factories/admins/make.register.use.case'
+import { InstructorAlreadyExistsError } from '@/use-cases/instructors/err/instructor.already.exists.error'
+import { makeRegisterInstructor } from '@/use-cases/factories/instructors/make.register.instructor.use.case'
 
 interface MultipartFile {
   path: string
@@ -26,9 +26,9 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
   const { path: avatar } = request.file as unknown as MultipartFile
 
   try {
-    const registerAdminUseCase = makeRegisterAdminUseCase()
+    const registerInstructorUseCase = makeRegisterInstructor()
 
-    const admin = await registerAdminUseCase.execute({
+    const instructor = await registerInstructorUseCase.execute({
       name,
       email,
       password,
@@ -39,9 +39,9 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       role,
     })
 
-    return reply.status(201).send({ admin })
+    return reply.status(201).send({ instructor })
   } catch (error) {
-    if (error instanceof AdminAlreadyExistsError) {
+    if (error instanceof InstructorAlreadyExistsError) {
       return reply.status(409).send({
         message: error.message,
       })
