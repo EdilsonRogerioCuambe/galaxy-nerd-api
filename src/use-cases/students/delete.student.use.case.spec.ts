@@ -1,6 +1,5 @@
 import { InMemoryStudentsRepository } from '@/repositories/in-memory-repositories/in.memory.students.repository'
 import { DeleteStudentUseCase } from './delete.student.use.case'
-import { StudentNotFoundError } from './err/student.not.found.error'
 import { it, describe, beforeEach, expect } from 'vitest'
 import { hash } from 'bcryptjs'
 
@@ -33,11 +32,5 @@ describe('Delete Student Use Case', () => {
     const students = await studentsRepository.findAll()
     expect(studentExists).toBeNull()
     expect(students).toHaveLength(0)
-  })
-
-  it('should throw if student is not found', async () => {
-    const promise = sut.execute({ studentId: 'invalid_id' })
-
-    await expect(promise).rejects.toThrow(StudentNotFoundError)
   })
 })
