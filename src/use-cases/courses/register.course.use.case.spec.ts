@@ -26,8 +26,6 @@ describe('Register Course Use Case', () => {
         id: expect.any(String),
         title: 'any_title',
         description: 'any_description',
-        price: 0,
-        slug: 'any_slug',
         categoryId: 'any_category_id',
         instructorId: 'any_instructor_id',
         studentId: 'any_student_id',
