@@ -67,6 +67,10 @@ export class InMemoryStudentsRepository implements StudentsRepository {
     return this.students[student]
   }
 
+  async findAll() {
+    return this.students
+  }
+
   async delete(id: string): Promise<void> {
     const student = this.students.findIndex((student) => student.id === id)
 
