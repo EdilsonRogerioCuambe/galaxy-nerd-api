@@ -38,6 +38,6 @@ describe('Delete Student Controller', () => {
       `/students/${student.body.student.student.id}`,
     )
 
-    console.log(response.body)
+    expect(response.statusCode).toBe(204)
   })
 })
