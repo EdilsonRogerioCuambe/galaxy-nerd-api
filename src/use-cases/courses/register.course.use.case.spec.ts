@@ -15,8 +15,7 @@ describe('Register Course Use Case', () => {
     const response = await sut.execute({
       title: 'any_title',
       description: 'any_description',
-      price: 0,
-      slug: 'any_slug',
+      price: '0',
       categoryId: 'any_category_id',
       instructorId: 'any_instructor_id',
       studentId: 'any_student_id',
