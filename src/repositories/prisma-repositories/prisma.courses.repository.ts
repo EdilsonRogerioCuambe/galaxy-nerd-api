@@ -49,13 +49,8 @@ export class PrismaCoursesRepository implements CoursesRepository {
   }
 
   async findByTitle(title: string) {
-    const course = await prisma.course.findMany({
-      where: {
-        title: {
-          contains: title,
-          mode: 'insensitive',
-        },
-      },
+    const course = await prisma.course.findUnique({
+      where: { title },
     })
 
     return course

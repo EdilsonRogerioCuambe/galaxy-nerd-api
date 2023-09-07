@@ -80,8 +80,12 @@ export class InMemoryCoursesRepository implements CoursesRepository {
   }
 
   async findByTitle(title: string) {
-    const courses = this.courses.filter((course) => course.title === title)
+    const course = this.courses.find((course) => course.title === title)
 
-    return courses
+    if (!course) {
+      return null
+    }
+
+    return course
   }
 }
