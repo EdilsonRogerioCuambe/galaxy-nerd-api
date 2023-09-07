@@ -9,22 +9,18 @@
    - [x] Evitar o cadastro de um administrador com o mesmo email de outro já existente.
 
 2. **Listar Administradores**
-    - [ ] Listar todos os administradores cadastrados.
-    - [ ] Listar administradores por tópicos de interesse.
-    - [ ] Listar administradores por nome.
-    - [ ] Listar administradores por data de criação.
+    - [x] Listar todos os administradores cadastrados.
     - [ ] Não permitir a listagem de todos os administradores sem autenticação.
     - [ ] Restringir a listagem de todos os administradores apenas a administradores.
 
 3. **Atualizar Administrador**
-    - [ ] Atualizar informações de um administrador cadastrado.
-    - [ ] Evitar a atualização do email para um já existente.
+    - [x] Atualizar informações de um administrador cadastrado.
+    - [x] Evitar a atualização do email para um já existente.
     - [ ] Permitir a atualização apenas pelo próprio administrador ou administrador.
     - [ ] Não permitir a atualização sem autenticação.
 
 4. **Deletar Administrador**
-    - [ ] Deletar um administrador cadastrado.
-    - [ ] Permitir a exclusão apenas pelo próprio administrador ou administrador.
+    - [x] Deletar um administrador cadastrado.
     - [ ] Não permitir a exclusão sem autenticação.
 
 5. **Visualizar Administrador**
@@ -46,35 +42,30 @@
 ### Instrutores
 
 1. **Cadastrar Instrutor**
-   - [ ] Cadastrar um novo instrutor com informações como nome, email, senha, avatar, biografia, tópicos de interesse, localização e redes sociais.
-   - [ ] Evitar o cadastro de um instrutor com o mesmo email de outro já existente.
-   - [ ] Restringir o cadastro de instrutores apenas a administradores.
-   - [ ] Não permitir o cadastro de instrutores sem autenticação.
+   - [x] Cadastrar um novo instrutor com informações como nome, email, senha, avatar, biografia, tópicos de interesse, localização e redes sociais.
+   - [x] Evitar o cadastro de um instrutor com o mesmo email de outro já existente.
 
 
 2. **Listar Instrutores**
-   - [ ] Listar todos os instrutores cadastrados.
-   - [ ] Listar instrutores por tópicos de interesse.
-   - [ ] Listar instrutores por nome.
-   - [ ] Deve ser possível listar todos os instrutores cadastrados por localização.
-   - [ ] Listar instrutores por localização.
-   - [ ] Listar instrutores por data de criação.
-   - [ ] Listar instrutores apenas para usuários autenticados.
+   - [x] Listar todos os instrutores cadastrados.
    - [ ] Restringir a listagem de todos os instrutores apenas a administradores.
-   - [ ] Não permitir a listagem de todos os instrutores sem ser um administrador.
 
 
 3. **Atualizar Instrutor**
-    - [ ] Atualizar informações de um instrutor cadastrado.
-    - [ ] Evitar a atualização do email para um já existente.
+    - [x] Atualizar informações de um instrutor cadastrado.
+    - [x] Evitar a atualização do email para um já existente.
     - [ ] Permitir atualização apenas pelo próprio instrutor ou administrador.
     - [ ] Não permitir atualização sem autenticação.
 
 
 4. **Deletar Instrutor**
-    - [ ] Deletar um instrutor cadastrado.
-    - [ ] Permitir a exclusão apenas pelo próprio instrutor ou administrador.
-    - [ ] Não permitir a exclusão sem autenticação.
+    - [x] Deletar um instrutor cadastrado.
+    - [ ] Permitir a exclusão apenas para administrador.
+    - [ ] Não permitir a exclusão sem autenticação do administrador.
+
+
+5. **Visualizar Instrutor**
+    - [x] Visualizar detalhes de um instrutor, incluindo nome, email, avatar, biografia, tópicos de interesse, localização e redes sociais.
 
 ### Cursos
 
@@ -160,32 +151,27 @@
 ### Estudantes
 
 1. **Cadastrar Estudante**
-   - [ ] Cadastrar um novo estudante com informações como nome, email, senha, avatar, biografia, tópicos de interesse, localização e redes sociais.
-   - [ ] Evitar o cadastro de um estudante com o mesmo email de outro já existente.
+   - [x] Cadastrar um novo estudante com informações como nome, email, senha, avatar, biografia, tópicos de interesse, localização e redes sociais.
+   - [x] Evitar o cadastro de um estudante com o mesmo email de outro já existente.
 
 2. **Listar Estudantes**
-   - [ ] Listar todos os estudantes cadastrados.
-   - [ ] Listar estudantes por tópicos de interesse.
-   - [ ] Listar estudantes por nome.
-   - [ ] Listar estudantes por localização.
-   - [ ] Listar estudantes por data de criação.
+   - [x] Listar todos os estudantes cadastrados.
    - [ ] Não permitir a listagem de todos os estudantes sem autenticação.
    - [ ] Restringir a listagem de todos os estudantes apenas a administradores.
-   - [ ]Listar estudantes por categoria.
 
 3. **Atualizar Estudante**
-    - [ ] Atualizar informações de um estudante cadastrado.
-    - [ ] Evitar a atualização do email para um já existente.
+    - [x] Atualizar informações de um estudante cadastrado.
+    - [x] Evitar a atualização do email para um já existente.
     - [ ] Permitir a atualização apenas pelo próprio estudante ou administrador.
     - [ ] Não permitir a atualização sem autenticação.
 
 4. **Deletar Estudante**
-    - [ ] Deletar um estudante cadastrado.
-    - [ ] Permitir a exclusão apenas pelo próprio estudante ou administrador.
+    - [x] Deletar um estudante cadastrado.
+    - [ ] Permitir a exclusão para apenas o administrador.
     - [ ] Não permitir a exclusão sem autenticação.
 
 5. **Visualizar Estudante**
-    - [ ] Visualizar detalhes de um estudante, incluindo nome, email, avatar, biografia, tópicos de interesse, localização e redes sociais.
+    - [x] Visualizar detalhes de um estudante, incluindo nome, email, avatar, biografia, tópicos de interesse, localização e redes sociais.
 
 ### Aulas
 

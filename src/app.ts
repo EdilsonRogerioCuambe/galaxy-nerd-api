@@ -6,6 +6,7 @@ import { ZodError } from 'zod'
 import { env } from './env'
 import { instructorsRoutes } from './http/controllers/instructors/routes'
 import { studentsRoutes } from './http/controllers/students/routes'
+import { coursesRoutes } from './http/controllers/course/routes'
 
 export const app = fastify()
 
@@ -18,6 +19,7 @@ app.register(fastifyMultipart, {
 app.register(adminsRoutes)
 app.register(instructorsRoutes)
 app.register(studentsRoutes)
+app.register(coursesRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ZodError) {
