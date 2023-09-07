@@ -3,6 +3,15 @@ import { Prisma } from '@prisma/client'
 import { AdminsRepository } from '../admins.repository'
 
 export class PrismaAdminsRepository implements AdminsRepository {
+  async update(id: string, data: Prisma.AdministratorUpdateInput) {
+    const admin = await prisma.administrator.update({
+      where: { id },
+      data,
+    })
+
+    return admin
+  }
+
   async delete(id: string) {
     await prisma.administrator.delete({
       where: { id },

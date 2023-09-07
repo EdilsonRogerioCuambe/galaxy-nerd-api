@@ -2,10 +2,34 @@ import { Administrator, Prisma, Role } from '@prisma/client'
 import { AdminsRepository } from '../admins.repository'
 
 export class InMemoryAdminsRepository implements AdminsRepository {
-  async delete(id: string): Promise<void> {
-    const adminIndex = this.admins.findIndex((admin) => admin.id === id)
+  async update(
+    id: string,
+    data: Prisma.AdministratorUncheckedUpdateInput,
+  ): Promise<Administrator> {
+    const admin = this.admins.findIndex((admin) => admin.id === id)
 
-    this.admins.splice(adminIndex, 1)
+    this.admins[admin] = {
+      ...this.admins[admin],
+      id: this.admins[admin].id,
+      name: data.name as string,
+      email: data.email as string,
+      password: data.password as string,
+      avatar: data.avatar as string | null,
+      biography: data.biography as string | null,
+      location: data.location as string | null,
+      socialLinks: data.socialLinks as string[],
+      role: data.role as Role,
+      createdAt: this.admins[admin].createdAt,
+      updatedAt: new Date(),
+    }
+
+    return this.admins[admin]
+  }
+
+  async delete(id: string): Promise<void> {
+    const admin = this.admins.findIndex((admin) => admin.id === id)
+
+    this.admins.splice(admin, 1)
   }
 
   async findAll() {
