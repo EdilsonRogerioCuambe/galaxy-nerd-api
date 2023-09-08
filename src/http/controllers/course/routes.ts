@@ -4,6 +4,7 @@ import multer from 'fastify-multer'
 import { createCloudinaryStorage } from '@/utils/storage'
 import { registerCourseController } from './register.course.controller'
 import { updateCourseController } from './update.course.controller'
+import { deleteCourseController } from './delete.course.controller'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -20,4 +21,5 @@ export async function coursesRoutes(app: FastifyInstance) {
     { preHandler: upload.single('thumbnail') },
     updateCourseController,
   )
+  app.delete('/courses/:courseId', deleteCourseController)
 }
