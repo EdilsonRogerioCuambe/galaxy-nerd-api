@@ -75,9 +75,9 @@ model Topic {
   title       String   @unique
   icon        String?
   description String?
-  order       Int
+  order       String
   couse       Course?  @relation(fields: [courseId], references: [id])
-  courseId    String?
+  courseId    String
   lessons     Lesson[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -90,11 +90,11 @@ model Lesson {
   title       String     @unique
   description String?
   videoUrl    String
-  duration    Int
-  order       Int
+  duration    String
+  order       String
   links       String[]
-  topic       Topic?     @relation(fields: [topicId], references: [id])
-  topicId     String?
+  topic       Topic     @relation(fields: [topicId], references: [id])
+  topicId     String
   documents   Document[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -109,7 +109,7 @@ model Document {
   title       String   @unique
   description String?
   fileUrl     String
-  order       Int
+  order       String
   lesson      Lesson?  @relation(fields: [lessonId], references: [id])
   lessonId    String?
   createdAt   DateTime @default(now())
@@ -167,7 +167,7 @@ model Quiz {
 
 model CourseProgress {
   id        String   @id @default(uuid())
-  progress  Int
+  progress  String
   course    Course?  @relation(fields: [courseId], references: [id])
   courseId  String?
   student   Student? @relation(fields: [studentId], references: [id])
