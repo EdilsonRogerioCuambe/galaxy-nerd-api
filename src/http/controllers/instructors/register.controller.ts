@@ -14,7 +14,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     password: z
       .string()
       .regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,32}$/),
-    role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']),
+    role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).default('INSTRUCTOR'),
     biography: z.string().optional(),
     location: z.string().optional(),
     socialLinks: z.array(z.string()).optional(),

@@ -9,7 +9,7 @@ const avatar = fs.readFileSync(
   path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
 )
 
-describe('Register Topic Controller', () => {
+describe('Get All Topics Controller', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -18,7 +18,7 @@ describe('Register Topic Controller', () => {
     await app.close()
   })
 
-  it('should be able to register a new topic', async () => {
+  it('should be able to get all topics', async () => {
     const instructor = await request(app.server)
       .post('/instructors')
       .field('name', 'John Doe')
@@ -47,7 +47,7 @@ describe('Register Topic Controller', () => {
       .field('instructorId', instructor.body.instructor.instructor.id)
       .attach('thumbnail', avatar)
 
-    const response = await request(app.server)
+    await request(app.server)
       .post('/topics')
       .field('title', 'any_title')
       .field('order', 0)
@@ -55,9 +55,26 @@ describe('Register Topic Controller', () => {
       .field('description', 'any_description')
       .attach('icon', avatar)
 
-    expect(response.statusCode).toBe(201)
-    expect(response.body.topic).toBeTruthy()
-    expect(response.body.topic.topic).toBeTruthy()
-    expect(response.body.topic.topic.id).toBeTruthy()
+    await request(app.server)
+      .post('/topics')
+      .field('title', 'new_title')
+      .field('order', 1)
+      .field('courseId', course.body.course.course.id)
+      .field('description', 'any_description')
+      .attach('icon', avatar)
+
+    await request(app.server)
+      .post('/topics')
+      .field('title', 'another_new_title')
+      .field('order', 2)
+      .field('courseId', course.body.course.course.id)
+      .field('description', 'any_description')
+      .attach('icon', avatar)
+
+    const response = await request(app.server).get('/topics')
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body.topics).toBeTruthy()
+    expect(response.body.topics.length).toBe(3)
   })
 })

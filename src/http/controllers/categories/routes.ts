@@ -2,6 +2,7 @@ import { createCloudinaryStorage } from '@/utils/storage'
 import { FastifyInstance } from 'fastify'
 import multer from 'fastify-multer'
 import { registerCategoryController } from './register.category.controller'
+import { updateCategoryController } from './update.category.controller'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -12,5 +13,10 @@ export async function categoriesRoutes(app: FastifyInstance) {
     '/categories',
     { preHandler: upload.single('icon') },
     registerCategoryController,
+  )
+  app.put(
+    '/categories/:categoryId',
+    { preHandler: upload.single('icon') },
+    updateCategoryController,
   )
 }

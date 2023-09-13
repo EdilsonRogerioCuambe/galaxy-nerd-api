@@ -3,7 +3,7 @@ import { TopicsRepository } from '../topics.repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaTopicsRepository implements TopicsRepository {
-  async create(data: Prisma.TopicUncheckedCreateInput) {
+  async create(data: Prisma.TopicCreateInput) {
     const topic = await prisma.topic.create({
       data,
     })
@@ -19,48 +19,32 @@ export class PrismaTopicsRepository implements TopicsRepository {
 
   async findById(id: string) {
     const topic = await prisma.topic.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
     })
-
-    if (!topic) {
-      return null
-    }
 
     return topic
   }
 
   async findByTitle(title: string) {
-    const topic = await prisma.topic.findUnique({
-      where: {
-        title,
-      },
+    const topic = await prisma.topic.findFirst({
+      where: { title },
     })
-
-    if (!topic) {
-      return null
-    }
 
     return topic
   }
 
-  async update(id: string, data: Prisma.TopicUncheckedUpdateInput) {
+  async update(id: string, data: Prisma.TopicUpdateInput) {
     const topic = await prisma.topic.update({
-      where: {
-        id,
-      },
+      where: { id },
       data,
     })
 
     return topic
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await prisma.topic.delete({
-      where: {
-        id,
-      },
+      where: { id },
     })
   }
 }
