@@ -6,6 +6,7 @@ import { registerTopicController } from './register.topic.controller'
 import { updateTopicController } from './update.topic.controller'
 import { getTopicController } from './get.topic.controller'
 import { getAllTopicsController } from './get.all.topics.controller'
+import { deleteTopicController } from './delete.topic.controller'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -24,4 +25,5 @@ export async function topicsRoutes(app: FastifyInstance) {
     { preHandler: upload.single('icon') },
     updateTopicController,
   )
+  app.delete('/topics/:id', deleteTopicController)
 }
