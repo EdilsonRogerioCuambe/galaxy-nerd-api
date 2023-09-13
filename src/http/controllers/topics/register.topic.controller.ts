@@ -14,7 +14,7 @@ export async function registerTopicController(
   const schema = z.object({
     title: z.string(),
     order: z.string(),
-    courseId: z.string(),
+    courseId: z.string().uuid(),
     description: z.string().optional(),
   })
 

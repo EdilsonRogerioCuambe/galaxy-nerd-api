@@ -58,7 +58,6 @@ model Course {
   thumbnail      String?
   instructor     Instructor?      @relation(fields: [instructorId], references: [id])
   instructorId   String?
-  topics         Topic[]
   Category       Category?        @relation(fields: [categoryId], references: [id])
   categoryId     String?
   Student        Student?         @relation(fields: [studentId], references: [id])
@@ -66,6 +65,7 @@ model Course {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   CourseProgress CourseProgress[]
+  topics         Topic[]
 
   @@map("courses")
 }
@@ -76,11 +76,12 @@ model Topic {
   icon        String?
   description String?
   order       String
-  couse       Course?  @relation(fields: [courseId], references: [id])
-  courseId    String
+  slug        String   @unique
   lessons     Lesson[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  course      Course   @relation(fields: [courseId], references: [id])
+  courseId    String
 
   @@map("topics")
 }
@@ -91,9 +92,10 @@ model Lesson {
   description String?
   videoUrl    String
   duration    String
+  slug        String     @unique
   order       String
   links       String[]
-  topic       Topic     @relation(fields: [topicId], references: [id])
+  topic       Topic      @relation(fields: [topicId], references: [id])
   topicId     String
   documents   Document[]
   createdAt   DateTime   @default(now())

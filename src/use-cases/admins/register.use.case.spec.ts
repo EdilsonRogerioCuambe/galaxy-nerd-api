@@ -13,10 +13,6 @@ describe('register admin use case', () => {
     sut = new RegisterAdminUseCase(adminsRepository)
   })
 
-  afterEach(async () => {
-    adminsRepository.admins = []
-  })
-
   it('should hash admin password before saving', async () => {
     const { admin } = await sut.execute({
       name: 'any_name',

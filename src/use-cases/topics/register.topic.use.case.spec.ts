@@ -2,14 +2,15 @@ import { it, describe, expect, beforeEach } from 'vitest'
 import { RegisterTopicUseCase } from './register.topic.use.case'
 import { InMemoryTopicsRepository } from '@/repositories/in-memory-repositories/in.memory.topics.repository'
 import { TopicAlreadyExistsError } from './err/topic.already.exists.error'
+import { slugify } from '@/utils/slug'
 
 let sut: RegisterTopicUseCase
-let inMemoryTopicsRepository: InMemoryTopicsRepository
+let topicsRepository: InMemoryTopicsRepository
 
 describe('Register Topic Use Case', () => {
   beforeEach(() => {
-    inMemoryTopicsRepository = new InMemoryTopicsRepository()
-    sut = new RegisterTopicUseCase(inMemoryTopicsRepository)
+    topicsRepository = new InMemoryTopicsRepository()
+    sut = new RegisterTopicUseCase(topicsRepository)
   })
 
   it('should be able to register a new topic', async () => {
@@ -30,12 +31,20 @@ describe('Register Topic Use Case', () => {
   })
 
   it('should not be able to register a new topic with an existing title', async () => {
-    await sut.execute({
-      title: 'any_title',
+    const title = 'any_title'
+    const slugifiedTitle = slugify({ slug: title })
+
+    await topicsRepository.create({
+      title,
       order: '1',
-      courseId: 'any_course_id',
+      course: {
+        connect: {
+          id: 'any_course_id',
+        },
+      },
       description: 'any_description',
       icon: 'any_icon',
+      slug: slugifiedTitle,
     })
 
     await expect(

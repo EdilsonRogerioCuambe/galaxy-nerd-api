@@ -1,17 +1,23 @@
 import { Prisma, Topic } from '@prisma/client'
 import { TopicsRepository } from '../topics.repository'
+import { randomUUID } from 'crypto'
 
 export class InMemoryTopicsRepository implements TopicsRepository {
   private topics: Topic[] = []
 
-  async create(data: Prisma.TopicUncheckedCreateInput): Promise<Topic> {
+  async create(data: Prisma.TopicCreateInput): Promise<Topic> {
+    if (!data.course?.connect?.id) {
+      throw new Error('Course id is required')
+    }
+
     const topic: Topic = {
-      id: 'any_id',
+      id: data.id !== undefined ? data.id : randomUUID(),
       title: data.title,
       icon: data.icon !== undefined ? data.icon : null,
       description: data.description !== undefined ? data.description : null,
       order: data.order,
-      courseId: data.courseId,
+      courseId: data.course.connect.id,
+      slug: data.slug,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
@@ -47,19 +53,22 @@ export class InMemoryTopicsRepository implements TopicsRepository {
     return topic
   }
 
-  async update(id: string, data: Prisma.TopicUncheckedUpdateInput) {
+  async update(id: string, data: Prisma.TopicUpdateInput) {
     const topic = this.topics.findIndex((topic) => topic.id === id)
+
+    if (!data.course?.connect?.id) {
+      throw new Error('Course id is required')
+    }
 
     this.topics[topic] = {
       ...this.topics[topic],
-      id: this.topics[topic].id,
+      id: this.topics[topic].id as string,
       title: data.title as string,
       icon: data.icon as string | null,
       description: data.description as string | null,
       order: data.order as string,
-      courseId: data.courseId as string,
-      createdAt: this.topics[topic].createdAt,
-      updatedAt: new Date(),
+      courseId: data.course.connect.id as string,
+      slug: data.slug as string,
     }
 
     return this.topics[topic]

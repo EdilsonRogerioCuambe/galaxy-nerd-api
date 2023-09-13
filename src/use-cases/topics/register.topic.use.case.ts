@@ -1,6 +1,7 @@
 import { TopicsRepository } from '@/repositories/topics.repository'
 import { Topic } from '@prisma/client'
 import { TopicAlreadyExistsError } from './err/topic.already.exists.error'
+import { slugify } from '@/utils/slug'
 
 interface RegisterTopicUseCaseProps {
   title: string
@@ -30,12 +31,19 @@ export class RegisterTopicUseCase {
       throw new TopicAlreadyExistsError()
     }
 
+    const slugifiedTitle = slugify({ slug: title })
+
     const topic = await this.topicsRepository.create({
       title,
       icon,
       description,
       order,
-      courseId,
+      course: {
+        connect: {
+          id: courseId,
+        },
+      },
+      slug: slugifiedTitle,
     })
 
     return { topic }
