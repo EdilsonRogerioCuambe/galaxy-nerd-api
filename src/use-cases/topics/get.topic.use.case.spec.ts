@@ -14,11 +14,9 @@ describe('Get Topic Use Case', () => {
   })
 
   it('should throw TopicNotFoundError if topic is not found', async () => {
-    const topicId = 'topic-id'
+    const id = 'topic-id'
 
-    await expect(sut.execute({ topicId })).rejects.toThrow(
-      new TopicNotFoundError(),
-    )
+    await expect(sut.execute({ id })).rejects.toBeInstanceOf(TopicNotFoundError)
   })
 
   it('should return topic if topic is found', async () => {
@@ -38,7 +36,7 @@ describe('Get Topic Use Case', () => {
       slug: slugifiedTitle,
     })
 
-    const response = await sut.execute({ topicId: topic.id })
+    const response = await sut.execute({ id: topic.id })
 
     expect(response.topic).toEqual(topic)
   })
