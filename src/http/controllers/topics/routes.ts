@@ -15,29 +15,27 @@ const upload = multer({
 })
 
 export async function topicsRoutes(app: FastifyInstance) {
-  app.addHook('onRequest', verifyJwt)
-
   app.post(
     '/topics',
     {
       preHandler: upload.single('icon'),
-      onRequest: [verifyUserRole('INSTRUCTOR')],
+      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
     },
     registerTopicController,
   )
-  app.get('/topics/:id', getTopicController)
-  app.get('/topics', getAllTopicsController)
+  app.get('/topics/:id', { onRequest: [verifyJwt] }, getTopicController)
+  app.get('/topics', { onRequest: [verifyJwt] }, getAllTopicsController)
   app.put(
     '/topics/:id',
     {
+      onRequest: [verifyJwt],
       preHandler: upload.single('icon'),
-      onRequest: [verifyUserRole('INSTRUCTOR')],
     },
     updateTopicController,
   )
   app.delete(
     '/topics/:id',
-    { onRequest: [verifyUserRole('INSTRUCTOR')] },
+    { onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')] },
     deleteTopicController,
   )
 }

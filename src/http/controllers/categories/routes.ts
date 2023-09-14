@@ -11,21 +11,19 @@ const upload = multer({
 })
 
 export async function categoriesRoutes(app: FastifyInstance) {
-  app.addHook('onRequest', verifyJwt)
-
   app.post(
     '/categories',
     {
-      preHandler: upload.single('icon'),
-      onRequest: [verifyUserRole('INSTRUCTOR')],
+      preHandler: [upload.single('icon')],
+      onRequest: [verifyJwt],
     },
     registerCategoryController,
   )
   app.put(
     '/categories/:categoryId',
     {
-      preHandler: upload.single('icon'),
-      onRequest: [verifyUserRole('INSTRUCTOR')],
+      preHandler: [upload.single('icon')],
+      onRequest: [verifyJwt],
     },
     updateCategoryController,
   )

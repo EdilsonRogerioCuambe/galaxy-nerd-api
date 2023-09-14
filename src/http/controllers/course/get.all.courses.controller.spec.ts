@@ -39,8 +39,6 @@ describe('Get All Courses Controller', () => {
 
     const { token } = auth.body
 
-    console.log(auth.body)
-
     const category = await request(app.server)
       .post('/categories')
       .set('Authorization', `Bearer ${token}`)
@@ -48,9 +46,7 @@ describe('Get All Courses Controller', () => {
       .field('description', 'any_description')
       .attach('icon', avatar)
 
-    console.log(category.body)
-
-    const course = await request(app.server)
+    await request(app.server)
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
       .field('title', 'Course title')
@@ -60,13 +56,10 @@ describe('Get All Courses Controller', () => {
       .field('instructorId', instructor.body.instructor.instructor.id)
       .attach('thumbnail', avatar)
 
-    console.log(course.body)
-
     const response = await request(app.server)
       .get('/courses')
       .set('Authorization', `Bearer ${token}`)
-
-    console.log(response.body)
+      .send()
 
     expect(response.statusCode).toBe(200)
   })

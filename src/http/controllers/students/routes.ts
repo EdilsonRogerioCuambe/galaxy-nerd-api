@@ -28,13 +28,13 @@ export async function studentsRoutes(app: FastifyInstance) {
     '/students/:studentId',
     {
       preHandler: upload.single('avatar'),
-      onRequest: [verifyUserRole('STUDENT'), verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('STUDENT')],
     },
     update,
   )
   app.delete(
     '/students/:studentId',
-    { onRequest: [verifyUserRole('ADMIN'), verifyJwt] },
+    { onRequest: [verifyJwt, verifyUserRole('ADMIN')] },
     deleteStudentController,
   )
 }

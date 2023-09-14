@@ -20,14 +20,14 @@ export async function instructorsRoutes(app: FastifyInstance) {
   app.post('/instructors', { preHandler: upload.single('avatar') }, register)
   app.get(
     '/instructors/:instructorId',
-    { onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')] },
+    { onRequest: [verifyJwt] },
     getInstructorProfile,
   )
   app.put(
     '/instructors/:instructorId',
     {
       preHandler: upload.single('avatar'),
-      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
+      onRequest: [verifyJwt],
     },
     update,
   )

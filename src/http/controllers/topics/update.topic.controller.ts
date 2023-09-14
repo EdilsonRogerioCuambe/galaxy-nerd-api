@@ -23,7 +23,7 @@ export async function updateTopicController(
 
   const { path: icon } = request.file as unknown as MultipartFile
 
-  const { id } = request.params as { id: string }
+  const { id } = schema.parse(request.params)
 
   try {
     const updateTopicUseCase = makeUpdateTopicUseCase()

@@ -15,29 +15,27 @@ const upload = multer({
 })
 
 export async function coursesRoutes(app: FastifyInstance) {
-  app.addHook('onRequest', verifyJwt)
-
   app.post(
     '/courses',
     {
       preHandler: upload.single('thumbnail'),
-      onRequest: [verifyUserRole('INSTRUCTOR')],
+      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
     },
     registerCourseController,
   )
-  app.get('/courses', getAllCoursesController)
-  app.get('/courses/:courseId', getCourseController)
+  app.get('/courses', { onRequest: [verifyJwt] }, getAllCoursesController)
+  app.get('/courses/:courseId', { onRequest: [verifyJwt] }, getCourseController)
   app.put(
     '/courses/:courseId',
     {
+      onRequest: [verifyJwt],
       preHandler: upload.single('thumbnail'),
-      onRequest: [verifyUserRole('INSTRUCTOR')],
     },
     updateCourseController,
   )
   app.delete(
     '/courses/:courseId',
-    { onRequest: [verifyUserRole('INSTRUCTOR')] },
+    { onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')] },
     deleteCourseController,
   )
 }
