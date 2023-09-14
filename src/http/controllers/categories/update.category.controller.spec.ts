@@ -19,18 +19,43 @@ describe('Update Category Controller', () => {
   })
 
   it('should update a category', async () => {
-    const category = await request(app.server)
+    await request(app.server)
+      .post('/instructors')
+      .field('name', 'John Doe')
+      .field('email', 'johndoe@gmail.com')
+      .field('password', '@17Edilson17')
+      .field('biography', 'I am a developer')
+      .field('socialLinks', 'twitter')
+      .field('socialLinks', 'facebook')
+      .field('socialLinks', 'linkedin')
+      .field('role', 'INSTRUCTOR')
+      .field('location', 'Lagos')
+      .attach('avatar', avatar)
+
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
+    const topic = await request(app.server)
       .post('/categories')
+      .set('Authorization', `Bearer ${token}`)
       .field('name', 'any_name')
       .field('description', 'any_description')
       .attach('icon', avatar)
 
+    console.log(topic.body.category.category.id)
+
     const response = await request(app.server)
-      .put(`/categories/${category.body.category.category.id}`)
-      .field('categoryId', category.body.category.category.id)
-      .field('name', 'any_name')
+      .put(`/categories/${topic.body.category.category.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .field('name', 'new_name')
       .field('description', 'new_description')
       .attach('icon', avatar)
+
+    console.log(response.body)
 
     expect(response.statusCode).toBe(200)
   })

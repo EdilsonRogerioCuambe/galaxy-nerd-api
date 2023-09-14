@@ -64,7 +64,7 @@ model Course {
   studentId      String?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  CourseProgress CourseProgress[]
+  courseProgress CourseProgress[]
   topics         Topic[]
 
   @@map("courses")
@@ -100,8 +100,8 @@ model Lesson {
   documents   Document[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  Quiz        Quiz[]
-  Forum       Forum[]
+  quiz        Quiz[]
+  forum       Forum[]
 
   @@map("lessons")
 }
@@ -146,9 +146,9 @@ model Student {
   role           Role             @default(STUDENT)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  CourseProgress CourseProgress[]
-  Forum          Forum[]
-  Answers        Answers[]
+  courseProgress CourseProgress[]
+  forum          Forum[]
+  answers        Answers[]
 
   @@map("students")
 }
@@ -190,7 +190,7 @@ model Forum {
   lessonId  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Answers   Answers[]
+  answers   Answers[]
 
   @@map("forums")
 }

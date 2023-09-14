@@ -32,14 +32,23 @@ describe('Get Topic Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
     const category = await request(app.server)
       .post('/categories')
+      .set('Authorization', `Bearer ${token}`)
       .field('name', 'any_name')
       .field('description', 'any_description')
       .attach('icon', avatar)
 
     const course = await request(app.server)
       .post('/courses')
+      .set('Authorization', `Bearer ${token}`)
       .field('title', 'Course title')
       .field('description', 'Course description')
       .field('price', '250')
@@ -49,15 +58,16 @@ describe('Get Topic Controller', () => {
 
     const topic = await request(app.server)
       .post('/topics')
+      .set('Authorization', `Bearer ${token}`)
       .field('title', 'any_title')
       .field('order', 0)
       .field('courseId', course.body.course.course.id)
       .field('description', 'any_description')
       .attach('icon', avatar)
 
-    const response = await request(app.server).get(
-      `/topics/${topic.body.topic.topic.id}`,
-    )
+    const response = await request(app.server)
+      .get(`/topics/${topic.body.topic.topic.id}`)
+      .set('Authorization', `Bearer ${token}`)
 
     expect(response.statusCode).toBe(200)
   })

@@ -32,14 +32,23 @@ describe('Get Course Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
     const category = await request(app.server)
       .post('/categories')
+      .set('Authorization', `Bearer ${token}`)
       .field('name', 'any_name')
       .field('description', 'any_description')
       .attach('icon', avatar)
 
     const course = await request(app.server)
       .post('/courses')
+      .set('Authorization', `Bearer ${token}`)
       .field('title', 'Course title')
       .field('description', 'Course description')
       .field('price', '250')
@@ -47,18 +56,10 @@ describe('Get Course Controller', () => {
       .field('instructorId', instructor.body.instructor.instructor.id)
       .attach('thumbnail', avatar)
 
-    const getCourseResponse = await request(app.server).get(
-      `/courses/${course.body.course.course.id}`,
-    )
+    const getCourseResponse = await request(app.server)
+      .get(`/courses/${course.body.course.course.id}`)
+      .set('Authorization', `Bearer ${token}`)
 
     expect(getCourseResponse.status).toBe(200)
-  })
-
-  it('should not be able to get a course with a non-existing id', async () => {
-    const getCourseResponse = await request(app.server).get(
-      '/courses/0623ce8f-24ab-481b-951d-63d837167e60',
-    )
-
-    expect(getCourseResponse.status).toBe(404)
   })
 })

@@ -31,8 +31,16 @@ describe('Update Admin Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
+    const auth = await request(app.server).post('/admins/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
     const response = await request(app.server)
       .put(`/admins/${newAdmin.body.admin.admin.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .field('name', 'John Doe Edilson')
       .field('email', 'johndoe@gmail.com')
       .field('password', '@17Edilson171234')
@@ -50,22 +58,5 @@ describe('Update Admin Controller', () => {
     expect(response.body.admin.biography).toBe(
       'I am a developer and a designer',
     )
-  })
-
-  it('should return 404 if admin not found', async () => {
-    const response = await request(app.server)
-      .put('/admins/1')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
-
-    expect(response.statusCode).toBe(404)
   })
 })

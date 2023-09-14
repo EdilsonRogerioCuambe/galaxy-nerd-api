@@ -22,7 +22,44 @@ export async function authenticateStudentController(
       password,
     })
 
-    reply.status(200).send({ student })
+    const token = await reply.jwtSign(
+      {
+        role: student.role,
+      },
+      {
+        sign: {
+          sub: student.id,
+        },
+      },
+    )
+
+    const refreshToken = await reply.jwtSign(
+      {
+        role: student.role,
+      },
+      {
+        sign: {
+          sub: student.id,
+          expiresIn: '7d',
+        },
+      },
+    )
+
+    return reply
+      .setCookie('refreshToken', refreshToken, {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      })
+      .status(200)
+      .send({
+        student: {
+          ...student,
+          password: undefined,
+        },
+        token,
+      })
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {
       reply.status(401).send({ message: err.message })

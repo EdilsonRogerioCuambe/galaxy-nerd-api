@@ -34,9 +34,33 @@ describe('Delete Student Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
-    const response = await request(app.server).delete(
-      `/students/${student.body.student.student.id}`,
-    )
+    await request(app.server)
+      .post('/admins')
+      .field('name', 'John Doe')
+      .field('email', 'eddy@gmail.com')
+      .field('password', '@17Edilson17')
+      .field('biography', 'I am a developer')
+      .field('socialLinks', 'twitter')
+      .field('socialLinks', 'facebook')
+      .field('socialLinks', 'linkedin')
+      .field('interests', 'Node.js')
+      .field('interests', 'ReactJS')
+      .field('interests', 'React Native')
+      .field('role', 'ADMIN')
+      .field('location', 'Lagos')
+      .attach('avatar', avatar)
+
+    const auth = await request(app.server).post('/admins/sessions').send({
+      email: 'eddy@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
+    const response = await request(app.server)
+      .delete(`/students/${student.body.student.student.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send()
 
     expect(response.statusCode).toBe(204)
   })

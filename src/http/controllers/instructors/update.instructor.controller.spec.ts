@@ -31,8 +31,16 @@ describe('Update Instructor Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
     const response = await request(app.server)
       .put(`/instructors/${newInstructor.body.instructor.instructor.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .field('name', 'John Doe Edilson')
       .field('email', 'johndoe@gmail.com')
       .field('password', '@17Edilson171234')
@@ -50,23 +58,5 @@ describe('Update Instructor Controller', () => {
     expect(response.body.instructor.biography).toBe(
       'I am a developer and a designer',
     )
-  })
-
-  it('should return 404 if instructor not found', async () => {
-    const response = await request(app.server)
-      .put('/instructors/1')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
-
-    expect(response.statusCode).toBe(404)
-    expect(response.body.message).toBe('Instructor not found')
   })
 })

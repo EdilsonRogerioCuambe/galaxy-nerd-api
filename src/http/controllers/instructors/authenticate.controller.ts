@@ -22,7 +22,45 @@ export async function authenticateInstructorController(
       password,
     })
 
-    reply.status(200).send({ instructor })
+    const token = await reply.jwtSign(
+      {
+        role: instructor.role,
+      },
+      {
+        sign: {
+          sub: instructor.id,
+          expiresIn: '7d',
+        },
+      },
+    )
+
+    const refreshToken = await reply.jwtSign(
+      {
+        role: instructor.role,
+      },
+      {
+        sign: {
+          sub: instructor.id,
+          expiresIn: '7d',
+        },
+      },
+    )
+
+    return reply
+      .setCookie('refreshToken', refreshToken, {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      })
+      .status(200)
+      .send({
+        instructor: {
+          ...instructor,
+          password: undefined,
+        },
+        token,
+      })
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {
       reply.status(401).send({ message: err.message })

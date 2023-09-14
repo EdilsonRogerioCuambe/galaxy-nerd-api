@@ -44,7 +44,17 @@ describe('Get All Instructors Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
-    const response = await request(app.server).get('/instructors')
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
+    const response = await request(app.server)
+      .get('/instructors')
+      .set('Authorization', `Bearer ${token}`)
+      .send()
 
     expect(response.statusCode).toBe(200)
     expect(response.body.instructors).toHaveLength(2)

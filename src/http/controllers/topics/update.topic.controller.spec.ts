@@ -32,14 +32,23 @@ describe('Update Topic Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
     const category = await request(app.server)
       .post('/categories')
+      .set('Authorization', `Bearer ${token}`)
       .field('name', 'any_name')
       .field('description', 'any_description')
       .attach('icon', avatar)
 
     const course = await request(app.server)
       .post('/courses')
+      .set('Authorization', `Bearer ${token}`)
       .field('title', 'Course title')
       .field('description', 'Course description')
       .field('price', '250')
@@ -49,6 +58,7 @@ describe('Update Topic Controller', () => {
 
     const topic = await request(app.server)
       .post('/topics')
+      .set('Authorization', `Bearer ${token}`)
       .field('title', 'Topic title')
       .field('description', 'Topic description')
       .field('order', '1')
@@ -57,6 +67,7 @@ describe('Update Topic Controller', () => {
 
     const response = await request(app.server)
       .put(`/topics/${topic.body.topic.topic.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .field('id', topic.body.topic.topic.id)
       .field('title', 'new_title')
       .field('description', 'new_description')

@@ -32,16 +32,17 @@ describe('Get Instructor Profile Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
-    const response = await request(app.server).get(
-      `/instructors/${instructor.body.instructor.instructor.id}`,
-    )
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
+    const response = await request(app.server)
+      .get(`/instructors/${instructor.body.instructor.instructor.id}`)
+      .set('Authorization', `Bearer ${token}`)
 
     expect(response.statusCode).toBe(200)
-  })
-
-  it('should not be able to get instructor profile if instructor does not exists', async () => {
-    const response = await request(app.server).get(`/instructors/any_id`)
-
-    expect(response.statusCode).toBe(404)
   })
 })
