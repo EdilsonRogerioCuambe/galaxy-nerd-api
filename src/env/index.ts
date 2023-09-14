@@ -8,6 +8,7 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string(),
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_CLOUD_NAME: z.string(),
+  JWT_SECRET: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

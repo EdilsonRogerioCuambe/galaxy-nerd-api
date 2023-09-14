@@ -32,9 +32,16 @@ describe('Get Student Profile Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
-    const response = await request(app.server).get(
-      `/students/${student.body.student.student.id}`,
-    )
+    const auth = await request(app.server).post('/students/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
+    const response = await request(app.server)
+      .get(`/students/${student.body.student.student.id}`)
+      .set('Authorization', `Bearer ${token}`)
 
     expect(response.statusCode).toBe(200)
   })

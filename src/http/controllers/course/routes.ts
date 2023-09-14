@@ -7,6 +7,8 @@ import { updateCourseController } from './update.course.controller'
 import { deleteCourseController } from './delete.course.controller'
 import { getAllCoursesController } from './get.all.courses.controller'
 import { getCourseController } from './get.course.controller'
+import { verifyJwt } from '@/http/middlewares/verify.jwt'
+import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -15,15 +17,25 @@ const upload = multer({
 export async function coursesRoutes(app: FastifyInstance) {
   app.post(
     '/courses',
-    { preHandler: upload.single('thumbnail') },
+    {
+      preHandler: upload.single('thumbnail'),
+      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
+    },
     registerCourseController,
   )
-  app.get('/courses', getAllCoursesController)
-  app.get('/courses/:courseId', getCourseController)
+  app.get('/courses', { onRequest: [verifyJwt] }, getAllCoursesController)
+  app.get('/courses/:courseId', { onRequest: [verifyJwt] }, getCourseController)
   app.put(
     '/courses/:courseId',
-    { preHandler: upload.single('thumbnail') },
+    {
+      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
+      preHandler: upload.single('thumbnail'),
+    },
     updateCourseController,
   )
-  app.delete('/courses/:courseId', deleteCourseController)
+  app.delete(
+    '/courses/:courseId',
+    { onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')] },
+    deleteCourseController,
+  )
 }

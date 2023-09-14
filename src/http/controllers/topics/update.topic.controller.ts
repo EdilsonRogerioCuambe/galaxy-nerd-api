@@ -13,17 +13,17 @@ export async function updateTopicController(
 ) {
   const schema = z.object({
     id: z.string(),
-    title: z.string(),
-    description: z.string(),
-    order: z.string(),
-    courseId: z.string(),
+    title: z.string().optional(),
+    description: z.string().optional(),
+    order: z.string().optional(),
+    courseId: z.string().optional(),
   })
 
   const { title, description, order, courseId } = schema.parse(request.body)
 
   const { path: icon } = request.file as unknown as MultipartFile
 
-  const { id } = request.params as { id: string }
+  const { id } = schema.parse(request.params)
 
   try {
     const updateTopicUseCase = makeUpdateTopicUseCase()

@@ -31,9 +31,17 @@ describe('Delete Admin Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
-    const response = await request(app.server).delete(
-      `/admins/${admin.body.admin.admin.id}`,
-    )
+    const auth = await request(app.server).post('/admins/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
+    const response = await request(app.server)
+      .delete(`/admins/${admin.body.admin.admin.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send()
 
     expect(response.statusCode).toBe(204)
     expect(response.body).toEqual({})

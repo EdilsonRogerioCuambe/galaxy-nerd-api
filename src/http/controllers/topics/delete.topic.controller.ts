@@ -4,7 +4,7 @@ import { makeDeleteTopicUseCase } from '@/use-cases/factories/topics/make.delete
 import { TopicNotFoundError } from '@/use-cases/topics/err/topic.not.found.error'
 
 export async function deleteTopicController(
-  request: FastifyRequest<{ Params: { id: string } }>,
+  request: FastifyRequest,
   reply: FastifyReply,
 ) {
   const schema = z.object({

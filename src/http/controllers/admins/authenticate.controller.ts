@@ -22,7 +22,44 @@ export async function authenticateAdminController(
       password,
     })
 
-    reply.status(200).send({ admin })
+    const token = await reply.jwtSign(
+      {
+        role: admin.role,
+      },
+      {
+        sign: {
+          sub: admin.id,
+        },
+      },
+    )
+
+    const refreshToken = await reply.jwtSign(
+      {
+        role: admin.role,
+      },
+      {
+        sign: {
+          sub: admin.id,
+          expiresIn: '7d',
+        },
+      },
+    )
+
+    return reply
+      .setCookie('refreshToken', refreshToken, {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      })
+      .status(200)
+      .send({
+        admin: {
+          ...admin,
+          password: undefined,
+        },
+        token,
+      })
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {
       reply.status(401).send({ message: err.message })

@@ -13,13 +13,13 @@ export async function updateCategoryController(
 ) {
   const schema = z.object({
     categoryId: z.string(),
-    name: z.string(),
-    description: z.string(),
+    name: z.string().optional(),
+    description: z.string().optional(),
   })
 
   const { name, description } = schema.parse(request.body)
 
-  const { categoryId } = request.params as { categoryId: string }
+  const { categoryId } = schema.parse(request.params)
 
   const { path: icon } = request.file as unknown as MultipartFile
 

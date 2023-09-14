@@ -8,6 +8,8 @@ import { getAllStudentsController } from './get.all.students.controller'
 import { getStudentProfileController } from './get.student.profile.controller'
 import { deleteStudentController } from './delete.student.controller'
 import { update } from './update.student.controller'
+import { verifyJwt } from '@/http/middlewares/verify.jwt'
+import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -16,12 +18,23 @@ const upload = multer({
 export async function studentsRoutes(app: FastifyInstance) {
   app.post('/students', { preHandler: upload.single('avatar') }, register)
   app.post('/students/sessions', authenticateStudentController)
-  app.get('/students', getAllStudentsController)
-  app.get('/students/:studentId', getStudentProfileController)
+  app.get('/students', { onRequest: verifyJwt }, getAllStudentsController)
+  app.get(
+    '/students/:studentId',
+    { onRequest: verifyJwt },
+    getStudentProfileController,
+  )
   app.put(
     '/students/:studentId',
-    { preHandler: upload.single('avatar') },
+    {
+      preHandler: upload.single('avatar'),
+      onRequest: [verifyJwt, verifyUserRole('STUDENT')],
+    },
     update,
   )
-  app.delete('/students/:studentId', deleteStudentController)
+  app.delete(
+    '/students/:studentId',
+    { onRequest: [verifyJwt, verifyUserRole('ADMIN')] },
+    deleteStudentController,
+  )
 }

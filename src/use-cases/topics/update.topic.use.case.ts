@@ -5,11 +5,11 @@ import { Topic } from '@prisma/client'
 
 interface UpdateTopicUseCaseProps {
   id: string
-  title: string
-  icon: string
-  description: string
-  order: string
-  courseId: string
+  title?: string
+  icon?: string
+  description?: string
+  order?: string
+  courseId?: string
 }
 
 interface UpdateTopicUseCaseResponse {

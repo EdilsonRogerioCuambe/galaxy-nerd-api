@@ -1,14 +1,15 @@
-import { app } from '@/app'
+import { it, describe, afterAll, beforeAll, expect } from 'vitest'
 import request from 'supertest'
 import path from 'path'
 import fs from 'fs'
-import { it, describe, expect, afterAll, beforeAll } from 'vitest'
+
+import { app } from '@/app'
 
 const avatar = fs.readFileSync(
   path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
 )
 
-describe('Delete Instructor Controller', () => {
+describe('Admin Get His Profile Controller', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -17,9 +18,9 @@ describe('Delete Instructor Controller', () => {
     await app.close()
   })
 
-  it('should be able to delete instructor', async () => {
-    const instructor = await request(app.server)
-      .post('/instructors')
+  it('should be able to get admin profile', async () => {
+    await request(app.server)
+      .post('/admins')
       .field('name', 'John Doe')
       .field('email', 'johndoe@gmail.com')
       .field('password', '@17Edilson17')
@@ -31,19 +32,15 @@ describe('Delete Instructor Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
-    const auth = await request(app.server).post('/instructors/sessions').send({
+    const auth = await request(app.server).post('/admins/sessions').send({
       email: 'johndoe@gmail.com',
       password: '@17Edilson17',
     })
 
-    const { token } = auth.body
-
     const response = await request(app.server)
-      .delete(`/instructors/${instructor.body.instructor.instructor.id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send()
+      .get(`/admins/me`)
+      .set('Authorization', `Bearer ${auth.body.token}`)
 
-    expect(response.statusCode).toBe(204)
-    expect(response.body).toEqual({})
+    expect(response.statusCode).toBe(200)
   })
 })

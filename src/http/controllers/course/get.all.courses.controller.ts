@@ -8,9 +8,11 @@ export async function getAllCoursesController(
   try {
     const getAllCoursesUseCase = makeGetAllCoursesUseCase()
 
-    const response = await getAllCoursesUseCase.execute()
+    const { courses } = await getAllCoursesUseCase.execute()
 
-    return reply.status(200).send(response)
+    return reply.status(200).send({
+      courses,
+    })
   } catch (error) {
     return reply.status(500).send()
   }

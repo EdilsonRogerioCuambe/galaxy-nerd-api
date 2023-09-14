@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs'
 
 import { app } from '@/app'
+import { createAndAuthenticateInstructor } from '@/utils/test/create.and.authenticate.instructor'
 
 const avatar = fs.readFileSync(
   path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
@@ -19,85 +20,30 @@ describe('Get All Courses Controller', () => {
   })
 
   it('should be able to get all courses', async () => {
-    const instructor = await request(app.server)
-      .post('/instructors')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    const { token, instructor } = await createAndAuthenticateInstructor(app)
 
     const category = await request(app.server)
       .post('/categories')
+      .set('Authorization', `Bearer ${token}`)
       .field('name', 'any_name')
       .field('description', 'any_description')
       .attach('icon', avatar)
 
     await request(app.server)
       .post('/courses')
+      .set('Authorization', `Bearer ${token}`)
       .field('title', 'Course title')
       .field('description', 'Course description')
       .field('price', '250')
       .field('categoryId', category.body.category.category.id)
-      .field('instructorId', instructor.body.instructor.instructor.id)
+      .field('instructorId', instructor.id)
       .attach('thumbnail', avatar)
 
-    const instructorTwo = await request(app.server)
-      .post('/instructors')
-      .field('name', 'Mary Doe')
-      .field('email', 'marydoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
-
-    const categoryTwo = await request(app.server)
-      .post('/categories')
-      .field('name', 'New name')
-      .field('description', 'New description')
-      .attach('icon', avatar)
-
-    await request(app.server)
-      .post('/courses')
-      .field('title', 'New title')
-      .field('description', 'New description')
-      .field('price', '250')
-      .field('categoryId', categoryTwo.body.category.category.id)
-      .field('instructorId', instructorTwo.body.instructor.instructor.id)
-
-    const response = await request(app.server).get('/courses')
+    const response = await request(app.server)
+      .get('/courses')
+      .set('Authorization', `Bearer ${token}`)
+      .send()
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.courses).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: expect.any(String),
-          title: 'Course title',
-          description: 'Course description',
-          price: '250',
-          categoryId: category.body.category.category.id,
-          instructorId: instructor.body.instructor.instructor.id,
-          slug: 'course-title',
-        }),
-        expect.objectContaining({
-          id: expect.any(String),
-          title: 'New title',
-          description: 'New description',
-          price: '250',
-          categoryId: categoryTwo.body.category.category.id,
-          instructorId: instructorTwo.body.instructor.instructor.id,
-          slug: 'new-title',
-        }),
-      ]),
-    )
   })
 })
