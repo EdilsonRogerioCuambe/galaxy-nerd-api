@@ -27,7 +27,7 @@ export async function instructorsRoutes(app: FastifyInstance) {
     '/instructors/:instructorId',
     {
       preHandler: upload.single('avatar'),
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
     },
     update,
   )

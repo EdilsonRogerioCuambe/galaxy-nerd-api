@@ -4,8 +4,8 @@ import { Category } from '@prisma/client'
 
 interface UpdateCategoryProps {
   categoryId: string
-  name: string
-  description: string
+  name?: string
+  description?: string
   icon: string
 }
 

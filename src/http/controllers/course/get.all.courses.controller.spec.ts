@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs'
 
 import { app } from '@/app'
+import { createAndAuthenticateInstructor } from '@/utils/test/create.and.authenticate.instructor'
 
 const avatar = fs.readFileSync(
   path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
@@ -19,25 +20,7 @@ describe('Get All Courses Controller', () => {
   })
 
   it('should be able to get all courses', async () => {
-    const instructor = await request(app.server)
-      .post('/instructors')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
-
-    const auth = await request(app.server).post('/instructors/sessions').send({
-      email: 'johndoe@gmail.com',
-      password: '@17Edilson17',
-    })
-
-    const { token } = auth.body
+    const { token, instructor } = await createAndAuthenticateInstructor(app)
 
     const category = await request(app.server)
       .post('/categories')
@@ -53,7 +36,7 @@ describe('Get All Courses Controller', () => {
       .field('description', 'Course description')
       .field('price', '250')
       .field('categoryId', category.body.category.category.id)
-      .field('instructorId', instructor.body.instructor.instructor.id)
+      .field('instructorId', instructor.id)
       .attach('thumbnail', avatar)
 
     const response = await request(app.server)

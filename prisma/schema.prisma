@@ -58,9 +58,9 @@ model Course {
   thumbnail      String?
   instructor     Instructor?      @relation(fields: [instructorId], references: [id])
   instructorId   String?
-  Category       Category?        @relation(fields: [categoryId], references: [id])
+  category       Category?        @relation(fields: [categoryId], references: [id])
   categoryId     String?
-  Student        Student?         @relation(fields: [studentId], references: [id])
+  student        Student?         @relation(fields: [studentId], references: [id])
   studentId      String?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt

@@ -3,6 +3,7 @@ import request from 'supertest'
 import path from 'path'
 import fs from 'fs'
 import { it, describe, expect, beforeAll, afterAll } from 'vitest'
+import { createAndAuthenticateInstructor } from '@/utils/test/create.and.authenticate.instructor'
 
 const avatar = fs.readFileSync(
   path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
@@ -18,28 +19,10 @@ describe('Update Instructor Controller', () => {
   })
 
   it('should update an instructor', async () => {
-    const newInstructor = await request(app.server)
-      .post('/instructors')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
-
-    const auth = await request(app.server).post('/instructors/sessions').send({
-      email: 'johndoe@gmail.com',
-      password: '@17Edilson17',
-    })
-
-    const { token } = auth.body
+    const { token, instructor } = await createAndAuthenticateInstructor(app)
 
     const response = await request(app.server)
-      .put(`/instructors/${newInstructor.body.instructor.instructor.id}`)
+      .put(`/instructors/${instructor.id}`)
       .set('Authorization', `Bearer ${token}`)
       .field('name', 'John Doe Edilson')
       .field('email', 'johndoe@gmail.com')

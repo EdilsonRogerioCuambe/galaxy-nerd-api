@@ -28,7 +28,7 @@ export async function topicsRoutes(app: FastifyInstance) {
   app.put(
     '/topics/:id',
     {
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
       preHandler: upload.single('icon'),
     },
     updateTopicController,

@@ -13,8 +13,8 @@ export async function updateCategoryController(
 ) {
   const schema = z.object({
     categoryId: z.string(),
-    name: z.string(),
-    description: z.string(),
+    name: z.string().optional(),
+    description: z.string().optional(),
   })
 
   const { name, description } = schema.parse(request.body)
