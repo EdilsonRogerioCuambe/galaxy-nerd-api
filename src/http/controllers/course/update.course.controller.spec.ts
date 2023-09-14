@@ -59,15 +59,12 @@ describe('Update Course Controller', () => {
     const response = await request(app.server)
       .put(`/courses/${course.body.course.course.id}`)
       .set('Authorization', `Bearer ${token}`)
-      .field('courseId', course.body.course.course.id)
-      .field('title', 'new_title')
-      .field('description', 'new_description')
-      .field('price', 'new_price')
+      .field('title', 'Course title')
+      .field('description', 'Course description')
+      .field('price', '250')
       .field('categoryId', category.body.category.category.id)
       .field('instructorId', instructor.body.instructor.instructor.id)
       .attach('thumbnail', avatar)
-
-    console.log(response.body)
 
     expect(response.statusCode).toBe(200)
   }, 100000)

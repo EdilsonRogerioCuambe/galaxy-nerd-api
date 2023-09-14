@@ -39,13 +39,18 @@ describe('Get All Courses Controller', () => {
 
     const { token } = auth.body
 
+    console.log(auth.body)
+
     const category = await request(app.server)
       .post('/categories')
+      .set('Authorization', `Bearer ${token}`)
       .field('name', 'any_name')
       .field('description', 'any_description')
       .attach('icon', avatar)
 
-    await request(app.server)
+    console.log(category.body)
+
+    const course = await request(app.server)
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
       .field('title', 'Course title')
@@ -55,43 +60,7 @@ describe('Get All Courses Controller', () => {
       .field('instructorId', instructor.body.instructor.instructor.id)
       .attach('thumbnail', avatar)
 
-    const instructorTwo = await request(app.server)
-      .post('/instructors')
-      .field('name', 'Mary Doe')
-      .field('email', 'marydoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
-
-    const authTwo = await request(app.server)
-      .post('/instructors/sessions')
-      .send({
-        email: 'marydoe@gmail.com',
-        password: '@17Edilson17',
-      })
-
-    const { token: tokenTwo } = authTwo.body
-
-    const categoryTwo = await request(app.server)
-      .post('/categories')
-      .set('Authorization', `Bearer ${tokenTwo}`)
-      .field('name', 'New name')
-      .field('description', 'New description')
-      .attach('icon', avatar)
-
-    await request(app.server)
-      .post('/courses')
-      .set('Authorization', `Bearer ${tokenTwo}`)
-      .field('title', 'New title')
-      .field('description', 'New description')
-      .field('price', '250')
-      .field('categoryId', categoryTwo.body.category.category.id)
-      .field('instructorId', instructorTwo.body.instructor.instructor.id)
+    console.log(course.body)
 
     const response = await request(app.server)
       .get('/courses')

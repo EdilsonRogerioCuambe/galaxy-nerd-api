@@ -39,23 +39,22 @@ describe('Update Category Controller', () => {
 
     const { token } = auth.body
 
-    const topic = await request(app.server)
+    const category = await request(app.server)
       .post('/categories')
       .set('Authorization', `Bearer ${token}`)
       .field('name', 'any_name')
       .field('description', 'any_description')
       .attach('icon', avatar)
 
-    console.log(topic.body.category.category.id)
+    console.log(category.body)
 
     const response = await request(app.server)
-      .put(`/categories/${topic.body.category.category.id}`)
+      .put(`/categories/${category.body.category.category.id}`)
       .set('Authorization', `Bearer ${token}`)
+      .field('categoryId', category.body.category.category.id)
       .field('name', 'new_name')
       .field('description', 'new_description')
       .attach('icon', avatar)
-
-    console.log(response.body)
 
     expect(response.statusCode).toBe(200)
   })

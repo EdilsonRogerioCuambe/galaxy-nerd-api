@@ -56,8 +56,6 @@ describe('Update Student Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
-    console.log(response.body)
-
     expect(response.statusCode).toBe(200)
   })
 })
