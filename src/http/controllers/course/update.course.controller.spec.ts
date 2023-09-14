@@ -39,12 +39,19 @@ describe('Update Course Controller', () => {
 
     const { token } = auth.body
 
+    console.log(
+      'UPDATE COURSE INSTRUCTOR',
+      instructor.body.instructor.instructor.id,
+    )
+
     const category = await request(app.server)
       .post('/categories')
       .set('Authorization', `Bearer ${token}`)
       .field('name', 'any_name')
       .field('description', 'any_description')
       .attach('icon', avatar)
+
+    console.log('UPDATE COURSE CATEGORY', category.body.category.category.id)
 
     const course = await request(app.server)
       .post('/courses')
@@ -56,15 +63,20 @@ describe('Update Course Controller', () => {
       .field('instructorId', instructor.body.instructor.instructor.id)
       .attach('thumbnail', avatar)
 
+    console.log('UPDATE COURSE', course.body.course.course.id)
+
     const response = await request(app.server)
       .put(`/courses/${course.body.course.course.id}`)
       .set('Authorization', `Bearer ${token}`)
+      .field('courseId', course.body.course.course.id)
       .field('title', 'Course title')
       .field('description', 'Course description')
       .field('price', '250')
       .field('categoryId', category.body.category.category.id)
       .field('instructorId', instructor.body.instructor.instructor.id)
       .attach('thumbnail', avatar)
+
+    console.log('UPDATE COURSE RESPONSE', response.body)
 
     expect(response.statusCode).toBe(200)
   }, 100000)

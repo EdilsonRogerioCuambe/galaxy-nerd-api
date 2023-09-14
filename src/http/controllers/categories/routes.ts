@@ -4,7 +4,6 @@ import multer from 'fastify-multer'
 import { registerCategoryController } from './register.category.controller'
 import { updateCategoryController } from './update.category.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
-import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -15,7 +14,6 @@ export async function categoriesRoutes(app: FastifyInstance) {
     '/categories',
     {
       preHandler: [upload.single('icon')],
-      onRequest: [verifyJwt],
     },
     registerCategoryController,
   )
@@ -23,7 +21,6 @@ export async function categoriesRoutes(app: FastifyInstance) {
     '/categories/:categoryId',
     {
       preHandler: [upload.single('icon')],
-      onRequest: [verifyJwt],
     },
     updateCategoryController,
   )

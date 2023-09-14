@@ -28,7 +28,7 @@ export async function coursesRoutes(app: FastifyInstance) {
   app.put(
     '/courses/:courseId',
     {
-      onRequest: [verifyJwt],
+      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
       preHandler: upload.single('thumbnail'),
     },
     updateCourseController,

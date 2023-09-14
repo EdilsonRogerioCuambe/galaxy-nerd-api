@@ -19,7 +19,7 @@ export async function updateCategoryController(
 
   const { name, description } = schema.parse(request.body)
 
-  const { categoryId } = request.params as { categoryId: string }
+  const { categoryId } = schema.parse(request.params)
 
   const { path: icon } = request.file as unknown as MultipartFile
 
