@@ -14,6 +14,7 @@ export async function categoriesRoutes(app: FastifyInstance) {
     '/categories',
     {
       preHandler: [upload.single('icon')],
+      onRequest: [verifyJwt],
     },
     registerCategoryController,
   )
@@ -21,6 +22,7 @@ export async function categoriesRoutes(app: FastifyInstance) {
     '/categories/:categoryId',
     {
       preHandler: [upload.single('icon')],
+      onRequest: [verifyJwt],
     },
     updateCategoryController,
   )
