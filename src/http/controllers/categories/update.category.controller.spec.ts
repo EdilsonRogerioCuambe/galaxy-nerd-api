@@ -39,6 +39,8 @@ describe('Update Category Controller', () => {
 
     const { token } = auth.body
 
+    console.log(auth.body)
+
     const category = await request(app.server)
       .post('/categories')
       .set('Authorization', `Bearer ${token}`)
