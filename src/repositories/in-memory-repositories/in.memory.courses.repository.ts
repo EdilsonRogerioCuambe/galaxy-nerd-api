@@ -14,7 +14,6 @@ export class InMemoryCoursesRepository implements CoursesRepository {
       thumbnail: data.thumbnail !== undefined ? data.thumbnail : null,
       instructorId: data.instructorId !== undefined ? data.instructorId : null,
       categoryId: data.categoryId !== undefined ? data.categoryId : null,
-      studentId: data.studentId !== undefined ? data.studentId : null,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
@@ -61,7 +60,6 @@ export class InMemoryCoursesRepository implements CoursesRepository {
       slug: data.slug as string,
       instructorId: data.instructorId as string | null,
       categoryId: data.categoryId as string | null,
-      studentId: data.studentId as string | null,
       createdAt: this.courses[course].createdAt,
       updatedAt: new Date(),
     }

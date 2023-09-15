@@ -20,8 +20,9 @@ export async function registerCourseController(
     studentId: z.string().optional(),
   })
 
-  const { title, description, instructorId, categoryId, studentId, price } =
-    schema.parse(request.body)
+  const { title, description, instructorId, categoryId, price } = schema.parse(
+    request.body,
+  )
 
   const { path: thumbnail } = request.file as unknown as MultipartFile
 
@@ -35,7 +36,6 @@ export async function registerCourseController(
       thumbnail,
       instructorId,
       categoryId,
-      studentId,
     })
 
     return reply.status(201).send({ course })

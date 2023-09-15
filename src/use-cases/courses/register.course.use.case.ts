@@ -10,7 +10,6 @@ interface RegisterCourseUseCaseProps {
   thumbnail?: string
   instructorId: string
   categoryId?: string
-  studentId?: string
 }
 
 interface RegisterCourseUseCaseResponse {
@@ -26,7 +25,6 @@ export class RegisterCourseUseCase {
     price,
     instructorId,
     categoryId,
-    studentId,
   }: RegisterCourseUseCaseProps): Promise<RegisterCourseUseCaseResponse> {
     const courseAlreadyExists = await this.coursesRepository.findByTitle(title)
 
@@ -43,7 +41,6 @@ export class RegisterCourseUseCase {
       slug,
       instructorId,
       categoryId,
-      studentId,
     })
 
     return { course }

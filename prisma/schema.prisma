@@ -60,14 +60,45 @@ model Course {
   instructorId   String?
   category       Category?        @relation(fields: [categoryId], references: [id])
   categoryId     String?
-  student        Student?         @relation(fields: [studentId], references: [id])
-  studentId      String?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   courseProgress CourseProgress[]
   topics         Topic[]
+  enrollments     Enrollment[]
 
   @@map("courses")
+}
+
+model Student {
+  id             String           @id @default(uuid())
+  name           String
+  email          String           @unique
+  password       String
+  avatar         String?
+  biography      String?
+  location       String?
+  socialLinks    String[]
+  interests      String[]
+  role           Role             @default(STUDENT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  courseProgress CourseProgress[]
+  forum          Forum[]
+  answers        Answers[]
+  enrollments     Enrollment[]
+
+  @@map("students")
+}
+
+model Enrollment {
+  id        String   @id @default(uuid())
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+  createdAt DateTime @default(now())
+
+  @@map("enrollments")
 }
 
 model Topic {
@@ -130,27 +161,6 @@ model Category {
   updatedAt   DateTime @updatedAt
 
   @@map("categories")
-}
-
-model Student {
-  id             String           @id @default(uuid())
-  name           String
-  email          String           @unique
-  password       String
-  avatar         String?
-  biography      String?
-  location       String?
-  socialLinks    String[]
-  courses        Course[]
-  interests      String[]
-  role           Role             @default(STUDENT)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  courseProgress CourseProgress[]
-  forum          Forum[]
-  answers        Answers[]
-
-  @@map("students")
 }
 
 model Quiz {
