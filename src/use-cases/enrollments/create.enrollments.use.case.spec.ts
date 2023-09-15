@@ -23,7 +23,7 @@ describe('Create Enrollment Use Case', () => {
 
   it('should create a new enrollment', async () => {
     const student = await studentsRepository.create({
-      name: 'John Doe',
+      name: 'Edilson Cuambe',
       email: 'eddyrogerioyuran@gmail.com',
       password: '@1723jdhf',
       avatar: 'any_avatar',

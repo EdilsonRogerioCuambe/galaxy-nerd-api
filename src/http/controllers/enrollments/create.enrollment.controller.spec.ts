@@ -39,11 +39,11 @@ describe('Create Enrollment Controller', () => {
       .field('instructorId', instructor.id)
       .attach('thumbnail', avatar)
 
-    const student = await request(app.server)
+    await request(app.server)
       .post('/students')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
+      .field('name', 'Eddy Doe')
+      .field('email', 'eddyrogerioyuran@gmail.com')
+      .field('password', '@17Edilson17kjjhjknakn65')
       .field('biography', 'I am a developer')
       .field('socialLinks', 'twitter')
       .field('socialLinks', 'facebook')
@@ -52,17 +52,19 @@ describe('Create Enrollment Controller', () => {
       .field('location', 'Lagos')
       .attach('avatar', avatar)
 
-    const auth = await request(app.server)
-      .post('/students/sessions')
-      .field('email', student.body.student.student.email)
-      .field('password', '@17Edilson17')
+    const auth = await request(app.server).post('/students/sessions').send({
+      email: 'eddyrogerioyuran@gmail.com',
+      password: '@17Edilson17kjjhjknakn65',
+    })
 
     const response = await request(app.server)
       .post('/enrollments')
       .set('Authorization', `Bearer ${auth.body.token}`)
-      .field('studentId', student.body.student.student.id)
-      .field('courseId', course.body.course.course.id)
+      .send({
+        studentId: auth.body.student.id,
+        courseId: course.body.course.course.id,
+      })
 
-    console.log(response.body)
+    expect(response.statusCode).toBe(201)
   }, 10000)
 })

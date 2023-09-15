@@ -9,13 +9,13 @@ export class PrismaEnrollmentsRepository implements EnrollmentsRepository {
     return enrollment
   }
 
-  async findMany() {
+  async findAll() {
     const enrollments = await prisma.enrollment.findMany()
 
     return enrollments
   }
 
-  async findOne(id: string) {
+  async findById(id: string) {
     const enrollment = await prisma.enrollment.findUnique({ where: { id } })
 
     return enrollment

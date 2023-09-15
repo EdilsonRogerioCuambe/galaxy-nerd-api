@@ -4,11 +4,11 @@ import { FastifyInstance } from 'fastify'
 
 import { createEnrollmentController } from './create.enrollment.controller'
 
-export function enrollmentsRoutes(app: FastifyInstance) {
+export async function enrollmentsRoutes(app: FastifyInstance) {
   app.post(
     '/enrollments',
     {
-      preHandler: [verifyJwt, verifyUserRole('STUDENT')],
+      onRequest: [verifyJwt, verifyUserRole('STUDENT')],
     },
     createEnrollmentController,
   )

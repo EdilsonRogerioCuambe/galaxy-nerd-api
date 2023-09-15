@@ -26,13 +26,13 @@ export class InMemoryEnrollmentsRepository implements EnrollmentsRepository {
     return enrollment
   }
 
-  async findMany() {
+  async findAll() {
     const enrollments = this.enrollments
 
     return enrollments
   }
 
-  async findOne(id: string) {
+  async findById(id: string) {
     const enrollment = this.enrollments.find(
       (enrollment) => enrollment.id === id,
     )
