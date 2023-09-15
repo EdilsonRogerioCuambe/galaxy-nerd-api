@@ -18,7 +18,6 @@ describe('Get All Courses Use Case', () => {
     const priceOne = '0'
     const categoryIdOne = 'any_category_id'
     const instructorIdOne = 'any_instructor_id'
-    const studentIdOne = 'any_student_id'
 
     const slugOne = slugify({ slug: titleOne })
 
@@ -28,7 +27,6 @@ describe('Get All Courses Use Case', () => {
       price: priceOne,
       categoryId: categoryIdOne,
       instructorId: instructorIdOne,
-      studentId: studentIdOne,
       slug: slugOne,
     })
 
@@ -37,7 +35,6 @@ describe('Get All Courses Use Case', () => {
     const priceTwo = '0'
     const categoryIdTwo = 'any_category_id'
     const instructorIdTwo = 'any_instructor_id'
-    const studentIdTwo = 'any_student_id'
 
     const slugTwo = slugify({ slug: titleTwo })
 
@@ -47,7 +44,6 @@ describe('Get All Courses Use Case', () => {
       price: priceTwo,
       categoryId: categoryIdTwo,
       instructorId: instructorIdTwo,
-      studentId: studentIdTwo,
       slug: slugTwo,
     })
 
@@ -62,7 +58,6 @@ describe('Get All Courses Use Case', () => {
           price: priceOne,
           categoryId: categoryIdOne,
           instructorId: instructorIdOne,
-          studentId: studentIdOne,
         }),
         expect.objectContaining({
           id: expect.any(String),
@@ -71,7 +66,6 @@ describe('Get All Courses Use Case', () => {
           price: priceTwo,
           categoryId: categoryIdTwo,
           instructorId: instructorIdTwo,
-          studentId: studentIdTwo,
         }),
       ]),
     )

@@ -18,7 +18,6 @@ describe('Register Course Use Case', () => {
       price: '0',
       categoryId: 'any_category_id',
       instructorId: 'any_instructor_id',
-      studentId: 'any_student_id',
     })
 
     expect(response.course).toEqual(
@@ -28,7 +27,6 @@ describe('Register Course Use Case', () => {
         description: 'any_description',
         categoryId: 'any_category_id',
         instructorId: 'any_instructor_id',
-        studentId: 'any_student_id',
       }),
     )
   })

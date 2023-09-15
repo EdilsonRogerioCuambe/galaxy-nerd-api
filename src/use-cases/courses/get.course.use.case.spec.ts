@@ -19,7 +19,6 @@ describe('Get Course Use Case', () => {
     const price = '0'
     const categoryId = 'any_category_id'
     const instructorId = 'any_instructor_id'
-    const studentId = 'any_student_id'
 
     const slug = slugify({ slug: title })
 
@@ -29,7 +28,6 @@ describe('Get Course Use Case', () => {
       price,
       categoryId,
       instructorId,
-      studentId,
       slug,
     })
 
@@ -38,7 +36,6 @@ describe('Get Course Use Case', () => {
     const priceTwo = '0'
     const categoryIdTwo = 'any_category_id_two'
     const instructorIdTwo = 'any_instructor_id_two'
-    const studentIdTwo = 'any_student_id_two'
 
     const slugTwo = slugify({ slug: titleTwo })
 
@@ -48,7 +45,6 @@ describe('Get Course Use Case', () => {
       price: priceTwo,
       categoryId: categoryIdTwo,
       instructorId: instructorIdTwo,
-      studentId: studentIdTwo,
       slug: slugTwo,
     })
 
@@ -62,7 +58,6 @@ describe('Get Course Use Case', () => {
         price,
         categoryId,
         instructorId,
-        studentId,
         slug,
       }),
     )
