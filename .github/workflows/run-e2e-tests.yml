@@ -33,3 +33,8 @@ jobs:
           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          STRIPE_PRIVATE_KEY: ${{ secrets.STRIPE_PRIVATE_KEY }}
+          NODE_MAILER_PORT: ${{ secrets.NODE_MAILER_PORT }}
+          NODE_MAILER_HOST: ${{ secrets.NODE_MAILER_HOST }}
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}

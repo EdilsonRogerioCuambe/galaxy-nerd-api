@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { Course, Student } from '@prisma/client'
 import nodemailer from 'nodemailer'
 
@@ -7,17 +8,17 @@ export async function sendConfirmationEmailToStudent(
 ) {
   try {
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
+      host: env.NODE_MAILER_HOST,
+      port: Number(env.NODE_MAILER_PORT),
       secure: false,
       auth: {
-        user: 'edilson@aluno.unilab.edu.br',
-        pass: '@ShaniaZibia20',
+        user: env.EMAIL,
+        pass: env.PASSWORD,
       },
     })
 
     const mailOptions = {
-      from: 'edilson@aluno.unilab.edu.br',
+      from: env.EMAIL,
       to: student.email,
       subject: 'Confirmação de matrícula',
       html: `
