@@ -21,6 +21,8 @@ describe('Update Admin Use Case', () => {
       biography: 'any_biography',
       location: 'any_location',
       socialLinks: ['any_social_link'],
+      interests: ['any_interest'],
+      banner: 'any_banner',
     })
 
     const { admin } = await sut.execute({
@@ -33,6 +35,8 @@ describe('Update Admin Use Case', () => {
       location: 'updated_location',
       socialLinks: ['updated_social_link'],
       role: 'ADMIN',
+      interests: ['updated_interest'],
+      banner: 'updated_banner',
     })
 
     expect(admin).toEqual({
@@ -44,6 +48,8 @@ describe('Update Admin Use Case', () => {
       biography: 'updated_biography',
       location: 'updated_location',
       socialLinks: ['updated_social_link'],
+      interests: ['updated_interest'],
+      banner: 'updated_banner',
       role: 'ADMIN',
       createdAt: newAdmin.createdAt,
       updatedAt: admin.updatedAt,

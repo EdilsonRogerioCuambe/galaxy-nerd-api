@@ -11,6 +11,8 @@ interface RegisterAdminUseCaseProps {
   biography?: string
   location?: string
   socialLinks?: string[]
+  interests?: string[]
+  banner?: string
   role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 }
 
@@ -30,6 +32,8 @@ export class RegisterAdminUseCase {
     location,
     socialLinks,
     role,
+    banner,
+    interests,
   }: RegisterAdminUseCaseProps): Promise<RegisterAdminUseCaseResponse> {
     const hashedPassword = await hash(password, 12)
 
@@ -48,6 +52,8 @@ export class RegisterAdminUseCase {
       location,
       socialLinks,
       role,
+      banner,
+      interests,
     })
 
     return { admin }

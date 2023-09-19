@@ -25,6 +25,8 @@ model Administrator {
   biography   String?
   location    String?
   socialLinks String[]
+  interests   String[]
+  banner      String?
   role        Role     @default(ADMIN)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -41,6 +43,8 @@ model Instructor {
   biography   String?
   location    String?
   socialLinks String[]
+  interests   String[]
+  banner      String?
   role        Role     @default(INSTRUCTOR)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -79,6 +83,7 @@ model Student {
   location       String?
   socialLinks    String[]
   interests      String[]
+  banner         String?
   role           Role             @default(STUDENT)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt

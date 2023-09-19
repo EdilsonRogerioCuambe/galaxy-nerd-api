@@ -5,6 +5,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui'
 import fastifyJwt from '@fastify/jwt'
 import { ZodError } from 'zod'
 import fastifyCookie from '@fastify/cookie'
+import fastifyCors from '@fastify/cors'
 
 import { adminsRoutes } from './http/controllers/admins/routes'
 import { env } from './env'
@@ -16,6 +17,10 @@ import { topicsRoutes } from './http/controllers/topics/routes'
 import { enrollmentsRoutes } from './http/controllers/enrollments/routes'
 
 export const app = fastify()
+
+app.register(fastifyCors, {
+  origin: '*',
+})
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,

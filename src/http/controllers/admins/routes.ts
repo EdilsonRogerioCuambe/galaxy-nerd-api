@@ -367,7 +367,16 @@ export async function adminsRoutes(app: FastifyInstance) {
     },
   }
 
-  app.post('/admins', { preHandler: upload.single('avatar') }, register)
+  app.post(
+    '/admins',
+    {
+      preHandler: upload.fields([
+        { name: 'avatar', maxCount: 1 },
+        { name: 'banner', maxCount: 1 },
+      ]),
+    },
+    register,
+  )
   app.post('/admins/sessions', authenticateAdminController)
   app.get(
     '/admins/:adminId',
@@ -377,7 +386,10 @@ export async function adminsRoutes(app: FastifyInstance) {
   app.put(
     '/admins/:adminId',
     {
-      preHandler: upload.single('avatar'),
+      preHandler: upload.fields([
+        { name: 'avatar', maxCount: 1 },
+        { name: 'banner', maxCount: 1 },
+      ]),
       onRequest: [verifyJwt, verifyUserRole('ADMIN')],
     },
     update,

@@ -7,6 +7,11 @@ interface MultipartFile {
   path: string
 }
 
+interface Files {
+  avatar: MultipartFile[]
+  banner: MultipartFile[]
+}
+
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const schema = z.object({
     name: z.string(),
@@ -14,16 +19,28 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     password: z
       .string()
       .regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,32}$/),
-    role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']),
+    role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).default('ADMIN'),
     biography: z.string().optional(),
     location: z.string().optional(),
     socialLinks: z.array(z.string()).optional(),
+    interests: z.array(z.string()).optional(),
   })
 
-  const { name, email, password, biography, location, socialLinks, role } =
-    schema.parse(request.body)
+  const {
+    name,
+    email,
+    password,
+    biography,
+    location,
+    socialLinks,
+    role,
+    interests,
+  } = schema.parse(request.body)
 
-  const { path: avatar } = request.file as unknown as MultipartFile
+  const { avatar, banner } = request.files as unknown as Files
+
+  const avatarPath = avatar[0].path
+  const bannerPath = banner[0].path
 
   try {
     const registerAdminUseCase = makeRegisterAdminUseCase()
@@ -32,11 +49,13 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       name,
       email,
       password,
-      avatar,
       biography,
       location,
       socialLinks,
       role,
+      interests,
+      avatar: avatarPath,
+      banner: bannerPath,
     })
 
     return reply.status(201).send({ admin })

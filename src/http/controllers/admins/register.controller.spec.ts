@@ -28,9 +28,13 @@ describe('Register Admin Controller', () => {
       .field('socialLinks', 'twitter')
       .field('socialLinks', 'facebook')
       .field('socialLinks', 'linkedin')
+      .field('interests', 'Node.js')
+      .field('interests', 'ReactJS')
+      .field('interests', 'React Native')
       .field('role', 'ADMIN')
       .field('location', 'Lagos')
       .attach('avatar', avatar)
+      .attach('banner', avatar)
 
     expect(response.statusCode).toBe(201)
   })

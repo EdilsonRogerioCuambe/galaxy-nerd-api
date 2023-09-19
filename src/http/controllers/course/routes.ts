@@ -23,8 +23,8 @@ export async function coursesRoutes(app: FastifyInstance) {
     },
     registerCourseController,
   )
-  app.get('/courses', { onRequest: [verifyJwt] }, getAllCoursesController)
-  app.get('/courses/:courseId', { onRequest: [verifyJwt] }, getCourseController)
+  app.get('/courses', getAllCoursesController)
+  app.get('/courses/:courseId', getCourseController)
   app.put(
     '/courses/:courseId',
     {

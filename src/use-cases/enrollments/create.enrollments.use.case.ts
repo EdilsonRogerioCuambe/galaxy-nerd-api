@@ -1,9 +1,9 @@
 import { EnrollmentsRepository } from '@/repositories/enrollments.repository'
 import { StudentsRepository } from '@/repositories/students.repository'
 import { CoursesRepository } from '@/repositories/courses.repository'
-import { processStudentPayment } from '@/utils/process.student.payment'
 import { Enrollment } from '@prisma/client'
 import { sendConfirmationEmailToStudent } from '@/utils/send.confirmation.email.to.student'
+import { StripePaymentProcessor } from '@/repositories/stripe-payment-processor/stripe.payment.processor'
 
 interface CreateEnrollmentProps {
   studentId: string
@@ -19,6 +19,7 @@ export class CreateEnrollmentUseCase {
     private enrollmentsRepository: EnrollmentsRepository,
     private studentsRepository: StudentsRepository,
     private coursesRepository: CoursesRepository,
+    private payment: StripePaymentProcessor,
   ) {}
 
   async execute({
@@ -36,7 +37,7 @@ export class CreateEnrollmentUseCase {
       throw new Error('Course not found')
     }
 
-    const paymentSucceeded = await processStudentPayment(course, student)
+    const paymentSucceeded = await this.payment.processPayment(course, student)
 
     if (!paymentSucceeded) {
       throw new Error('Payment not succeeded')

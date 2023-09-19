@@ -7,23 +7,45 @@ interface MultipartFile {
   path: string
 }
 
+interface Files {
+  avatar: MultipartFile[] | string
+  banner: MultipartFile[] | string
+}
+
 export async function update(request: FastifyRequest, reply: FastifyReply) {
   const schema = z.object({
     name: z.string().optional(),
     email: z.string().email().optional(),
     password: z
       .string()
-      .regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,32}$/),
+      .regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,32}$/)
+      .optional(),
     role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).optional(),
     biography: z.string().optional(),
     location: z.string().optional(),
     socialLinks: z.array(z.string()).optional(),
+    interests: z.array(z.string()).optional(),
   })
 
-  const { name, email, password, biography, location, socialLinks, role } =
-    schema.parse(request.body)
+  const {
+    name,
+    email,
+    password,
+    biography,
+    location,
+    socialLinks,
+    role,
+    interests,
+  } = schema.parse(request.body)
 
-  const { path: avatar } = request.file as unknown as MultipartFile
+  const { avatar, banner } = request.files as unknown as
+    | Files
+    | {
+        avatar: string
+        banner: string
+      }
+
+  console.log(avatar, banner)
 
   const { adminId } = request.params as { adminId: string }
 
@@ -35,11 +57,13 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       name,
       email,
       password,
-      avatar,
+      avatar: avatar ? (avatar as MultipartFile[])[0].path : avatar,
       biography,
       location,
       socialLinks,
       role,
+      interests,
+      banner: banner ? (banner as MultipartFile[])[0].path : banner,
     })
 
     return reply.status(200).send({ admin })
