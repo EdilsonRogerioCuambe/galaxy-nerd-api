@@ -27,6 +27,7 @@ describe('register instructor use case', () => {
       role: 'INSTRUCTOR',
       biography: 'any_biography',
       location: 'any_location',
+      banner: 'any_banner',
     })
 
     const instructorPasswordIsHashed = await compare(
@@ -47,6 +48,7 @@ describe('register instructor use case', () => {
       role: 'INSTRUCTOR',
       biography: 'any_biography',
       location: 'any_location',
+      banner: 'any_banner',
     })
 
     expect(async () => {
@@ -59,6 +61,7 @@ describe('register instructor use case', () => {
         role: 'INSTRUCTOR',
         biography: 'any_biography',
         location: 'any_location',
+        banner: 'any_banner',
       })
     }).rejects.toBeInstanceOf(InstructorAlreadyExistsError)
   })

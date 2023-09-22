@@ -11,6 +11,7 @@ import { update } from './update.admin.controller'
 import { profileAdminController } from './profile.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
+import { refresh } from './refresh.admin'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -416,4 +417,5 @@ export async function adminsRoutes(app: FastifyInstance) {
     { onRequest: [verifyJwt, verifyUserRole('ADMIN')] },
     deleteAdminController,
   )
+  app.patch('/token/refresh', refresh)
 }
