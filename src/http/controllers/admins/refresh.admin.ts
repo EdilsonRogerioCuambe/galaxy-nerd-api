@@ -30,8 +30,8 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
     .setCookie('refreshToken', refreshToken, {
       path: '/',
       httpOnly: true,
-      sameSite: 'strict',
-      secure: false,
+      sameSite: 'none',
+      secure: true,
     })
     .send({
       token,

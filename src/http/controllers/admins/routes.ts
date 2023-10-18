@@ -67,5 +67,5 @@ export async function adminsRoutes(app: FastifyInstance) {
     { onRequest: [verifyJwt, verifyUserRole('ADMIN')] },
     deleteAdminController,
   )
-  app.patch('/token/refresh', refresh)
+  app.patch('/admin/token/refresh', refresh)
 }

@@ -12,9 +12,7 @@ interface UpdateAdminUseCaseProps {
   biography?: string
   location?: string
   socialLinks?: string[]
-  interests?: string[] | null
   banner?: string
-  favorites?: string[] | null
   role?: Role
 }
 
@@ -36,8 +34,6 @@ export class UpdateAdminUseCase {
     socialLinks,
     role,
     banner,
-    favorites,
-    interests,
   }: UpdateAdminUseCaseProps): Promise<UpdateAdminUseCaseResponse> {
     const admin = await this.adminsRepository.findById(adminId)
 
@@ -57,12 +53,6 @@ export class UpdateAdminUseCase {
       socialLinks: socialLinks || admin.socialLinks,
       role: role || admin.role,
       banner: banner || admin.banner,
-      favorites: {
-        connect: favorites?.map((favorite) => ({ id: favorite })) || [],
-      },
-      interests: {
-        connect: interests?.map((interest) => ({ id: interest })) || [],
-      },
     })
 
     return {

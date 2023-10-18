@@ -23,19 +23,10 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     biography: z.string().optional(),
     location: z.string().optional(),
     socialLinks: z.array(z.string()).optional(),
-    interests: z.array(z.string()).optional(),
   })
 
-  const {
-    name,
-    email,
-    password,
-    biography,
-    location,
-    socialLinks,
-    role,
-    interests,
-  } = schema.parse(request.body)
+  const { name, email, password, biography, location, socialLinks, role } =
+    schema.parse(request.body)
 
   const { avatar, banner } = request.files as unknown as Files
 
@@ -53,7 +44,6 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       location,
       socialLinks,
       role,
-      interests,
       avatar: avatarPath,
       banner: bannerPath,
     })

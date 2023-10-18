@@ -29,7 +29,6 @@ model Administrator {
   role        Role       @default(ADMIN)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  favorites   Favorite[]
   interests   Interest[]
 
   @@map("administrators")
@@ -49,7 +48,6 @@ model Instructor {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   courses     Course[]
-  favorites   Favorite[]
   interests   Interest[]
 
   @@map("instructors")
@@ -118,10 +116,6 @@ model Favorite {
   studentId       String?
   course          Course         @relation(fields: [courseId], references: [id])
   courseId        String
-  admin           Administrator? @relation(fields: [administratorId], references: [id])
-  administratorId String?
-  instructor      Instructor?    @relation(fields: [instructorId], references: [id])
-  instructorId    String?
   createdAt       DateTime       @default(now())
 
   @@map("favorites")

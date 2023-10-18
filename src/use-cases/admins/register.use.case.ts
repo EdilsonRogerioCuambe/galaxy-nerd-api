@@ -11,9 +11,7 @@ interface RegisterAdminUseCaseProps {
   biography?: string
   location?: string
   socialLinks?: string[]
-  interests?: string[]
   banner?: string
-  favoritesCourses?: string[]
   role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 }
 

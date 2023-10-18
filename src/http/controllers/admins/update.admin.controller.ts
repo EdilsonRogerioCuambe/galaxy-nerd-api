@@ -3,6 +3,15 @@ import { z } from 'zod'
 import { AdminNotFoundError } from '@/use-cases/admins/err/admin.not.found.error'
 import { makeUpdateAdminUseCase } from '@/use-cases/factories/admins/make.update.admin.use.case'
 
+interface MultipartFile {
+  path: string
+}
+
+interface Files {
+  avatar: MultipartFile[]
+  banner: MultipartFile[]
+}
+
 export async function update(request: FastifyRequest, reply: FastifyReply) {
   const schema = z.object({
     name: z.string().optional(),
@@ -15,7 +24,8 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     biography: z.string().optional(),
     location: z.string().optional(),
     socialLinks: z.array(z.string()).optional(),
-    interests: z.array(z.string()).optional(),
+    avatar: z.string().optional(),
+    banner: z.string().optional(),
   })
 
   const {
@@ -26,13 +36,28 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     location,
     socialLinks,
     role,
-    interests,
+    avatar,
+    banner,
   } = schema.parse(request.body)
 
   const { adminId } = request.params as { adminId: string }
 
   try {
     const updateAdminUseCase = makeUpdateAdminUseCase()
+
+    let avatarPath = avatar
+    let bannerPath = banner
+
+    const { avatar: avatarFiles, banner: bannerFiles } =
+      request.files as unknown as Files
+
+    if (avatarFiles && avatarFiles.length > 0) {
+      avatarPath = avatarFiles[0].path
+    }
+
+    if (bannerFiles && bannerFiles.length > 0) {
+      bannerPath = bannerFiles[0].path
+    }
 
     const { admin } = await updateAdminUseCase.execute({
       adminId,
@@ -43,7 +68,8 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       location,
       socialLinks,
       role,
-      interests,
+      avatar: avatarPath,
+      banner: bannerPath,
     })
 
     return reply.status(200).send({ admin })
