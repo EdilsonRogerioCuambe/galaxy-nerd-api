@@ -3,7 +3,6 @@ import { StudentsRepository } from '@/repositories/students.repository'
 import { CoursesRepository } from '@/repositories/courses.repository'
 import { Enrollment } from '@prisma/client'
 import { sendConfirmationEmailToStudent } from '@/utils/send.confirmation.email.to.student'
-import { StripePaymentProcessor } from '@/repositories/stripe-payment-processor/stripe.payment.processor'
 
 interface CreateEnrollmentProps {
   studentId: string
@@ -19,7 +18,6 @@ export class CreateEnrollmentUseCase {
     private enrollmentsRepository: EnrollmentsRepository,
     private studentsRepository: StudentsRepository,
     private coursesRepository: CoursesRepository,
-    private payment: StripePaymentProcessor,
   ) {}
 
   async execute({
@@ -35,12 +33,6 @@ export class CreateEnrollmentUseCase {
 
     if (!course) {
       throw new Error('Course not found')
-    }
-
-    const paymentSucceeded = await this.payment.processPayment(course, student)
-
-    if (!paymentSucceeded) {
-      throw new Error('Payment not succeeded')
     }
 
     await sendConfirmationEmailToStudent(student, course)

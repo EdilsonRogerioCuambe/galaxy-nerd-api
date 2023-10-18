@@ -8,6 +8,6 @@ export interface AdminsRepository {
   delete(id: string): Promise<void>
   update(
     id: string,
-    data: Prisma.AdministratorUncheckedUpdateInput,
+    data: Prisma.AdministratorUpdateInput,
   ): Promise<Administrator>
 }

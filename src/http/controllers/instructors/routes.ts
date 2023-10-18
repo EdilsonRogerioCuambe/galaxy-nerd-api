@@ -17,7 +17,16 @@ const upload = multer({
 
 export async function instructorsRoutes(app: FastifyInstance) {
   app.post('/instructors/sessions', authenticateInstructorController)
-  app.post('/instructors', { preHandler: upload.single('avatar') }, register)
+  app.post(
+    '/instructors',
+    {
+      preHandler: upload.fields([
+        { name: 'avatar', maxCount: 1 },
+        { name: 'banner', maxCount: 1 },
+      ]),
+    },
+    register,
+  )
   app.get(
     '/instructors/:instructorId',
     { onRequest: [verifyJwt] },

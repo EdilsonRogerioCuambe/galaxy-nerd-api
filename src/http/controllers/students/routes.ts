@@ -16,7 +16,16 @@ const upload = multer({
 })
 
 export async function studentsRoutes(app: FastifyInstance) {
-  app.post('/students', { preHandler: upload.single('avatar') }, register)
+  app.post(
+    '/students',
+    {
+      preHandler: upload.fields([
+        { name: 'avatar', maxCount: 1 },
+        { name: 'banner', maxCount: 1 },
+      ]),
+    },
+    register,
+  )
   app.post('/students/sessions', authenticateStudentController)
   app.get('/students', { onRequest: verifyJwt }, getAllStudentsController)
   app.get(
@@ -27,7 +36,10 @@ export async function studentsRoutes(app: FastifyInstance) {
   app.put(
     '/students/:studentId',
     {
-      preHandler: upload.single('avatar'),
+      preHandler: upload.fields([
+        { name: 'avatar', maxCount: 1 },
+        { name: 'banner', maxCount: 1 },
+      ]),
       onRequest: [verifyJwt, verifyUserRole('STUDENT')],
     },
     update,

@@ -10,6 +10,7 @@ const envSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string(),
   JWT_SECRET: z.string(),
   STRIPE_PRIVATE_KEY: z.string(),
+  CLIENT_URL: z.string(),
   EMAIL: z.string(),
   PASSWORD: z.string(),
   NODE_MAILER_HOST: z.string(),

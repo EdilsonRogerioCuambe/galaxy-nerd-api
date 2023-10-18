@@ -26,6 +26,8 @@ export async function registerCourseController(
 
   const { path: thumbnail } = request.file as unknown as MultipartFile
 
+  console.log(thumbnail)
+
   try {
     const registerCourseUseCase = makeRegisterCourseUseCase()
 

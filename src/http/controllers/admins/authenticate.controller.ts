@@ -49,8 +49,8 @@ export async function authenticateAdminController(
       .setCookie('refreshToken', refreshToken, {
         path: '/',
         httpOnly: true,
-        secure: true,
         sameSite: 'none',
+        secure: true,
       })
       .status(200)
       .send({
@@ -61,6 +61,8 @@ export async function authenticateAdminController(
         token,
       })
   } catch (err) {
+    console.log(err)
+
     if (err instanceof InvalidCredentialsError) {
       reply.status(401).send({ message: err.message })
     } else {

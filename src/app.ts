@@ -15,11 +15,15 @@ import { coursesRoutes } from './http/controllers/course/routes'
 import { categoriesRoutes } from './http/controllers/categories/routes'
 import { topicsRoutes } from './http/controllers/topics/routes'
 import { enrollmentsRoutes } from './http/controllers/enrollments/routes'
+import { imagesRoutes } from './http/controllers/images/routes'
+import { stripeSessionsRoutes } from './http/controllers/stripe-sessions/routes'
 
 export const app = fastify()
 
 app.register(fastifyCors, {
-  origin: '*',
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
 })
 
 app.register(fastifyJwt, {
@@ -29,7 +33,7 @@ app.register(fastifyJwt, {
   },
   cookie: {
     cookieName: 'refreshToken',
-    signed: false,
+    signed: true,
   },
 })
 
@@ -79,6 +83,8 @@ app.register(coursesRoutes)
 app.register(categoriesRoutes)
 app.register(topicsRoutes)
 app.register(enrollmentsRoutes)
+app.register(imagesRoutes)
+app.register(stripeSessionsRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ZodError) {

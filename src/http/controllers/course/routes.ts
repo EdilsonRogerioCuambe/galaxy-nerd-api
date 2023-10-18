@@ -9,6 +9,7 @@ import { getAllCoursesController } from './get.all.courses.controller'
 import { getCourseController } from './get.course.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
+import { getCourseBySlugController } from './get.course.by.slug.controller'
 
 const upload = multer({
   storage: createCloudinaryStorage(),
@@ -25,6 +26,7 @@ export async function coursesRoutes(app: FastifyInstance) {
   )
   app.get('/courses', getAllCoursesController)
   app.get('/courses/:courseId', getCourseController)
+  app.get('/courses/slug/:slug', getCourseBySlugController)
   app.put(
     '/courses/:courseId',
     {

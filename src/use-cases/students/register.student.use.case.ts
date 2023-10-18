@@ -6,6 +6,7 @@ import { StudentAlreadyExistsError } from './err/student.already.exists.error'
 interface RegisterStudentUseCaseProps {
   name: string
   email: string
+  banner?: string
   password: string
   avatar?: string
   biography?: string
@@ -32,6 +33,7 @@ export class RegisterStudentUseCase {
     socialLinks,
     interests,
     role,
+    banner,
   }: RegisterStudentUseCaseProps): Promise<RegisterStudentUseCaseResponse> {
     const hashedPassword = await hash(password, 12)
 
@@ -51,6 +53,7 @@ export class RegisterStudentUseCase {
       socialLinks,
       interests,
       role,
+      banner,
     })
 
     return { student }

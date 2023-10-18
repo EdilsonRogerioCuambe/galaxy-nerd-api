@@ -24,12 +24,14 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
     },
   )
 
+  console.log('refreshToken', refreshToken)
+
   return reply
     .setCookie('refreshToken', refreshToken, {
       path: '/',
       httpOnly: true,
       sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
     })
     .send({
       token,

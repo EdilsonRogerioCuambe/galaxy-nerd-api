@@ -17,38 +17,40 @@ enum Role {
 }
 
 model Administrator {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
-  email       String   @unique
+  email       String     @unique
   password    String
   avatar      String?
   biography   String?
   location    String?
   socialLinks String[]
-  interests   String[]
   banner      String?
-  role        Role     @default(ADMIN)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  role        Role       @default(ADMIN)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  favorites   Favorite[]
+  interests   Interest[]
 
   @@map("administrators")
 }
 
 model Instructor {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
-  email       String   @unique
+  email       String     @unique
   password    String
   avatar      String?
   biography   String?
   location    String?
   socialLinks String[]
-  interests   String[]
   banner      String?
-  role        Role     @default(INSTRUCTOR)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  role        Role       @default(INSTRUCTOR)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   courses     Course[]
+  favorites   Favorite[]
+  interests   Interest[]
 
   @@map("instructors")
 }
@@ -68,7 +70,8 @@ model Course {
   updatedAt      DateTime         @updatedAt
   courseProgress CourseProgress[]
   topics         Topic[]
-  enrollments     Enrollment[]
+  enrollments    Enrollment[]
+  favorites      Favorite[]
 
   @@map("courses")
 }
@@ -82,7 +85,6 @@ model Student {
   biography      String?
   location       String?
   socialLinks    String[]
-  interests      String[]
   banner         String?
   role           Role             @default(STUDENT)
   createdAt      DateTime         @default(now())
@@ -90,7 +92,9 @@ model Student {
   courseProgress CourseProgress[]
   forum          Forum[]
   answers        Answers[]
-  enrollments     Enrollment[]
+  enrollments    Enrollment[]
+  favorites      Favorite[]
+  interests      Interest[]
 
   @@map("students")
 }
@@ -104,6 +108,40 @@ model Enrollment {
   createdAt DateTime @default(now())
 
   @@map("enrollments")
+}
+
+// Model para que o admin, instrutor e estudante possam favoritar um curso
+
+model Favorite {
+  id              String         @id @default(uuid())
+  student         Student?       @relation(fields: [studentId], references: [id])
+  studentId       String?
+  course          Course         @relation(fields: [courseId], references: [id])
+  courseId        String
+  admin           Administrator? @relation(fields: [administratorId], references: [id])
+  administratorId String?
+  instructor      Instructor?    @relation(fields: [instructorId], references: [id])
+  instructorId    String?
+  createdAt       DateTime       @default(now())
+
+  @@map("favorites")
+}
+
+// Model para que o admin, estudante e professor possam adiconar categoria de interesses
+
+model Interest {
+  id              String         @id @default(uuid())
+  student         Student?       @relation(fields: [studentId], references: [id])
+  studentId       String?
+  admin           Administrator? @relation(fields: [administratorId], references: [id])
+  administratorId String?
+  instructor      Instructor?    @relation(fields: [instructorId], references: [id])
+  instructorId    String?
+  category        Category       @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  createdAt       DateTime       @default(now())
+
+  @@map("interests")
 }
 
 model Topic {
@@ -157,13 +195,15 @@ model Document {
 }
 
 model Category {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-  icon        String?
-  courses     Course[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String     @id @default(uuid())
+  name            String     @unique
+  description     String?
+  icon            String?
+  courses         Course[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  administratorId String?
+  Interest        Interest[]
 
   @@map("categories")
 }

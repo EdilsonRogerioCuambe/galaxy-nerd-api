@@ -10,13 +10,24 @@ export class PrismaEnrollmentsRepository implements EnrollmentsRepository {
   }
 
   async findAll() {
-    const enrollments = await prisma.enrollment.findMany()
+    const enrollments = await prisma.enrollment.findMany({
+      include: {
+        course: true,
+        student: true,
+      },
+    })
 
     return enrollments
   }
 
   async findById(id: string) {
-    const enrollment = await prisma.enrollment.findUnique({ where: { id } })
+    const enrollment = await prisma.enrollment.findUnique({
+      where: { id },
+      include: {
+        student: true,
+        course: true,
+      },
+    })
 
     return enrollment
   }

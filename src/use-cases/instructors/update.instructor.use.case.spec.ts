@@ -21,6 +21,7 @@ describe('Update Instructor Use Case', () => {
       biography: 'any_biography',
       location: 'any_location',
       socialLinks: ['any_social_link'],
+      banner: 'any_banner',
     })
 
     const { instructor } = await sut.execute({
@@ -32,7 +33,9 @@ describe('Update Instructor Use Case', () => {
       biography: 'updated_biography',
       location: 'updated_location',
       socialLinks: ['updated_social_link'],
+      interests: ['updated_interest'],
       role: 'INSTRUCTOR',
+      banner: 'updated_banner',
     })
 
     expect(instructor).toEqual({
@@ -44,6 +47,8 @@ describe('Update Instructor Use Case', () => {
       biography: 'updated_biography',
       location: 'updated_location',
       socialLinks: ['updated_social_link'],
+      banner: 'updated_banner',
+      interests: ['updated_interest'],
       role: 'INSTRUCTOR',
       createdAt: newInstructor.createdAt,
       updatedAt: instructor.updatedAt,

@@ -19,7 +19,7 @@ export class PrismaAdminsRepository implements AdminsRepository {
   }
 
   async findAll() {
-    const admins = await prisma.administrator.findMany()
+    const admins = await prisma.administrator.findMany({})
 
     return admins
   }

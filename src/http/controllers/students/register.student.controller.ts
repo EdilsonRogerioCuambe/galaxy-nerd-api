@@ -7,6 +7,11 @@ interface MultipartFile {
   path: string
 }
 
+interface Files {
+  avatar: MultipartFile[]
+  banner: MultipartFile[]
+}
+
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const schema = z.object({
     name: z.string(),
@@ -32,7 +37,10 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     interests,
   } = schema.parse(request.body)
 
-  const { path: avatar } = request.file as unknown as MultipartFile
+  const { avatar, banner } = request.files as unknown as Files
+
+  const avatarPath = avatar[0].path
+  const bannerPath = banner[0].path
 
   try {
     const registerStudentUseCase = makeRegisterStudentUseCase()
@@ -41,7 +49,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       name,
       email,
       password,
-      avatar,
+      avatar: avatarPath,
+      banner: bannerPath,
       biography,
       location,
       socialLinks,

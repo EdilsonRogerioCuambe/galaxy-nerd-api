@@ -23,6 +23,7 @@ describe('Register Student Use Case', () => {
       role: 'STUDENT',
       biography: 'any_biography',
       location: 'any_location',
+      banner: 'any_banner',
     })
 
     const studentPasswordIsHashed = await compare(
@@ -43,6 +44,7 @@ describe('Register Student Use Case', () => {
       role: 'STUDENT',
       biography: 'any_biography',
       location: 'any_location',
+      banner: 'any_banner',
     })
 
     expect(async () => {
@@ -55,6 +57,7 @@ describe('Register Student Use Case', () => {
         role: 'STUDENT',
         biography: 'any_biography',
         location: 'any_location',
+        banner: 'any_banner',
       })
     }).rejects.toBeInstanceOf(StudentAlreadyExistsError)
   })

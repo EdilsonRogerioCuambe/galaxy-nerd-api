@@ -8,7 +8,7 @@ export async function enrollmentsRoutes(app: FastifyInstance) {
   app.post(
     '/enrollments',
     {
-      onRequest: [verifyJwt, verifyUserRole('STUDENT')],
+      preHandler: [verifyJwt, verifyUserRole('STUDENT')],
     },
     createEnrollmentController,
   )
