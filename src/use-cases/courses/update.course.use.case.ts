@@ -9,7 +9,6 @@ interface UpdateCourseUseCaseProps {
   description?: string
   price?: string
   thumbnail?: string
-  categoryId?: string
   instructorId: string
 }
 
@@ -26,7 +25,6 @@ export class UpdateCourseUseCase {
     description,
     price,
     thumbnail,
-    categoryId,
     instructorId,
   }: UpdateCourseUseCaseProps): Promise<UpdateCourseUseCaseResponse> {
     const courseAlreadyExists = await this.coursesRepository.findById(courseId)
@@ -43,7 +41,6 @@ export class UpdateCourseUseCase {
       price,
       slug,
       instructorId,
-      categoryId,
       thumbnail,
     })
 

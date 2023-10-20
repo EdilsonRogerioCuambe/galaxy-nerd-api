@@ -7,6 +7,11 @@ interface MultipartFile {
   path: string
 }
 
+interface Files {
+  image: MultipartFile[]
+  thumbnail: MultipartFile[]
+}
+
 export async function registerCourseController(
   request: FastifyRequest,
   reply: FastifyReply,
@@ -16,17 +21,28 @@ export async function registerCourseController(
     description: z.string().optional(),
     price: z.string(),
     instructorId: z.string(),
-    categoryId: z.string().optional(),
     studentId: z.string().optional(),
+    shortDescription: z.string().optional(),
+    languages: z.array(z.string()),
+    level: z.enum(['Iniciante', 'Intermediário', 'Avançado']),
+    duration: z.string(),
   })
 
-  const { title, description, instructorId, categoryId, price } = schema.parse(
-    request.body,
-  )
+  const {
+    title,
+    description,
+    instructorId,
+    price,
+    languages,
+    shortDescription,
+    level,
+    duration,
+  } = schema.parse(request.body)
 
-  const { path: thumbnail } = request.file as unknown as MultipartFile
+  const { image, thumbnail } = request.files as unknown as Files
 
-  console.log(thumbnail)
+  const imagePath = image[0].path
+  const thumbnailPath = thumbnail[0].path
 
   try {
     const registerCourseUseCase = makeRegisterCourseUseCase()
@@ -35,9 +51,13 @@ export async function registerCourseController(
       title,
       description,
       price,
-      thumbnail,
+      thumbnail: thumbnailPath,
+      image: imagePath,
+      shortDescription,
+      languages,
       instructorId,
-      categoryId,
+      level,
+      duration,
     })
 
     return reply.status(201).send({ course })

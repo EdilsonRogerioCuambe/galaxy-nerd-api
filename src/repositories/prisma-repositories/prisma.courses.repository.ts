@@ -22,7 +22,7 @@ export class PrismaCoursesRepository implements CoursesRepository {
     const courses = await prisma.course.findMany({
       include: {
         instructor: true,
-        category: true,
+        languages: true,
         topics: true,
         enrollments: true,
       },
@@ -36,7 +36,7 @@ export class PrismaCoursesRepository implements CoursesRepository {
       where: { id },
       include: {
         instructor: true,
-        category: true,
+        languages: true,
         favorites: true,
         topics: true,
         enrollments: true,
@@ -51,7 +51,7 @@ export class PrismaCoursesRepository implements CoursesRepository {
       where: { slug },
       include: {
         instructor: true,
-        category: true,
+        languages: true,
         favorites: true,
         topics: true,
         enrollments: true,
@@ -74,7 +74,7 @@ export class PrismaCoursesRepository implements CoursesRepository {
       where: { title },
       include: {
         instructor: true,
-        category: true,
+        languages: true,
         favorites: true,
         topics: true,
         enrollments: true,

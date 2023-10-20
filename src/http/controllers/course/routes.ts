@@ -19,7 +19,10 @@ export async function coursesRoutes(app: FastifyInstance) {
   app.post(
     '/courses',
     {
-      preHandler: upload.single('thumbnail'),
+      preHandler: upload.fields([
+        { name: 'image', maxCount: 1 },
+        { name: 'thumbnail', maxCount: 1 },
+      ]),
       onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
     },
     registerCourseController,

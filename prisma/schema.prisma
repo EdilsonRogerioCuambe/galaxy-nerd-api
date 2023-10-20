@@ -54,24 +54,42 @@ model Instructor {
 }
 
 model Course {
-  id             String           @id @default(uuid())
-  title          String           @unique
-  description    String?
-  price          String
-  slug           String           @unique
-  thumbnail      String?
-  instructor     Instructor?      @relation(fields: [instructorId], references: [id])
-  instructorId   String?
-  category       Category?        @relation(fields: [categoryId], references: [id])
-  categoryId     String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  courseProgress CourseProgress[]
-  topics         Topic[]
-  enrollments    Enrollment[]
-  favorites      Favorite[]
+  id               String           @id @default(uuid())
+  title            String           @unique
+  description      String?
+  price            String
+  slug             String           @unique
+  level            String?
+  shortDescription String?
+  duration         String?
+  image            String?
+  thumbnail        String?
+  languages        Category[]
+  instructor       Instructor?      @relation(fields: [instructorId], references: [id])
+  instructorId     String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  courseProgress   CourseProgress[]
+  topics           Topic[]
+  enrollments      Enrollment[]
+  favorites        Favorite[]
+  ratings          Rating[]
 
   @@map("courses")
+}
+
+model Rating {
+  id        String   @id @default(uuid())
+  rating    String
+  comment   String?
+  course    Course?  @relation(fields: [courseId], references: [id])
+  courseId  String?
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ratings")
 }
 
 model Student {
@@ -93,16 +111,17 @@ model Student {
   enrollments    Enrollment[]
   favorites      Favorite[]
   interests      Interest[]
+  ratings        Rating[]
 
   @@map("students")
 }
 
 model Enrollment {
   id        String   @id @default(uuid())
-  student   Student  @relation(fields: [studentId], references: [id])
-  studentId String
-  course    Course   @relation(fields: [courseId], references: [id])
-  courseId  String
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String?
+  course    Course?  @relation(fields: [courseId], references: [id])
+  courseId  String?
   createdAt DateTime @default(now())
 
   @@map("enrollments")
@@ -111,12 +130,12 @@ model Enrollment {
 // Model para que o admin, instrutor e estudante possam favoritar um curso
 
 model Favorite {
-  id              String         @id @default(uuid())
-  student         Student?       @relation(fields: [studentId], references: [id])
-  studentId       String?
-  course          Course         @relation(fields: [courseId], references: [id])
-  courseId        String
-  createdAt       DateTime       @default(now())
+  id        String   @id @default(uuid())
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String?
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+  createdAt DateTime @default(now())
 
   @@map("favorites")
 }
@@ -193,11 +212,12 @@ model Category {
   name            String     @unique
   description     String?
   icon            String?
-  courses         Course[]
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   administratorId String?
   Interest        Interest[]
+  Course          Course?    @relation(fields: [courseId], references: [id])
+  courseId        String?
 
   @@map("categories")
 }
