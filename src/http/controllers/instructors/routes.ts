@@ -8,6 +8,7 @@ import { deleteInstructorController } from './delete.instructor.controller'
 import { getInstructorProfile } from './get.instructor.profile.controller'
 import { getAllInstructors } from './get.all.instructors.controller'
 import { update } from './update.instructor.controller'
+import { refresh } from './refresh'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 
@@ -27,11 +28,7 @@ export async function instructorsRoutes(app: FastifyInstance) {
     },
     register,
   )
-  app.get(
-    '/instructors/:instructorId',
-    { onRequest: [verifyJwt] },
-    getInstructorProfile,
-  )
+  app.get('/instructors/:instructorId', getInstructorProfile)
   app.put(
     '/instructors/:instructorId',
     {
@@ -46,4 +43,5 @@ export async function instructorsRoutes(app: FastifyInstance) {
     { onRequest: [verifyJwt, verifyUserRole('ADMIN')] },
     deleteInstructorController,
   )
+  app.put('/instructor/token/refresh', refresh)
 }

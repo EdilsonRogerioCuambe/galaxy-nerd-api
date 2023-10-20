@@ -19,7 +19,11 @@ export class PrismaInstructorsRepository implements InstructorsRepository {
   }
 
   async findAll() {
-    const instructors = await prisma.instructor.findMany()
+    const instructors = await prisma.instructor.findMany({
+      include: {
+        courses: true,
+      },
+    })
 
     return instructors
   }
@@ -27,6 +31,15 @@ export class PrismaInstructorsRepository implements InstructorsRepository {
   async findById(id: string) {
     const instructor = await prisma.instructor.findUnique({
       where: { id },
+      include: {
+        courses: {
+          include: {
+            enrollments: true,
+            instructor: true,
+            languages: true,
+          },
+        },
+      },
     })
 
     return instructor
