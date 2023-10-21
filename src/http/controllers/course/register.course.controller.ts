@@ -3,14 +3,17 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { CourseAlreadyExistsError } from '@/use-cases/courses/err/course.already.exists.error'
 
-interface MultipartFile {
-  path: string
-}
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
-interface Files {
-  image: MultipartFile[]
-  thumbnail: MultipartFile[]
-}
+import { env } from '@/env'
+
+const s3Client = new S3Client({
+  region: 'us-east-2',
+  credentials: {
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+  },
+})
 
 export async function registerCourseController(
   request: FastifyRequest,
@@ -26,6 +29,8 @@ export async function registerCourseController(
     languages: z.array(z.string()),
     level: z.enum(['Iniciante', 'Intermediário', 'Avançado']),
     duration: z.string(),
+    thumbnail: z.string(),
+    image: z.string(),
   })
 
   const {
@@ -37,22 +42,44 @@ export async function registerCourseController(
     shortDescription,
     level,
     duration,
+    thumbnail,
+    image,
   } = schema.parse(request.body)
 
-  const { image, thumbnail } = request.files as unknown as Files
+  const imageFileName = `${title}-image.${image.split(';')[0].split('/')[1]}`
+  const thumbnailFileName = `${title}-thumbnail.${
+    thumbnail.split(';')[0].split('/')[1]
+  }`
 
-  const imagePath = image[0].path
-  const thumbnailPath = thumbnail[0].path
+  const imageCommand = new PutObjectCommand({
+    Bucket: 'galaxynerd',
+    Key: imageFileName,
+    Body: Buffer.from(image.split(',')[1], 'base64'),
+    ContentType: `image/${image.split(';')[0].split('/')[1]}`,
+  })
+
+  const thumbnailCommand = new PutObjectCommand({
+    Bucket: 'galaxynerd',
+    Key: thumbnailFileName,
+    Body: Buffer.from(thumbnail.split(',')[1], 'base64'),
+    ContentType: `image/${thumbnail.split(';')[0].split('/')[1]}`,
+  })
 
   try {
+    await s3Client.send(imageCommand)
+    await s3Client.send(thumbnailCommand)
+
+    const imageUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${imageFileName}`
+    const thumbnailUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${thumbnailFileName}`
+
     const registerCourseUseCase = makeRegisterCourseUseCase()
 
     const course = await registerCourseUseCase.execute({
       title,
       description,
       price,
-      thumbnail: thumbnailPath,
-      image: imagePath,
+      thumbnail: thumbnailUrl,
+      image: imageUrl,
       shortDescription,
       languages,
       instructorId,

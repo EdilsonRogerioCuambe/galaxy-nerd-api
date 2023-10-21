@@ -20,21 +20,18 @@ import { stripeSessionsRoutes } from './http/controllers/stripe-sessions/routes'
 import { lessonsRoutes } from './http/controllers/lessons/routes'
 
 export const app = fastify({
-  bodyLimit: 1024 * 1024 * 1024,
+  bodyLimit: 1024 * 1024 * 1024, // 1GB
 })
 
-// aumentar o body limit
 app.addHook('onRequest', (request, reply, done) => {
-  if (request.isMultipart()) {
-    request.raw.on('data', (data) => {
-      if (data.length > 1024 * 1024 * 1024) {
-        reply.code(413).send({
-          message: 'File size too large',
-        })
-      }
-    })
+  if (request.headers['content-length']) {
+    const contentLength = Number(request.headers['content-length'])
+    if (contentLength > 1024 * 1024 * 1024) {
+      reply.code(413).send({
+        message: 'File too large',
+      })
+    }
   }
-
   done()
 })
 

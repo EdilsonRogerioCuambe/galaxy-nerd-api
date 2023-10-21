@@ -9,13 +9,7 @@ import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 import { getCourseBySlugController } from './get.course.by.slug.controller'
 
 export async function coursesRoutes(app: FastifyInstance) {
-  app.post(
-    '/courses',
-    {
-      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
-    },
-    registerCourseController,
-  )
+  app.post('/courses', registerCourseController)
   app.get('/courses', getAllCoursesController)
   app.get('/courses/:courseId', getCourseController)
   app.get('/courses/slug/:slug', getCourseBySlugController)
