@@ -57,7 +57,6 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     Bucket: 'galaxynerd',
     Key: bannerFileName,
     Body: Buffer.from(banner.split(',')[1], 'base64'),
-    // content type automatico
     ContentType: `image/${banner.split(';')[0].split('/')[1]}`,
   })
 

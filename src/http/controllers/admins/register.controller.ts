@@ -3,14 +3,17 @@ import { z } from 'zod'
 import { AdminAlreadyExistsError } from '@/use-cases/admins/err/admin.already.exists.error'
 import { makeRegisterAdminUseCase } from '@/use-cases/factories/admins/make.register.use.case'
 
-interface MultipartFile {
-  path: string
-}
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
-interface Files {
-  avatar: MultipartFile[]
-  banner: MultipartFile[]
-}
+import { env } from '@/env'
+
+const s3Client = new S3Client({
+  region: 'us-east-2',
+  credentials: {
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+  },
+})
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const schema = z.object({
@@ -23,17 +26,46 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     biography: z.string().optional(),
     location: z.string().optional(),
     socialLinks: z.array(z.string()).optional(),
+    avatar: z.string(),
+    banner: z.string(),
   })
 
-  const { name, email, password, biography, location, socialLinks, role } =
-    schema.parse(request.body)
+  const {
+    name,
+    email,
+    password,
+    biography,
+    avatar,
+    banner,
+    location,
+    socialLinks,
+    role,
+  } = schema.parse(request.body)
 
-  const { avatar, banner } = request.files as unknown as Files
+  const avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
+  const bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
 
-  const avatarPath = avatar[0].path
-  const bannerPath = banner[0].path
+  const avatarCommand = new PutObjectCommand({
+    Bucket: 'galaxynerd',
+    Key: avatarFileName,
+    Body: Buffer.from(avatar.split(',')[1], 'base64'),
+    ContentType: `image/${avatar.split(';')[0].split('/')[1]}`,
+  })
+
+  const bannerCommand = new PutObjectCommand({
+    Bucket: 'galaxynerd',
+    Key: bannerFileName,
+    Body: Buffer.from(banner.split(',')[1], 'base64'),
+    ContentType: `image/${banner.split(';')[0].split('/')[1]}`,
+  })
 
   try {
+    await s3Client.send(avatarCommand)
+    await s3Client.send(bannerCommand)
+
+    const avatarUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${avatarFileName}`
+    const bannerUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${bannerFileName}`
+
     const registerAdminUseCase = makeRegisterAdminUseCase()
 
     const admin = await registerAdminUseCase.execute({
@@ -44,8 +76,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       location,
       socialLinks,
       role,
-      avatar: avatarPath,
-      banner: bannerPath,
+      avatar: avatarUrl,
+      banner: bannerUrl,
     })
 
     return reply.status(201).send({ admin })
