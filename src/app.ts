@@ -17,8 +17,26 @@ import { topicsRoutes } from './http/controllers/topics/routes'
 import { enrollmentsRoutes } from './http/controllers/enrollments/routes'
 import { imagesRoutes } from './http/controllers/images/routes'
 import { stripeSessionsRoutes } from './http/controllers/stripe-sessions/routes'
+import { lessonsRoutes } from './http/controllers/lessons/routes'
 
-export const app = fastify()
+export const app = fastify({
+  bodyLimit: 1024 * 1024 * 1024,
+})
+
+// aumentar o body limit
+app.addHook('onRequest', (request, reply, done) => {
+  if (request.isMultipart()) {
+    request.raw.on('data', (data) => {
+      if (data.length > 1024 * 1024 * 1024) {
+        reply.code(413).send({
+          message: 'File size too large',
+        })
+      }
+    })
+  }
+
+  done()
+})
 
 app.register(fastifyCors, {
   origin: 'http://localhost:3000',
@@ -41,7 +59,7 @@ app.register(fastifyCookie)
 
 app.register(fastifyMultipart, {
   limits: {
-    fileSize: 1024 * 1024 * 1024, // 1 GB
+    fileSize: 1024 * 1024 * 1024, // 1GB
   },
 })
 
@@ -85,6 +103,7 @@ app.register(topicsRoutes)
 app.register(enrollmentsRoutes)
 app.register(imagesRoutes)
 app.register(stripeSessionsRoutes)
+app.register(lessonsRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ZodError) {
@@ -98,6 +117,7 @@ app.setErrorHandler((error, _request, reply) => {
     console.error(error)
   } else {
     // TODO: Log error
+    console.error(error)
   }
 
   reply.status(500).send({

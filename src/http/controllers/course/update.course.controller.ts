@@ -20,9 +20,7 @@ export async function updateCourseController(
     categoryId: z.string().optional(),
   })
 
-  const { title, description, instructorId, categoryId, price } = schema.parse(
-    request.body,
-  )
+  const { title, description, instructorId, price } = schema.parse(request.body)
 
   const { path: thumbnail } = request.file as unknown as MultipartFile
 
@@ -38,7 +36,6 @@ export async function updateCourseController(
       price,
       thumbnail,
       instructorId,
-      categoryId,
     })
 
     return reply.status(200).send({ course })

@@ -12,7 +12,11 @@ export class PrismaTopicsRepository implements TopicsRepository {
   }
 
   async findAll() {
-    const topics = await prisma.topic.findMany()
+    const topics = await prisma.topic.findMany({
+      include: {
+        lessons: true,
+      },
+    })
 
     return topics
   }
@@ -20,6 +24,9 @@ export class PrismaTopicsRepository implements TopicsRepository {
   async findById(id: string) {
     const topic = await prisma.topic.findUnique({
       where: { id },
+      include: {
+        lessons: true,
+      },
     })
 
     return topic
@@ -28,6 +35,9 @@ export class PrismaTopicsRepository implements TopicsRepository {
   async findByTitle(title: string) {
     const topic = await prisma.topic.findFirst({
       where: { title },
+      include: {
+        lessons: true,
+      },
     })
 
     return topic

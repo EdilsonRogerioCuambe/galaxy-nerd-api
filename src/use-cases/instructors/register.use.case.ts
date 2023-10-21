@@ -13,7 +13,7 @@ interface RegisterInstructorUseCaseProps {
   socialLinks?: string[]
   interests?: string[]
   role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
-  banner: string
+  banner?: string
 }
 
 interface RegisterInstructorUseCaseResponse {
@@ -54,7 +54,6 @@ export class RegisterInstructorUseCase {
       socialLinks,
       role,
       banner,
-      interests,
     })
 
     return { instructor }

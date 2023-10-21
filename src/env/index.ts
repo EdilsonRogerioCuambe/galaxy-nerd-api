@@ -15,6 +15,10 @@ const envSchema = z.object({
   PASSWORD: z.string(),
   NODE_MAILER_HOST: z.string(),
   NODE_MAILER_PORT: z.string(),
+  AWS_ACCESS_KEY_ID: z.string(),
+  AWS_SECRET_ACCESS_KEY: z.string(),
+  AWS_BUCKET_NAME: z.string(),
+  AWS_REGION: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

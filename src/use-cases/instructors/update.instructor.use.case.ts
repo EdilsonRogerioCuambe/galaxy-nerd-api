@@ -58,7 +58,9 @@ export class UpdateInstructorUseCase {
         location: location || instructor.location,
         socialLinks: socialLinks || instructor.socialLinks,
         role: role || instructor.role,
-        interests: interests || instructor.interests,
+        interests: {
+          connect: interests?.map((interest) => ({ id: interest })),
+        },
         banner: banner || instructor.banner,
       },
     )
