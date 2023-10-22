@@ -2,7 +2,7 @@ import { makeRegisterLessonUseCase } from '@/use-cases/factories/lessons/make.re
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import crypto from 'node:crypto'
+import { Readable } from 'stream'
 
 import { env } from '@/env'
 
@@ -24,35 +24,32 @@ export async function registerLessonController(
     order: z.string(),
     topicId: z.string(),
     duration: z.string(),
+    video: z.string(),
   })
 
-  const { title, description, topicId, order, duration } = schema.parse(
+  const { title, description, topicId, order, duration, video } = schema.parse(
     request.body,
   )
 
-  const video = await request.file()
+  // excluir dois pontos, caracteres especiais e espaços no titulo que vai para o video
+  const videoFileName = `${title
+    .replace(/:/g, '')
+    .replace(/ /g, '-')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')}.mp4`
 
-  if (!video) {
-    return reply.code(400).send({ message: 'Video is required' })
-  }
-
-  const { filename, file } = video
-
-  const fileHash = crypto.randomBytes(16).toString('hex')
-  const fileName = `${fileHash}-${filename}`
+  const videoCommand = new PutObjectCommand({
+    Bucket: 'galaxynerd',
+    Key: videoFileName,
+    Body: Buffer.from(video.split(',')[1], 'base64'),
+    ContentType: `video/mp4`,
+    ContentDisposition: 'inline',
+  })
 
   try {
-    const s3UploadParams = {
-      Bucket: env.AWS_BUCKET_NAME,
-      Key: fileName,
-      Body: file,
-    }
+    await s3Client.send(videoCommand)
 
-    const command = new PutObjectCommand(s3UploadParams)
-
-    await s3Client.send(command)
-
-    const videoUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${fileName}`
+    const videoUrl = `https://d4lyjck7y73xy.cloudfront.net/assets/galaxynerd2/MP4/${videoFileName}`
 
     const registerLessonUseCase = makeRegisterLessonUseCase()
 

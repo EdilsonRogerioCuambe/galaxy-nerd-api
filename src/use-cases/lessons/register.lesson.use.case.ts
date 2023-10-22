@@ -1,6 +1,8 @@
 import { LessonsRepository } from '@/repositories/lessons.repository'
 import { Lesson } from '@prisma/client'
 import { slugify } from '@/utils/slug'
+import { TopicsRepository } from '@/repositories/topics.repository'
+import { TopicNotFoundError } from '../topics/err/topic.not.found.error'
 
 interface RegisterLessonUseCaseProps {
   title: string
@@ -16,7 +18,10 @@ interface RegisterLessonUseCaseResponse {
 }
 
 export class RegisterLessonUseCase {
-  constructor(private lessonsRepository: LessonsRepository) {}
+  constructor(
+    private lessonsRepository: LessonsRepository,
+    private topicsRepository: TopicsRepository,
+  ) {}
 
   async execute({
     title,
@@ -27,6 +32,12 @@ export class RegisterLessonUseCase {
     duration,
   }: RegisterLessonUseCaseProps): Promise<RegisterLessonUseCaseResponse> {
     const slug = slugify({ slug: title })
+
+    const topic = await this.topicsRepository.findById(topicId)
+
+    if (!topic) {
+      throw new TopicNotFoundError()
+    }
 
     const lesson = await this.lessonsRepository.create({
       title,

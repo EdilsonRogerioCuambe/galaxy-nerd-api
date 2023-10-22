@@ -23,7 +23,11 @@ export class PrismaCoursesRepository implements CoursesRepository {
       include: {
         instructor: true,
         languages: true,
-        topics: true,
+        topics: {
+          include: {
+            lessons: true,
+          },
+        },
         enrollments: true,
       },
     })
@@ -38,7 +42,11 @@ export class PrismaCoursesRepository implements CoursesRepository {
         instructor: true,
         languages: true,
         favorites: true,
-        topics: true,
+        topics: {
+          include: {
+            lessons: true,
+          },
+        },
         enrollments: true,
       },
     })
@@ -53,7 +61,11 @@ export class PrismaCoursesRepository implements CoursesRepository {
         instructor: true,
         languages: true,
         favorites: true,
-        topics: true,
+        topics: {
+          include: {
+            lessons: true,
+          },
+        },
         enrollments: true,
       },
     })
@@ -76,7 +88,11 @@ export class PrismaCoursesRepository implements CoursesRepository {
         instructor: true,
         languages: true,
         favorites: true,
-        topics: true,
+        topics: {
+          include: {
+            lessons: true,
+          },
+        },
         enrollments: true,
       },
     })
