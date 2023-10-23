@@ -17,38 +17,34 @@ enum Role {
 }
 
 model Administrator {
-  id          String     @id @default(uuid())
-  name        String
-  email       String     @unique
-  password    String
-  avatar      String?
-  biography   String?
-  location    String?
-  socialLinks String[]
-  banner      String?
-  role        Role       @default(ADMIN)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  interests   Interest[]
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  avatar    String?
+  biography String?
+  location  String?
+  banner    String?
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("administrators")
 }
 
 model Instructor {
-  id          String     @id @default(uuid())
-  name        String
-  email       String     @unique
-  password    String
-  avatar      String?
-  biography   String?
-  location    String?
-  socialLinks String[]
-  banner      String?
-  role        Role       @default(INSTRUCTOR)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  courses     Course[]
-  interests   Interest[]
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  avatar    String?
+  biography String?
+  location  String?
+  banner    String?
+  role      Role     @default(INSTRUCTOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courses   Course[]
 
   @@map("instructors")
 }
@@ -100,7 +96,6 @@ model Student {
   avatar         String?
   biography      String?
   location       String?
-  socialLinks    String[]
   banner         String?
   role           Role             @default(STUDENT)
   createdAt      DateTime         @default(now())
@@ -110,8 +105,15 @@ model Student {
   answers        Answers[]
   enrollments    Enrollment[]
   favorites      Favorite[]
-  interests      Interest[]
+  interests      Category[]
   ratings        Rating[]
+  facebook       String?
+  twitter        String?
+  instagram      String?
+  linkedin       String?
+  youtube        String?
+  website        String?
+  github         String?
 
   @@map("students")
 }
@@ -136,21 +138,6 @@ model Favorite {
   createdAt DateTime @default(now())
 
   @@map("favorites")
-}
-
-model Interest {
-  id              String         @id @default(uuid())
-  student         Student?       @relation(fields: [studentId], references: [id])
-  studentId       String?
-  admin           Administrator? @relation(fields: [administratorId], references: [id])
-  administratorId String?
-  instructor      Instructor?    @relation(fields: [instructorId], references: [id])
-  instructorId    String?
-  category        Category       @relation(fields: [categoryId], references: [id])
-  categoryId      String
-  createdAt       DateTime       @default(now())
-
-  @@map("interests")
 }
 
 model Topic {
@@ -204,16 +191,17 @@ model Document {
 }
 
 model Category {
-  id              String     @id @default(uuid())
-  name            String     @unique
+  id              String   @id @default(uuid())
+  name            String   @unique
   description     String?
   icon            String?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   administratorId String?
-  Interest        Interest[]
-  Course          Course?    @relation(fields: [courseId], references: [id])
+  course          Course?  @relation(fields: [courseId], references: [id])
   courseId        String?
+  student         Student? @relation(fields: [studentId], references: [id])
+  studentId       String?
 
   @@map("categories")
 }

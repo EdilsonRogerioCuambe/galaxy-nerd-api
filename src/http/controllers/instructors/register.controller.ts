@@ -67,8 +67,6 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     const avatarUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${avatarFileName}`
     const bannerUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${bannerFileName}`
 
-    console.log(avatarUrl, bannerUrl)
-
     const registerInstructorUseCase = makeRegisterInstructor()
 
     const instructor = await registerInstructorUseCase.execute({

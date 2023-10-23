@@ -13,6 +13,13 @@ interface UpdateStudentUseCaseProps {
   location?: string
   socialLinks?: string[]
   interests?: string[]
+  facebook?: string
+  twitter?: string
+  instagram?: string
+  linkedin?: string
+  youtube?: string
+  github?: string
+  website?: string
   role?: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 }
 
@@ -30,8 +37,13 @@ export class UpdateStudentUseCase {
     avatar,
     biography,
     location,
-    socialLinks,
-    interests,
+    facebook,
+    twitter,
+    instagram,
+    linkedin,
+    youtube,
+    github,
+    website,
     role,
     studentId,
   }: UpdateStudentUseCaseProps): Promise<UpdateStudentUseCaseResponse> {
@@ -51,8 +63,13 @@ export class UpdateStudentUseCase {
       password: hashedPassword,
       biography,
       location,
-      socialLinks,
-      interests,
+      facebook,
+      twitter,
+      instagram,
+      linkedin,
+      youtube,
+      github,
+      website,
       role,
     })
 
