@@ -18,6 +18,7 @@ import { enrollmentsRoutes } from './http/controllers/enrollments/routes'
 import { imagesRoutes } from './http/controllers/images/routes'
 import { stripeSessionsRoutes } from './http/controllers/stripe-sessions/routes'
 import { lessonsRoutes } from './http/controllers/lessons/routes'
+import { forumsRoutes } from './http/controllers/foruns/routes'
 
 export const app = fastify({
   bodyLimit: 1024 * 1024 * 1024, // 1GB
@@ -101,6 +102,7 @@ app.register(enrollmentsRoutes)
 app.register(imagesRoutes)
 app.register(stripeSessionsRoutes)
 app.register(lessonsRoutes)
+app.register(forumsRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ZodError) {

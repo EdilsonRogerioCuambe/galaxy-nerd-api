@@ -2,7 +2,6 @@ import { makeRegisterLessonUseCase } from '@/use-cases/factories/lessons/make.re
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { Readable } from 'stream'
 
 import { env } from '@/env'
 

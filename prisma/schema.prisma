@@ -234,16 +234,18 @@ model CourseProgress {
 }
 
 model Forum {
-  id        String    @id @default(uuid())
-  title     String    @unique
-  body      String
-  student   Student?  @relation(fields: [studentId], references: [id])
-  studentId String?
-  lesson    Lesson?   @relation(fields: [lessonId], references: [id])
-  lessonId  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  answers   Answers[]
+  id          String    @id @default(uuid())
+  title       String    @unique
+  description String?
+  slug        String    @unique
+  answered    Boolean   @default(false)
+  student     Student?  @relation(fields: [studentId], references: [id])
+  studentId   String?
+  lesson      Lesson?   @relation(fields: [lessonId], references: [id])
+  lessonId    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  answers     Answers[]
 
   @@map("forums")
 }

@@ -44,7 +44,15 @@ export class PrismaCoursesRepository implements CoursesRepository {
         favorites: true,
         topics: {
           include: {
-            lessons: true,
+            lessons: {
+              include: {
+                forum: {
+                  include: {
+                    student: true,
+                  },
+                },
+              },
+            },
           },
         },
         enrollments: true,

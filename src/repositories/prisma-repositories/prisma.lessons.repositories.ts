@@ -25,7 +25,19 @@ export class PrismaLessonsRepositories implements LessonsRepository {
     const lesson = await prisma.lesson.findUnique({
       where: { id },
       include: {
-        topic: true,
+        topic: {
+          include: {
+            lessons: {
+              include: {
+                forum: {
+                  include: {
+                    student: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     })
 
@@ -37,6 +49,11 @@ export class PrismaLessonsRepositories implements LessonsRepository {
       where: { slug },
       include: {
         topic: true,
+        forum: {
+          include: {
+            student: true,
+          },
+        },
       },
     })
 
