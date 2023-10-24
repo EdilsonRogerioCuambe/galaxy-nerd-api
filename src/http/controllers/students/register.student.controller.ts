@@ -25,8 +25,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     biography: z.string().optional(),
     location: z.string().optional(),
     interests: z.array(z.string()).optional(),
-    avatar: z.string(),
-    banner: z.string(),
+    avatar: z.string().optional(),
+    banner: z.string().optional(),
     facebook: z.string().optional(),
     twitter: z.string().optional(),
     instagram: z.string().optional(),
@@ -55,27 +55,36 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     website,
   } = schema.parse(request.body)
 
-  const avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
-  const bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
+  let avatarFileName = ''
+  let bannerFileName = ''
 
-  const avatarCommand = new PutObjectCommand({
-    Bucket: 'galaxynerd',
-    Key: avatarFileName,
-    Body: Buffer.from(avatar.split(',')[1], 'base64'),
-    ContentType: `image/${avatar.split(';')[0].split('/')[1]}`,
-  })
+  if (avatar) {
+    avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
 
-  const bannerCommand = new PutObjectCommand({
-    Bucket: 'galaxynerd',
-    Key: bannerFileName,
-    Body: Buffer.from(banner.split(',')[1], 'base64'),
-    ContentType: `image/${banner.split(';')[0].split('/')[1]}`,
-  })
+    const avatarCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: avatarFileName,
+      Body: Buffer.from(avatar.split(',')[1], 'base64'),
+      ContentType: `image/${avatar.split(';')[0].split('/')[1]}`,
+    })
+
+    await s3Client.send(avatarCommand)
+  }
+
+  if (banner) {
+    bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
+
+    const bannerCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: bannerFileName,
+      Body: Buffer.from(banner.split(',')[1], 'base64'),
+      ContentType: `image/${banner.split(';')[0].split('/')[1]}`,
+    })
+
+    await s3Client.send(bannerCommand)
+  }
 
   try {
-    await s3Client.send(avatarCommand)
-    await s3Client.send(bannerCommand)
-
     const avatarUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${avatarFileName}`
     const bannerUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${bannerFileName}`
 

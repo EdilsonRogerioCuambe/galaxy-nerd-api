@@ -1,13 +1,6 @@
 import request from 'supertest'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import path from 'path'
-import fs from 'fs'
-
 import { app } from '@/app'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Get Topic Controller', () => {
   beforeAll(async () => {
@@ -19,18 +12,14 @@ describe('Get Topic Controller', () => {
   })
 
   it('should be able to get a topic', async () => {
-    const instructor = await request(app.server)
-      .post('/instructors')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    const instructor = await request(app.server).post('/instructors').send({
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Brazil',
+      role: 'INSTRUCTOR',
+    })
 
     const auth = await request(app.server).post('/instructors/sessions').send({
       email: 'johndoe@gmail.com',
@@ -39,36 +28,34 @@ describe('Get Topic Controller', () => {
 
     const { token } = auth.body
 
-    const category = await request(app.server)
-      .post('/categories')
-      .set('Authorization', `Bearer ${token}`)
-      .field('name', 'any_name')
-      .field('description', 'any_description')
-      .attach('icon', avatar)
-
     const course = await request(app.server)
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
-      .field('title', 'Course title')
-      .field('description', 'Course description')
-      .field('price', '250')
-      .field('categoryId', category.body.category.category.id)
-      .field('instructorId', instructor.body.instructor.instructor.id)
-      .attach('thumbnail', avatar)
+      .send({
+        title: 'Course title',
+        description: 'Course description',
+        price: '250',
+        instructorId: instructor.body.instructor.instructor.id,
+        duration: '10',
+        level: 'Iniciante',
+      })
 
-    const topic = await request(app.server)
+    const responseNewTopic = await request(app.server)
       .post('/topics')
       .set('Authorization', `Bearer ${token}`)
-      .field('title', 'any_title')
-      .field('order', 0)
-      .field('courseId', course.body.course.course.id)
-      .field('description', 'any_description')
-      .attach('icon', avatar)
+      .send({
+        title: 'Topic title',
+        description: 'Topic description',
+        courseId: course.body.course.course.id,
+        order: '1',
+      })
 
     const response = await request(app.server)
-      .get(`/topics/${topic.body.topic.topic.id}`)
+      .get(`/topics/${responseNewTopic.body.topic.topic.id}`)
       .set('Authorization', `Bearer ${token}`)
+      .send()
 
     expect(response.statusCode).toBe(200)
+    expect(response.body.topic).toBeTruthy()
   })
 })

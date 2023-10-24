@@ -19,6 +19,7 @@ interface UpdateStudentUseCaseProps {
   youtube?: string
   github?: string
   website?: string
+  banner?: string
   role?: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 }
 
@@ -45,6 +46,7 @@ export class UpdateStudentUseCase {
     website,
     role,
     studentId,
+    banner,
   }: UpdateStudentUseCaseProps): Promise<UpdateStudentUseCaseResponse> {
     const studentFound = await this.studentsRepository.findById(studentId)
 
@@ -71,6 +73,7 @@ export class UpdateStudentUseCase {
       github: github || studentFound.github,
       website: website || studentFound.website,
       role,
+      banner: banner || studentFound.banner,
     })
 
     return { student }

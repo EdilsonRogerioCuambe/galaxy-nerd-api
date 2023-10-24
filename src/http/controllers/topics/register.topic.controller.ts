@@ -23,25 +23,29 @@ export async function registerTopicController(
     order: z.string(),
     courseId: z.string().uuid(),
     description: z.string().optional(),
-    icon: z.string(),
+    icon: z.string().optional(),
   })
 
   const { title, order, courseId, description, icon } = schema.parse(
     request.body,
   )
 
-  const iconFileName = `${title}-icon.${icon.split(';')[0].split('/')[1]}`
+  let iconFileName = ''
 
-  const iconCommand = new PutObjectCommand({
-    Bucket: 'galaxynerd',
-    Key: iconFileName,
-    Body: Buffer.from(icon.split(',')[1], 'base64'),
-    ContentType: `image/${icon.split(';')[0].split('/')[1]}`,
-  })
+  if (icon) {
+    iconFileName = `${title}-icon.${icon.split(';')[0].split('/')[1]}`
+
+    const iconCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: iconFileName,
+      Body: Buffer.from(icon.split(',')[1], 'base64'),
+      ContentType: `image/${icon.split(';')[0].split('/')[1]}`,
+    })
+
+    await s3Client.send(iconCommand)
+  }
 
   try {
-    await s3Client.send(iconCommand)
-
     const topicUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${iconFileName}`
 
     const registerTopicUseCase = makeRegisterTopicUseCase()
