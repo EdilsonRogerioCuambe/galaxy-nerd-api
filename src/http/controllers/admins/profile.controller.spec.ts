@@ -19,18 +19,17 @@ describe('Admin Get His Profile Controller', () => {
   })
 
   it('should be able to get admin profile', async () => {
-    await request(app.server)
-      .post('/admins')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    await request(app.server).post('/admins').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Brazil',
+      role: 'ADMIN',
+    })
 
     const auth = await request(app.server).post('/admins/sessions').send({
-      email: 'johndoe@gmail.com',
+      email: 'edilson@gmail.com',
       password: '@17Edilson17',
     })
 

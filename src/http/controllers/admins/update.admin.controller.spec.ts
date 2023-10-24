@@ -1,12 +1,6 @@
 import { app } from '@/app'
 import request from 'supertest'
-import path from 'path'
-import fs from 'fs'
 import { it, describe, expect, beforeAll, afterAll } from 'vitest'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Update Admin Controller', () => {
   beforeAll(async () => {
@@ -18,15 +12,14 @@ describe('Update Admin Controller', () => {
   })
 
   it('should update an admin', async () => {
-    const newAdmin = await request(app.server)
-      .post('/admins')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    const newAdmin = await request(app.server).post('/admins').send({
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Brazil',
+      role: 'ADMIN',
+    })
 
     const auth = await request(app.server).post('/admins/sessions').send({
       email: 'johndoe@gmail.com',
@@ -38,13 +31,11 @@ describe('Update Admin Controller', () => {
     const response = await request(app.server)
       .put(`/admins/${newAdmin.body.admin.admin.id}`)
       .set('Authorization', `Bearer ${token}`)
-      .field('name', 'John Doe Edilson')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson171234')
-      .field('biography', 'I am a developer and a designer')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos Island')
-      .attach('avatar', avatar)
+      .send({
+        name: 'John Doe Edilson',
+        biography: 'I am a developer and a designer',
+        adminId: newAdmin.body.admin.admin.id,
+      })
 
     expect(response.statusCode).toBe(200)
     expect(response.body.admin.name).toBe('John Doe Edilson')

@@ -35,7 +35,7 @@ describe('Create Enrollment Controller', () => {
       .field('title', 'Course title')
       .field('description', 'Course description')
       .field('price', '250')
-      .field('categoryId', category.body.category.category.id)
+      .field('languages', category.body.category.category.id)
       .field('instructorId', instructor.id)
       .attach('thumbnail', avatar)
 
@@ -45,9 +45,6 @@ describe('Create Enrollment Controller', () => {
       .field('email', 'eddyrogerioyuran@gmail.com')
       .field('password', '@17Edilson17kjjhjknakn65')
       .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
       .field('role', 'STUDENT')
       .field('location', 'Lagos')
       .attach('avatar', avatar)

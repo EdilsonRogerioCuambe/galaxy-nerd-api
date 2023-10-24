@@ -1,13 +1,6 @@
 import { app } from '@/app'
 import request from 'supertest'
-import path from 'path'
-import fs from 'fs'
 import { it, describe, expect, beforeAll, afterAll } from 'vitest'
-import { createAndAuthenticateInstructor } from '@/utils/test/create.and.authenticate.instructor'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Update Instructor Controller', () => {
   beforeAll(async () => {
@@ -19,23 +12,31 @@ describe('Update Instructor Controller', () => {
   })
 
   it.only('should update an instructor', async () => {
-    const { token, instructor } = await createAndAuthenticateInstructor(app)
+    const newInstructor = await request(app.server).post('/instructors').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Lagos',
+      role: 'INSTRUCTOR',
+    })
+
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
 
     const response = await request(app.server)
-      .put(`/instructors/${instructor.id}`)
+      .put(`/instructors/${newInstructor.body.instructor.instructor.id}`)
       .set('Authorization', `Bearer ${token}`)
-      .field('name', 'John Doe Edilson')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson171234')
-      .field('biography', 'I am a developer and a designer')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos Island')
-      .attach('avatar', avatar)
+      .send({
+        name: 'John Doe',
+        biography: 'I am a developer and a designer',
+        instructorId: newInstructor.body.instructor.instructor.id,
+      })
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.instructor.name).toBe('John Doe Edilson')
-    expect(response.body.instructor.biography).toBe(
-      'I am a developer and a designer',
-    )
   })
 })

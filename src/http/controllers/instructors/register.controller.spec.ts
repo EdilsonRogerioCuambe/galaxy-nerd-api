@@ -1,12 +1,6 @@
 import { app } from '@/app'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
 import request from 'supertest'
-import path from 'path'
-import fs from 'fs'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Register Instructor Controller', () => {
   beforeAll(async () => {
@@ -18,15 +12,14 @@ describe('Register Instructor Controller', () => {
   })
 
   it('should return 201 when instructor is created', async () => {
-    const response = await request(app.server)
-      .post('/instructors')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    const response = await request(app.server).post('/instructors').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Brazil',
+      role: 'INSTRUCTOR',
+    })
 
     expect(response.statusCode).toBe(201)
   })

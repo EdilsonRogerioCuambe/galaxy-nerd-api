@@ -25,37 +25,51 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).default('ADMIN'),
     biography: z.string().optional(),
     location: z.string().optional(),
-    avatar: z.string(),
-    banner: z.string(),
+    avatar: z.string().optional(),
+    banner: z.string().optional(),
   })
 
   const { name, email, password, biography, avatar, banner, location, role } =
     schema.parse(request.body)
 
-  const avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
-  const bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
+  let avatarUrl = ''
+  let bannerUrl = ''
 
-  const avatarCommand = new PutObjectCommand({
-    Bucket: 'galaxynerd',
-    Key: avatarFileName,
-    Body: Buffer.from(avatar.split(',')[1], 'base64'),
-    ContentType: `image/${avatar.split(';')[0].split('/')[1]}`,
-  })
+  if (avatar) {
+    const avatarFileName = `${name}-avatar.${
+      avatar.split(';')[0].split('/')[1]
+    }`
 
-  const bannerCommand = new PutObjectCommand({
-    Bucket: 'galaxynerd',
-    Key: bannerFileName,
-    Body: Buffer.from(banner.split(',')[1], 'base64'),
-    ContentType: `image/${banner.split(';')[0].split('/')[1]}`,
-  })
+    const avatarCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: avatarFileName,
+      Body: Buffer.from(avatar.split(',')[1], 'base64'),
+      ContentType: `image/${avatar.split(';')[0].split('/')[1]}`,
+    })
 
-  try {
     await s3Client.send(avatarCommand)
+
+    avatarUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${avatarFileName}`
+  }
+
+  if (banner) {
+    const bannerFileName = `${name}-banner.${
+      banner.split(';')[0].split('/')[1]
+    }`
+
+    const bannerCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: bannerFileName,
+      Body: Buffer.from(banner.split(',')[1], 'base64'),
+      ContentType: `image/${banner.split(';')[0].split('/')[1]}`,
+    })
+
     await s3Client.send(bannerCommand)
 
-    const avatarUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${avatarFileName}`
-    const bannerUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${bannerFileName}`
+    bannerUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${bannerFileName}`
+  }
 
+  try {
     const registerAdminUseCase = makeRegisterAdminUseCase()
 
     const admin = await registerAdminUseCase.execute({
@@ -71,6 +85,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
     return reply.status(201).send({ admin })
   } catch (error) {
+    console.log(error)
+
     if (error instanceof AdminAlreadyExistsError) {
       return reply.status(409).send({
         message: error.message,

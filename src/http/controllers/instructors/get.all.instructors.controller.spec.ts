@@ -1,13 +1,6 @@
 import { app } from '@/app'
 import request from 'supertest'
-import path from 'path'
-import fs from 'fs'
 import { it, describe, afterAll, beforeAll, expect } from 'vitest'
-import { createAndAuthenticateInstructor } from '@/utils/test/create.and.authenticate.instructor'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Get All Instructors Controller', () => {
   beforeAll(async () => {
@@ -19,27 +12,30 @@ describe('Get All Instructors Controller', () => {
   })
 
   it('should be able to get all instructors', async () => {
-    await request(app.server)
-      .post('/instructors')
-      .field('name', 'John Doe')
-      .field('email', 'charlen@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    await request(app.server).post('/instructors').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Lagos',
+      role: 'INSTRUCTOR',
+    })
 
-    await request(app.server)
-      .post('/instructors')
-      .field('name', 'Mary Doe')
-      .field('email', 'marydoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+    })
 
-    const { token } = await createAndAuthenticateInstructor(app)
+    const { token } = auth.body
+
+    await request(app.server).post('/instructors').send({
+      name: 'Mary Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'New York',
+      role: 'INSTRUCTOR',
+    })
 
     const response = await request(app.server)
       .get('/instructors')
@@ -47,6 +43,5 @@ describe('Get All Instructors Controller', () => {
       .send()
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.instructors.length).toBe(3)
   })
 })

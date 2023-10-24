@@ -12,8 +12,6 @@ interface UpdateInstructorUseCaseProps {
   biography?: string
   location?: string
   banner?: string
-  socialLinks?: string[]
-  interests?: string[]
   role?: Role
 }
 
@@ -32,9 +30,7 @@ export class UpdateInstructorUseCase {
     avatar,
     biography,
     location,
-    socialLinks,
     role,
-    interests,
     banner,
   }: UpdateInstructorUseCaseProps): Promise<UpdateInstructorUseCaseResponse> {
     const instructor = await this.instructorsRepository.findById(instructorId)
@@ -56,11 +52,7 @@ export class UpdateInstructorUseCase {
         avatar: avatar || instructor.avatar,
         biography: biography || instructor.biography,
         location: location || instructor.location,
-        socialLinks: socialLinks || instructor.socialLinks,
         role: role || instructor.role,
-        interests: {
-          connect: interests?.map((interest) => ({ id: interest })),
-        },
         banner: banner || instructor.banner,
       },
     )

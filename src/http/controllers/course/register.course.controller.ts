@@ -26,11 +26,11 @@ export async function registerCourseController(
     instructorId: z.string(),
     studentId: z.string().optional(),
     shortDescription: z.string().optional(),
-    languages: z.array(z.string()),
+    languages: z.array(z.string()).optional(),
     level: z.enum(['Iniciante', 'Intermediário', 'Avançado']),
     duration: z.string(),
-    thumbnail: z.string(),
-    image: z.string(),
+    thumbnail: z.string().optional(),
+    image: z.string().optional(),
   })
 
   const {
@@ -46,29 +46,37 @@ export async function registerCourseController(
     image,
   } = schema.parse(request.body)
 
-  const imageFileName = `${title}-image.${image.split(';')[0].split('/')[1]}`
-  const thumbnailFileName = `${title}-thumbnail.${
-    thumbnail.split(';')[0].split('/')[1]
-  }`
+  let thumbnailFileName = ''
+  let imageFileName = ''
 
-  const imageCommand = new PutObjectCommand({
-    Bucket: 'galaxynerd',
-    Key: imageFileName,
-    Body: Buffer.from(image.split(',')[1], 'base64'),
-    ContentType: `image/${image.split(';')[0].split('/')[1]}`,
-  })
+  if (image) {
+    imageFileName = `${title}-image.${image.split(';')[0].split('/')[1]}`
+    const imageCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: imageFileName,
+      Body: Buffer.from(image.split(',')[1], 'base64'),
+      ContentType: `image/${image.split(';')[0].split('/')[1]}`,
+    })
 
-  const thumbnailCommand = new PutObjectCommand({
-    Bucket: 'galaxynerd',
-    Key: thumbnailFileName,
-    Body: Buffer.from(thumbnail.split(',')[1], 'base64'),
-    ContentType: `image/${thumbnail.split(';')[0].split('/')[1]}`,
-  })
+    await s3Client.send(imageCommand)
+  }
+
+  if (thumbnail) {
+    thumbnailFileName = `${title}-thumbnail.${
+      thumbnail.split(';')[0].split('/')[1]
+    }`
+
+    const thumbnailCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: thumbnailFileName,
+      Body: Buffer.from(thumbnail.split(',')[1], 'base64'),
+      ContentType: `image/${thumbnail.split(';')[0].split('/')[1]}`,
+    })
+
+    await s3Client.send(thumbnailCommand)
+  }
 
   try {
-    await s3Client.send(imageCommand)
-    await s3Client.send(thumbnailCommand)
-
     const imageUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${imageFileName}`
     const thumbnailUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${thumbnailFileName}`
 

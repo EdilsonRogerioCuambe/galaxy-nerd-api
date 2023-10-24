@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
 
 import { authenticateInstructorController } from './authenticate.controller'
-import { register } from './register.controller'
+import { register } from './register.instructor.controller'
 import { deleteInstructorController } from './delete.instructor.controller'
 import { getInstructorProfile } from './get.instructor.profile.controller'
 import { getAllInstructors } from './get.all.instructors.controller'

@@ -1,13 +1,6 @@
 import request from 'supertest'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import path from 'path'
-import fs from 'fs'
-
 import { app } from '@/app'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Register Category Controller', () => {
   beforeAll(async () => {
@@ -19,21 +12,17 @@ describe('Register Category Controller', () => {
   })
 
   it('should be able to register a new category', async () => {
-    await request(app.server)
-      .post('/instructors')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'INSTRUCTOR')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    await request(app.server).post('/admins').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Brazil',
+      role: 'ADMIN',
+    })
 
-    const auth = await request(app.server).post('/instructors/sessions').send({
-      email: 'johndoe@gmail.com',
+    const auth = await request(app.server).post('/admins/sessions').send({
+      email: 'edilson@gmail.com',
       password: '@17Edilson17',
     })
 
@@ -42,9 +31,11 @@ describe('Register Category Controller', () => {
     const response = await request(app.server)
       .post('/categories')
       .set('Authorization', `Bearer ${token}`)
-      .field('name', 'any_name')
-      .field('description', 'any_description')
-      .attach('icon', avatar)
+      .send({
+        name: 'Node.js',
+        description:
+          "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine.",
+      })
 
     expect(response.statusCode).toBe(201)
   })

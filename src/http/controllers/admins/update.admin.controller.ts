@@ -25,16 +25,24 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).optional(),
     biography: z.string().optional(),
     location: z.string().optional(),
-    avatar: z.string(),
-    banner: z.string(),
+    avatar: z.string().optional(),
+    banner: z.string().optional(),
     adminId: z.string(),
   })
 
   const { name, email, password, biography, location, role, avatar, banner } =
     schema.parse(request.body)
 
-  const avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
-  const bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
+  let avatarFileName = ''
+  let bannerFileName = ''
+
+  if (avatar) {
+    avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
+  }
+
+  if (banner) {
+    bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
+  }
 
   const { adminId } = request.params as { adminId: string }
 
@@ -42,7 +50,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     let avatarUrl = avatar
     let bannerUrl = banner
 
-    if (avatar.includes('base64')) {
+    if (avatar && avatar.includes('base64')) {
       const avatarParts = avatar.split(',')
       if (avatarParts.length > 1) {
         await s3Client.send(
@@ -61,7 +69,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       }
     }
 
-    if (banner.includes('base64')) {
+    if (banner && banner.includes('base64')) {
       const bannerParts = banner.split(',')
       if (bannerParts.length > 1) {
         await s3Client.send(

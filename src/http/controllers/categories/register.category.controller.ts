@@ -21,25 +21,28 @@ export async function registerCategoryController(
   const schema = z.object({
     name: z.string(),
     description: z.string().optional(),
-    icon: z.string(),
+    icon: z.string().optional(),
   })
 
   const { name, description, icon } = schema.parse(request.body)
 
-  const iconFileName = `${name}-icon.${icon.split(';')[0].split('/')[1]}`
+  let iconUrl = ''
 
-  const iconCommand = new PutObjectCommand({
-    Bucket: 'galaxynerd',
-    Key: iconFileName,
-    Body: Buffer.from(icon.split(',')[1], 'base64'),
-    ContentType: `image/${icon.split(';')[0].split('/')[1]}`,
-  })
+  if (icon) {
+    const iconFileName = `${name}-icon.${icon.split(';')[0].split('/')[1]}`
 
-  try {
+    const iconCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: iconFileName,
+      Body: Buffer.from(icon.split(',')[1], 'base64'),
+      ContentType: `image/${icon.split(';')[0].split('/')[1]}`,
+    })
+
     await s3Client.send(iconCommand)
 
-    const iconUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${iconFileName}`
-
+    iconUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${iconFileName}`
+  }
+  try {
     const registerCategoryUseCase = makeRegisterCategoryUseCase()
 
     const category = await registerCategoryUseCase.execute({

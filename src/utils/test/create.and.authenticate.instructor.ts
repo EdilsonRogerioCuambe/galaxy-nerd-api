@@ -7,7 +7,7 @@ export async function createAndAuthenticateInstructor(app: FastifyInstance) {
   const instructor = await prisma.instructor.create({
     data: {
       name: 'John Doe',
-      email: 'johndoe@gmail.com',
+      email: 'edilson@gmail.com',
       password: await hash('@17Edilson17', 6),
       role: 'INSTRUCTOR',
       location: 'Lagos',
