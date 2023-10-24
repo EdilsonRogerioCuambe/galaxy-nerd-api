@@ -2,7 +2,7 @@ import { app } from '@/app'
 import request from 'supertest'
 import { it, describe, expect, afterAll, beforeAll } from 'vitest'
 
-describe.only('Delete Instructor Controller', () => {
+describe('Delete Instructor Controller', () => {
   beforeAll(async () => {
     await app.ready()
   })

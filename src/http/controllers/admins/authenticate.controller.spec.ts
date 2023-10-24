@@ -11,7 +11,7 @@ describe('Authenticate Admin Controller', () => {
     await app.close()
   })
 
-  it.only('should return 200 when admin is authenticated', async () => {
+  it('should return 200 when admin is authenticated', async () => {
     await request(app.server).post('/admins').send({
       name: 'John Doe',
       email: 'edilson@gmail.com',

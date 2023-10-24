@@ -11,7 +11,7 @@ describe('Update Instructor Controller', () => {
     await app.close()
   })
 
-  it.only('should update an instructor', async () => {
+  it('should update an instructor', async () => {
     const newInstructor = await request(app.server).post('/instructors').send({
       name: 'John Doe',
       email: 'edilson@gmail.com',
