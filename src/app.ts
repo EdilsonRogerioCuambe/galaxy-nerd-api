@@ -116,7 +116,6 @@ app.setErrorHandler((error, _request, reply) => {
     console.error(error)
   } else {
     // TODO: Log error
-    console.error(error)
   }
 
   reply.status(500).send({

@@ -8,7 +8,7 @@ const avatar = fs.readFileSync(
   path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
 )
 
-describe('Delete Instructor Controller', () => {
+describe.only('Delete Instructor Controller', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -24,9 +24,6 @@ describe('Delete Instructor Controller', () => {
       .field('email', 'johndoe@gmail.com')
       .field('password', '@17Edilson17')
       .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
       .field('role', 'ADMIN')
       .field('location', 'Lagos')
       .attach('avatar', avatar)

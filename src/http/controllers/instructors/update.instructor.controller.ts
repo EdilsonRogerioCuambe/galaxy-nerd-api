@@ -18,11 +18,11 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).optional(),
     biography: z.string().optional(),
     location: z.string().optional(),
-    socialLinks: z.array(z.string()).optional(),
   })
 
-  const { name, email, password, biography, location, socialLinks, role } =
-    schema.parse(request.body)
+  const { name, email, password, biography, location, role } = schema.parse(
+    request.body,
+  )
 
   const { path: avatar } = request.file as unknown as MultipartFile
 
@@ -39,7 +39,6 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       avatar,
       biography,
       location,
-      socialLinks,
       role,
     })
 

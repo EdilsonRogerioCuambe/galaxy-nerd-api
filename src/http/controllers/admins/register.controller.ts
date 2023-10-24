@@ -25,22 +25,12 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).default('ADMIN'),
     biography: z.string().optional(),
     location: z.string().optional(),
-    socialLinks: z.array(z.string()).optional(),
     avatar: z.string(),
     banner: z.string(),
   })
 
-  const {
-    name,
-    email,
-    password,
-    biography,
-    avatar,
-    banner,
-    location,
-    socialLinks,
-    role,
-  } = schema.parse(request.body)
+  const { name, email, password, biography, avatar, banner, location, role } =
+    schema.parse(request.body)
 
   const avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
   const bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
@@ -74,7 +64,6 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       password,
       biography,
       location,
-      socialLinks,
       role,
       avatar: avatarUrl,
       banner: bannerUrl,

@@ -25,23 +25,13 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).optional(),
     biography: z.string().optional(),
     location: z.string().optional(),
-    socialLinks: z.array(z.string()).optional(),
     avatar: z.string(),
     banner: z.string(),
     adminId: z.string(),
   })
 
-  const {
-    name,
-    email,
-    password,
-    biography,
-    location,
-    socialLinks,
-    role,
-    avatar,
-    banner,
-  } = schema.parse(request.body)
+  const { name, email, password, biography, location, role, avatar, banner } =
+    schema.parse(request.body)
 
   const avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
   const bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
@@ -65,8 +55,6 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
         )
         avatarUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${avatarFileName}`
       } else {
-        // Handle error: avatar is not properly formatted
-
         return reply.status(400).send({
           message: 'avatar is not properly formatted',
         })
@@ -103,7 +91,6 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       password,
       biography,
       location,
-      socialLinks,
       role,
       avatar: avatarUrl,
       banner: bannerUrl,

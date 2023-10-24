@@ -18,7 +18,7 @@ describe('Update Instructor Controller', () => {
     await app.close()
   })
 
-  it('should update an instructor', async () => {
+  it.only('should update an instructor', async () => {
     const { token, instructor } = await createAndAuthenticateInstructor(app)
 
     const response = await request(app.server)
@@ -28,10 +28,6 @@ describe('Update Instructor Controller', () => {
       .field('email', 'johndoe@gmail.com')
       .field('password', '@17Edilson171234')
       .field('biography', 'I am a developer and a designer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('socialLinks', 'github')
       .field('role', 'INSTRUCTOR')
       .field('location', 'Lagos Island')
       .attach('avatar', avatar)

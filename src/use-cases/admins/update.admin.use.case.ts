@@ -11,7 +11,6 @@ interface UpdateAdminUseCaseProps {
   avatar?: string
   biography?: string
   location?: string
-  socialLinks?: string[]
   banner?: string
   role?: Role
 }
@@ -31,7 +30,6 @@ export class UpdateAdminUseCase {
     avatar,
     biography,
     location,
-    socialLinks,
     role,
     banner,
   }: UpdateAdminUseCaseProps): Promise<UpdateAdminUseCaseResponse> {
@@ -50,7 +48,6 @@ export class UpdateAdminUseCase {
       avatar: avatar || admin.avatar,
       biography: biography || admin.biography,
       location: location || admin.location,
-      socialLinks: socialLinks || admin.socialLinks,
       role: role || admin.role,
       banner: banner || admin.banner,
     })
