@@ -5,6 +5,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui'
 import fastifyJwt from '@fastify/jwt'
 import { ZodError } from 'zod'
 import fastifyCookie from '@fastify/cookie'
+import fastifyCors from '@fastify/cors'
 
 import { adminsRoutes } from './http/controllers/admins/routes'
 import { env } from './env'
@@ -14,17 +15,41 @@ import { coursesRoutes } from './http/controllers/course/routes'
 import { categoriesRoutes } from './http/controllers/categories/routes'
 import { topicsRoutes } from './http/controllers/topics/routes'
 import { enrollmentsRoutes } from './http/controllers/enrollments/routes'
+import { imagesRoutes } from './http/controllers/images/routes'
+import { stripeSessionsRoutes } from './http/controllers/stripe-sessions/routes'
+import { lessonsRoutes } from './http/controllers/lessons/routes'
+import { forumsRoutes } from './http/controllers/foruns/routes'
 
-export const app = fastify()
+export const app = fastify({
+  bodyLimit: 1024 * 1024 * 1024, // 1GB
+})
+
+app.addHook('onRequest', (request, reply, done) => {
+  if (request.headers['content-length']) {
+    const contentLength = Number(request.headers['content-length'])
+    if (contentLength > 1024 * 1024 * 1024) {
+      reply.code(413).send({
+        message: 'File too large',
+      })
+    }
+  }
+  done()
+})
+
+app.register(fastifyCors, {
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+})
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
   sign: {
-    expiresIn: '10m',
+    expiresIn: '1d',
   },
   cookie: {
     cookieName: 'refreshToken',
-    signed: false,
+    signed: true,
   },
 })
 
@@ -32,7 +57,7 @@ app.register(fastifyCookie)
 
 app.register(fastifyMultipart, {
   limits: {
-    fileSize: 1024 * 1024 * 1024, // 1 GB
+    fileSize: 1024 * 1024 * 1024, // 1GB
   },
 })
 
@@ -74,6 +99,10 @@ app.register(coursesRoutes)
 app.register(categoriesRoutes)
 app.register(topicsRoutes)
 app.register(enrollmentsRoutes)
+app.register(imagesRoutes)
+app.register(stripeSessionsRoutes)
+app.register(lessonsRoutes)
+app.register(forumsRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ZodError) {

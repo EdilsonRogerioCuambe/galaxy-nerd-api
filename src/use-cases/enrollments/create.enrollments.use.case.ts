@@ -1,7 +1,6 @@
 import { EnrollmentsRepository } from '@/repositories/enrollments.repository'
 import { StudentsRepository } from '@/repositories/students.repository'
 import { CoursesRepository } from '@/repositories/courses.repository'
-import { processStudentPayment } from '@/utils/process.student.payment'
 import { Enrollment } from '@prisma/client'
 import { sendConfirmationEmailToStudent } from '@/utils/send.confirmation.email.to.student'
 
@@ -34,12 +33,6 @@ export class CreateEnrollmentUseCase {
 
     if (!course) {
       throw new Error('Course not found')
-    }
-
-    const paymentSucceeded = await processStudentPayment(course, student)
-
-    if (!paymentSucceeded) {
-      throw new Error('Payment not succeeded')
     }
 
     await sendConfirmationEmailToStudent(student, course)

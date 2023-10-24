@@ -1,12 +1,6 @@
 import { app } from '@/app'
 import request from 'supertest'
-import path from 'path'
-import fs from 'fs'
 import { it, describe, afterAll, beforeAll, expect } from 'vitest'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Get All Students Controller', () => {
   beforeAll(async () => {
@@ -18,34 +12,38 @@ describe('Get All Students Controller', () => {
   })
 
   it('should be able to get all students', async () => {
-    await request(app.server)
-      .post('/students')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    await request(app.server).post('/students').send({
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Lagos',
+      role: 'STUDENT',
+      twitter: 'https://twitter.com/edilson_rogerio',
+      facebook: 'https://facebook.com/edilson.rogerio',
+      instagram: 'https://instagram.com/edilson_rogerio',
+      linkedin: 'https://linkedin.com/in/edilson-rogerio',
+      github: 'github',
+      website: 'https://edilson.rogerio',
+    })
 
-    await request(app.server)
-      .post('/students')
-      .field('name', 'Mary Doe')
-      .field('email', 'marydoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    await request(app.server).post('/students').send({
+      name: 'Mary Doe',
+      email: 'marydoe@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Lagos',
+      role: 'STUDENT',
+      twitter: 'https://twitter.com/edilson_rogerio',
+      facebook: 'https://facebook.com/edilson.rogerio',
+      instagram: 'https://instagram.com/edilson_rogerio',
+      linkedin: 'https://linkedin.com/in/edilson-rogerio',
+      github: 'github',
+      website: 'https://edilson.rogerio',
+    })
 
     const auth = await request(app.server).post('/students/sessions').send({
-      email: 'johndoe@gmail.com',
+      email: 'marydoe@gmail.com',
       password: '@17Edilson17',
     })
 

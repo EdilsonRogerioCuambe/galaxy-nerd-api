@@ -17,6 +17,12 @@ describe('Update Category Use Case', () => {
       name: 'any_name',
       description: 'any_description',
       icon: 'any_icon',
+      administratorId: 'any_administrator_id',
+      courseId: 'any_course_id',
+      createdAt: new Date(),
+      id: 'any_id',
+      studentId: 'any_student_id',
+      updatedAt: new Date(),
     })
 
     const updatedCategory = await sut.execute({

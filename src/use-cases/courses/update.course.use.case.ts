@@ -9,8 +9,15 @@ interface UpdateCourseUseCaseProps {
   description?: string
   price?: string
   thumbnail?: string
-  categoryId?: string
   instructorId: string
+  image?: string
+  shortDescription?: string
+  duration?: string
+  level?: string
+  languages?: string[]
+  favorites?: string[]
+  ratings?: string[]
+  topics?: string[]
 }
 
 interface UpdateCourseUseCaseResponse {
@@ -26,8 +33,15 @@ export class UpdateCourseUseCase {
     description,
     price,
     thumbnail,
-    categoryId,
     instructorId,
+    image,
+    shortDescription,
+    duration,
+    level,
+    languages,
+    favorites,
+    ratings,
+    topics,
   }: UpdateCourseUseCaseProps): Promise<UpdateCourseUseCaseResponse> {
     const courseAlreadyExists = await this.coursesRepository.findById(courseId)
 
@@ -43,8 +57,23 @@ export class UpdateCourseUseCase {
       price,
       slug,
       instructorId,
-      categoryId,
       thumbnail,
+      image,
+      shortDescription,
+      duration,
+      level,
+      languages: {
+        connect: languages?.map((language) => ({ id: language })),
+      },
+      favorites: {
+        connect: favorites?.map((favorite) => ({ id: favorite })),
+      },
+      ratings: {
+        connect: ratings?.map((rating) => ({ id: rating })),
+      },
+      topics: {
+        connect: topics?.map((topic) => ({ id: topic })),
+      },
     })
 
     return { course }

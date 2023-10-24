@@ -9,7 +9,7 @@ export async function authenticateInstructorController(
 ) {
   const bodySchema = z.object({
     email: z.string().email(),
-    password: z.string().min(8),
+    password: z.string(),
   })
 
   const { email, password } = bodySchema.parse(request.body)

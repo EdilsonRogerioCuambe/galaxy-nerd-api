@@ -1,13 +1,7 @@
 import { it, describe, afterAll, beforeAll, expect } from 'vitest'
 import request from 'supertest'
-import path from 'path'
-import fs from 'fs'
 
 import { app } from '@/app'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Get Student Profile Controller', () => {
   beforeAll(async () => {
@@ -19,18 +13,20 @@ describe('Get Student Profile Controller', () => {
   })
 
   it('should be able to get student profile', async () => {
-    const student = await request(app.server)
-      .post('/students')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    const student = await request(app.server).post('/students').send({
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Lagos',
+      role: 'STUDENT',
+      twitter: 'https://twitter.com/edilson_rogerio',
+      facebook: 'https://facebook.com/edilson.rogerio',
+      instagram: 'https://instagram.com/edilson_rogerio',
+      linkedin: 'https://linkedin.com/in/edilson-rogerio',
+      github: 'github',
+      website: 'https://edilson.rogerio',
+    })
 
     const auth = await request(app.server).post('/students/sessions').send({
       email: 'johndoe@gmail.com',

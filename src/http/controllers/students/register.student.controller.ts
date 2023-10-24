@@ -2,10 +2,17 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { makeRegisterStudentUseCase } from '@/use-cases/factories/students/make.register.student.use.case'
 import { StudentAlreadyExistsError } from '@/use-cases/students/err/student.already.exists.error'
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
-interface MultipartFile {
-  path: string
-}
+import { env } from '@/env'
+
+const s3Client = new S3Client({
+  region: 'us-east-2',
+  credentials: {
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+  },
+})
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const schema = z.object({
@@ -17,8 +24,16 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).default('STUDENT'),
     biography: z.string().optional(),
     location: z.string().optional(),
-    socialLinks: z.array(z.string()).optional(),
     interests: z.array(z.string()).optional(),
+    avatar: z.string().optional(),
+    banner: z.string().optional(),
+    facebook: z.string().optional(),
+    twitter: z.string().optional(),
+    instagram: z.string().optional(),
+    linkedin: z.string().optional(),
+    youtube: z.string().optional(),
+    github: z.string().optional(),
+    website: z.string().optional(),
   })
 
   const {
@@ -27,26 +42,71 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     password,
     biography,
     location,
-    socialLinks,
     role,
     interests,
+    avatar,
+    banner,
+    facebook,
+    twitter,
+    instagram,
+    linkedin,
+    youtube,
+    github,
+    website,
   } = schema.parse(request.body)
 
-  const { path: avatar } = request.file as unknown as MultipartFile
+  let avatarFileName = ''
+  let bannerFileName = ''
+
+  if (avatar) {
+    avatarFileName = `${name}-avatar.${avatar.split(';')[0].split('/')[1]}`
+
+    const avatarCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: avatarFileName,
+      Body: Buffer.from(avatar.split(',')[1], 'base64'),
+      ContentType: `image/${avatar.split(';')[0].split('/')[1]}`,
+    })
+
+    await s3Client.send(avatarCommand)
+  }
+
+  if (banner) {
+    bannerFileName = `${name}-banner.${banner.split(';')[0].split('/')[1]}`
+
+    const bannerCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: bannerFileName,
+      Body: Buffer.from(banner.split(',')[1], 'base64'),
+      ContentType: `image/${banner.split(';')[0].split('/')[1]}`,
+    })
+
+    await s3Client.send(bannerCommand)
+  }
 
   try {
+    const avatarUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${avatarFileName}`
+    const bannerUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${bannerFileName}`
+
     const registerStudentUseCase = makeRegisterStudentUseCase()
 
     const student = await registerStudentUseCase.execute({
       name,
       email,
       password,
-      avatar,
+      avatar: avatarUrl,
+      banner: bannerUrl,
       biography,
       location,
-      socialLinks,
       role,
       interests,
+      facebook,
+      twitter,
+      instagram,
+      linkedin,
+      youtube,
+      github,
+      website,
     })
 
     return reply.status(201).send({ student })

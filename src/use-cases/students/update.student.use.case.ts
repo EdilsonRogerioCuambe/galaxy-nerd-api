@@ -11,8 +11,15 @@ interface UpdateStudentUseCaseProps {
   avatar?: string
   biography?: string
   location?: string
-  socialLinks?: string[]
   interests?: string[]
+  facebook?: string
+  twitter?: string
+  instagram?: string
+  linkedin?: string
+  youtube?: string
+  github?: string
+  website?: string
+  banner?: string
   role?: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 }
 
@@ -30,30 +37,43 @@ export class UpdateStudentUseCase {
     avatar,
     biography,
     location,
-    socialLinks,
-    interests,
+    facebook,
+    twitter,
+    instagram,
+    linkedin,
+    youtube,
+    github,
+    website,
     role,
     studentId,
+    banner,
   }: UpdateStudentUseCaseProps): Promise<UpdateStudentUseCaseResponse> {
-    const hashedPassword = await hash(password, 10)
+    const studentFound = await this.studentsRepository.findById(studentId)
 
-    const studentAlreadyExists =
-      await this.studentsRepository.findById(studentId)
-
-    if (!studentAlreadyExists) {
+    if (!studentFound) {
       throw new StudentNotFoundError()
     }
 
+    const hashedPassword = password
+      ? await hash(password, 12)
+      : studentFound.password
+
     const student = await this.studentsRepository.update(studentId, {
-      name,
-      email,
-      avatar,
+      name: name || studentFound.name,
+      email: email || studentFound.email,
+      avatar: avatar || studentFound.avatar,
       password: hashedPassword,
-      biography,
-      location,
-      socialLinks,
-      interests,
+      biography: biography || studentFound.biography,
+      location: location || studentFound.location,
+      facebook: facebook || studentFound.facebook,
+      twitter: twitter || studentFound.twitter,
+      instagram: instagram || studentFound.instagram,
+      linkedin: linkedin || studentFound.linkedin,
+      youtube: youtube || studentFound.youtube,
+      github: github || studentFound.github,
+      website: website || studentFound.website,
       role,
+      banner: banner || studentFound.banner,
     })
 
     return { student }

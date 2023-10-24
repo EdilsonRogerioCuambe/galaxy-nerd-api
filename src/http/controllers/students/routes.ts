@@ -1,7 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import multer from 'fastify-multer'
 
-import { createCloudinaryStorage } from '@/utils/storage'
 import { register } from './register.student.controller'
 import { authenticateStudentController } from './authenticate.student.controller'
 import { getAllStudentsController } from './get.all.students.controller'
@@ -11,12 +9,8 @@ import { update } from './update.student.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 
-const upload = multer({
-  storage: createCloudinaryStorage(),
-})
-
 export async function studentsRoutes(app: FastifyInstance) {
-  app.post('/students', { preHandler: upload.single('avatar') }, register)
+  app.post('/students', register)
   app.post('/students/sessions', authenticateStudentController)
   app.get('/students', { onRequest: verifyJwt }, getAllStudentsController)
   app.get(
@@ -27,7 +21,6 @@ export async function studentsRoutes(app: FastifyInstance) {
   app.put(
     '/students/:studentId',
     {
-      preHandler: upload.single('avatar'),
       onRequest: [verifyJwt, verifyUserRole('STUDENT')],
     },
     update,

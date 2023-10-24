@@ -16,8 +16,12 @@ describe('Get All Courses Use Case', () => {
     const titleOne = 'any_title'
     const descriptionOne = 'any_description'
     const priceOne = '0'
-    const categoryIdOne = 'any_category_id'
     const instructorIdOne = 'any_instructor_id'
+    const levelOne = 'any_level'
+    const thumbnailOne = 'any_thumbnail'
+    const imageOne = 'any_image'
+    const shortDescriptionOne = 'any_short_description'
+    const durationOne = 'any_duration'
 
     const slugOne = slugify({ slug: titleOne })
 
@@ -25,16 +29,24 @@ describe('Get All Courses Use Case', () => {
       title: titleOne,
       description: descriptionOne,
       price: priceOne,
-      categoryId: categoryIdOne,
       instructorId: instructorIdOne,
       slug: slugOne,
+      level: levelOne,
+      thumbnail: thumbnailOne,
+      image: imageOne,
+      shortDescription: shortDescriptionOne,
+      duration: durationOne,
     })
 
     const titleTwo = 'any_title'
     const descriptionTwo = 'any_description'
     const priceTwo = '0'
-    const categoryIdTwo = 'any_category_id'
     const instructorIdTwo = 'any_instructor_id'
+    const levelTwo = 'any_level'
+    const thumbnailTwo = 'any_thumbnail'
+    const imageTwo = 'any_image'
+    const shortDescriptionTwo = 'any_short_description'
+    const durationTwo = 'any_duration'
 
     const slugTwo = slugify({ slug: titleTwo })
 
@@ -42,9 +54,13 @@ describe('Get All Courses Use Case', () => {
       title: titleTwo,
       description: descriptionTwo,
       price: priceTwo,
-      categoryId: categoryIdTwo,
       instructorId: instructorIdTwo,
       slug: slugTwo,
+      level: levelTwo,
+      thumbnail: thumbnailTwo,
+      image: imageTwo,
+      shortDescription: shortDescriptionTwo,
+      duration: durationTwo,
     })
 
     const response = await sut.execute()
@@ -56,16 +72,26 @@ describe('Get All Courses Use Case', () => {
           title: titleOne,
           description: descriptionOne,
           price: priceOne,
-          categoryId: categoryIdOne,
           instructorId: instructorIdOne,
+          slug: slugOne,
+          level: levelOne,
+          thumbnail: thumbnailOne,
+          image: imageOne,
+          shortDescription: shortDescriptionOne,
+          duration: durationOne,
         }),
         expect.objectContaining({
           id: expect.any(String),
           title: titleTwo,
           description: descriptionTwo,
           price: priceTwo,
-          categoryId: categoryIdTwo,
           instructorId: instructorIdTwo,
+          slug: slugTwo,
+          level: levelTwo,
+          thumbnail: thumbnailTwo,
+          image: imageTwo,
+          shortDescription: shortDescriptionTwo,
+          duration: durationTwo,
         }),
       ]),
     )

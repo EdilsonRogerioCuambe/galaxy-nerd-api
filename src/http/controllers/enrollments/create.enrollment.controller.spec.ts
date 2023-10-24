@@ -1,14 +1,6 @@
 import request from 'supertest'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import path from 'path'
-import fs from 'fs'
-
 import { app } from '@/app'
-import { createAndAuthenticateInstructor } from '@/utils/test/create.and.authenticate.instructor'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Create Enrollment Controller', () => {
   beforeAll(async () => {
@@ -20,51 +12,67 @@ describe('Create Enrollment Controller', () => {
   })
 
   it('should be able to create a new enrollment', async () => {
-    const { token, instructor } = await createAndAuthenticateInstructor(app)
+    const newInstructor = await request(app.server).post('/instructors').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Lagos',
+      role: 'INSTRUCTOR',
+    })
 
-    const category = await request(app.server)
-      .post('/categories')
-      .set('Authorization', `Bearer ${token}`)
-      .field('name', 'any_name')
-      .field('description', 'any_description')
-      .attach('icon', avatar)
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
 
     const course = await request(app.server)
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
-      .field('title', 'Course title')
-      .field('description', 'Course description')
-      .field('price', '250')
-      .field('categoryId', category.body.category.category.id)
-      .field('instructorId', instructor.id)
-      .attach('thumbnail', avatar)
+      .send({
+        title: 'Course title',
+        description: 'Course description',
+        price: '250',
+        instructorId: newInstructor.body.instructor.instructor.id,
+        duration: '10',
+        level: 'Iniciante',
+      })
 
-    await request(app.server)
-      .post('/students')
-      .field('name', 'Eddy Doe')
-      .field('email', 'eddyrogerioyuran@gmail.com')
-      .field('password', '@17Edilson17kjjhjknakn65')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'STUDENT')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
-
-    const auth = await request(app.server).post('/students/sessions').send({
-      email: 'eddyrogerioyuran@gmail.com',
-      password: '@17Edilson17kjjhjknakn65',
+    const responseStudent = await request(app.server).post('/students').send({
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Lagos',
+      role: 'STUDENT',
+      twitter: 'https://twitter.com/edilson_rogerio',
+      facebook: 'https://facebook.com/edilson.rogerio',
+      instagram: 'https://instagram.com/edilson_rogerio',
+      linkedin: 'https://linkedin.com/in/edilson-rogerio',
+      github: 'github',
+      website: 'https://edilson.rogerio',
     })
+
+    const studentAuth = await request(app.server)
+      .post('/students/sessions')
+      .send({
+        email: 'johndoe@gmail.com',
+        password: '@17Edilson17',
+      })
+
+    const { token: studentToken } = studentAuth.body
 
     const response = await request(app.server)
       .post('/enrollments')
-      .set('Authorization', `Bearer ${auth.body.token}`)
+      .set('Authorization', `Bearer ${studentToken}`)
       .send({
-        studentId: auth.body.student.id,
+        studentId: responseStudent.body.student.student.id,
         courseId: course.body.course.course.id,
       })
 
     expect(response.statusCode).toBe(201)
-  }, 10000)
+    expect(response.body.enrollment).toBeTruthy()
+  })
 })

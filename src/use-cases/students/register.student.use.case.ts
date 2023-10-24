@@ -6,11 +6,18 @@ import { StudentAlreadyExistsError } from './err/student.already.exists.error'
 interface RegisterStudentUseCaseProps {
   name: string
   email: string
+  banner?: string
   password: string
   avatar?: string
   biography?: string
   location?: string
-  socialLinks?: string[]
+  facebook?: string
+  twitter?: string
+  instagram?: string
+  linkedin?: string
+  youtube?: string
+  github?: string
+  website?: string
   interests?: string[]
   role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 }
@@ -29,9 +36,16 @@ export class RegisterStudentUseCase {
     avatar,
     biography,
     location,
-    socialLinks,
     interests,
     role,
+    banner,
+    facebook,
+    twitter,
+    instagram,
+    linkedin,
+    youtube,
+    github,
+    website,
   }: RegisterStudentUseCaseProps): Promise<RegisterStudentUseCaseResponse> {
     const hashedPassword = await hash(password, 12)
 
@@ -48,9 +62,18 @@ export class RegisterStudentUseCase {
       avatar,
       biography,
       location,
-      socialLinks,
-      interests,
       role,
+      banner,
+      facebook,
+      twitter,
+      instagram,
+      linkedin,
+      youtube,
+      github,
+      website,
+      interests: {
+        connect: interests?.map((interest) => ({ id: interest })),
+      },
     })
 
     return { student }

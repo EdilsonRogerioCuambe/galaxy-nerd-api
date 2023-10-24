@@ -6,44 +6,72 @@ const stripe = new Stripe(env.STRIPE_PRIVATE_KEY, {
   apiVersion: '2023-08-16',
 })
 
-export async function processStudentPayment(course: Course, student: Student) {
+interface ProcessPaymentResponse {
+  paymentSucceeded: boolean
+  paymentIntent: Stripe.Checkout.Session
+}
+
+export async function processStudentPayment(
+  course: Course,
+  student: Student,
+): Promise<ProcessPaymentResponse> {
   try {
-    const paymentMethod = await stripe.paymentMethods.create({
-      type: 'card',
-      card: {
-        token: 'tok_visa',
-      },
-    })
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: parseInt(course.price) * 100,
-      currency: 'brl',
-      description: `Payment for ${course.title}`,
-      receipt_email: student.email,
-      metadata: {
-        studentId: student.id,
-        courseId: course.id,
-      },
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      confirm: true,
-      return_url: 'http://localhost:3333/payment/success',
-      payment_method: paymentMethod.id,
-    })
-
-    if (!paymentIntent.client_secret) {
-      console.error('Payment intent without client secret:', paymentIntent)
-      throw new Error('Payment intent without client secret')
+    const coursePrice = parseInt(course.price)
+    if (isNaN(coursePrice) || coursePrice <= 0) {
+      throw new Error('Invalid course price')
     }
+
+    const courseDescription: string | undefined =
+      typeof course.description === 'string' ? course.description : undefined
+
+    const paymentIntent = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'brl',
+            product_data: {
+              name: course.title,
+              description: courseDescription,
+              images: [course.thumbnail || 'url_da_imagem_padrao'],
+            },
+            unit_amount: coursePrice * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      customer_email: student.email,
+      success_url: `${env.CLIENT_URL}/courses/${course.slug}/enrolled`,
+      cancel_url: `${env.CLIENT_URL}/courses/${course.slug}`,
+      client_reference_id: student.id,
+    })
 
     console.log('Payment Intent Status:', paymentIntent.status)
 
-    if (paymentIntent.status === 'succeeded') {
-      return true
+    if (paymentIntent.payment_status === 'paid') {
+      return {
+        paymentSucceeded: true,
+        paymentIntent,
+      }
+    } else if (paymentIntent.status === 'open') {
+      return new Promise((resolve, reject) => {
+        setTimeout(
+          () => {
+            if (paymentIntent.payment_status !== 'paid') {
+              reject(new Error('Payment not succeeded'))
+            } else {
+              resolve({
+                paymentSucceeded: true,
+                paymentIntent,
+              })
+            }
+          },
+          5 * 60 * 1000,
+        )
+      })
     } else {
-      console.error('Payment intent not succeeded:', paymentIntent)
-      throw new Error('Payment intent not succeeded')
+      throw new Error('Payment not succeeded')
     }
   } catch (error) {
     console.error('Error in processStudentPayment:', error)

@@ -4,7 +4,17 @@ import { CategoriesRepository } from '../categories.repository'
 export class InMemoryCategoriesRepository implements CategoriesRepository {
   private categories: Category[] = []
 
-  async create(data: Prisma.CategoryCreateInput) {
+  async create(data: {
+    id: string
+    name: string
+    description: string | null
+    icon: string | null
+    createdAt: Date
+    updatedAt: Date
+    administratorId: string | null
+    courseId: string | null
+    studentId: string | null
+  }) {
     const category = {
       id: 'any_id',
       name: data.name,
@@ -12,6 +22,9 @@ export class InMemoryCategoriesRepository implements CategoriesRepository {
       icon: data.icon || null,
       createdAt: new Date(),
       updatedAt: new Date(),
+      administratorId: data.administratorId || null,
+      courseId: data.courseId || null,
+      studentId: data.studentId || null,
     }
 
     this.categories.push(category)

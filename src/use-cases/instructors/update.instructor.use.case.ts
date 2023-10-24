@@ -1,6 +1,7 @@
 import { InstructorsRepository } from '@/repositories/instructors.repository'
 import { InstructorNotFoundError } from './err/instructor.not.found.error'
 import { Instructor, Role } from '@prisma/client'
+import { hash } from 'bcryptjs'
 
 interface UpdateInstructorUseCaseProps {
   instructorId: string
@@ -10,7 +11,7 @@ interface UpdateInstructorUseCaseProps {
   avatar?: string
   biography?: string
   location?: string
-  socialLinks?: string[]
+  banner?: string
   role?: Role
 }
 
@@ -29,8 +30,8 @@ export class UpdateInstructorUseCase {
     avatar,
     biography,
     location,
-    socialLinks,
     role,
+    banner,
   }: UpdateInstructorUseCaseProps): Promise<UpdateInstructorUseCaseResponse> {
     const instructor = await this.instructorsRepository.findById(instructorId)
 
@@ -38,17 +39,21 @@ export class UpdateInstructorUseCase {
       throw new InstructorNotFoundError()
     }
 
+    const hashedPassword = password
+      ? await hash(password, 12)
+      : instructor.password
+
     const updatedInstructor = await this.instructorsRepository.update(
       instructorId,
       {
-        name,
-        email,
-        password,
-        avatar,
-        biography,
-        location,
-        socialLinks,
-        role,
+        name: name || instructor.name,
+        email: email || instructor.email,
+        password: hashedPassword,
+        avatar: avatar || instructor.avatar,
+        biography: biography || instructor.biography,
+        location: location || instructor.location,
+        role: role || instructor.role,
+        banner: banner || instructor.banner,
       },
     )
 

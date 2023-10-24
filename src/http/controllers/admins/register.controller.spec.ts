@@ -1,13 +1,7 @@
 import request from 'supertest'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import path from 'path'
-import fs from 'fs'
 
 import { app } from '@/app'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Register Admin Controller', () => {
   beforeAll(async () => {
@@ -19,18 +13,14 @@ describe('Register Admin Controller', () => {
   })
 
   it('should return 201 when admin is created', async () => {
-    const response = await request(app.server)
-      .post('/admins')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    const response = await request(app.server).post('/admins').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Brazil',
+      role: 'ADMIN',
+    })
 
     expect(response.statusCode).toBe(201)
   })

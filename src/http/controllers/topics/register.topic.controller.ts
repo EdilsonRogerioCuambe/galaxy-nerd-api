@@ -2,10 +2,17 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { makeRegisterTopicUseCase } from '@/use-cases/factories/topics/make.register.topic.use.case'
 import { TopicAlreadyExistsError } from '@/use-cases/topics/err/topic.already.exists.error'
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
-interface MultipartFile {
-  path: string
-}
+import { env } from '@/env'
+
+const s3Client = new S3Client({
+  region: 'us-east-2',
+  credentials: {
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+  },
+})
 
 export async function registerTopicController(
   request: FastifyRequest,
@@ -16,13 +23,31 @@ export async function registerTopicController(
     order: z.string(),
     courseId: z.string().uuid(),
     description: z.string().optional(),
+    icon: z.string().optional(),
   })
 
-  const { title, order, courseId, description } = schema.parse(request.body)
+  const { title, order, courseId, description, icon } = schema.parse(
+    request.body,
+  )
 
-  const { path: icon } = request.file as unknown as MultipartFile
+  let iconFileName = ''
+
+  if (icon) {
+    iconFileName = `${title}-icon.${icon.split(';')[0].split('/')[1]}`
+
+    const iconCommand = new PutObjectCommand({
+      Bucket: 'galaxynerd',
+      Key: iconFileName,
+      Body: Buffer.from(icon.split(',')[1], 'base64'),
+      ContentType: `image/${icon.split(';')[0].split('/')[1]}`,
+    })
+
+    await s3Client.send(iconCommand)
+  }
 
   try {
+    const topicUrl = `https://${env.AWS_BUCKET_NAME}.s3.amazonaws.com/${iconFileName}`
+
     const registerTopicUseCase = makeRegisterTopicUseCase()
 
     const topic = await registerTopicUseCase.execute({
@@ -30,7 +55,7 @@ export async function registerTopicController(
       order,
       courseId,
       description,
-      icon,
+      icon: topicUrl,
     })
 
     return reply.status(201).send({ topic })

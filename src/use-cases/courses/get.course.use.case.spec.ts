@@ -17,8 +17,12 @@ describe('Get Course Use Case', () => {
     const title = 'any_title'
     const description = 'any_description'
     const price = '0'
-    const categoryId = 'any_category_id'
     const instructorId = 'any_instructor_id'
+    const levelOne = 'any_level'
+    const thumbnailOne = 'any_thumbnail'
+    const imageOne = 'any_image'
+    const shortDescriptionOne = 'any_short_description'
+    const durationOne = 'any_duration'
 
     const slug = slugify({ slug: title })
 
@@ -26,26 +30,13 @@ describe('Get Course Use Case', () => {
       title,
       description,
       price,
-      categoryId,
       instructorId,
       slug,
-    })
-
-    const titleTwo = 'any_title_two'
-    const descriptionTwo = 'any_description_two'
-    const priceTwo = '0'
-    const categoryIdTwo = 'any_category_id_two'
-    const instructorIdTwo = 'any_instructor_id_two'
-
-    const slugTwo = slugify({ slug: titleTwo })
-
-    await coursesRepository.create({
-      title: titleTwo,
-      description: descriptionTwo,
-      price: priceTwo,
-      categoryId: categoryIdTwo,
-      instructorId: instructorIdTwo,
-      slug: slugTwo,
+      level: levelOne,
+      thumbnail: thumbnailOne,
+      image: imageOne,
+      shortDescription: shortDescriptionOne,
+      duration: durationOne,
     })
 
     const response = await sut.execute({ courseId: course.id })
@@ -56,9 +47,13 @@ describe('Get Course Use Case', () => {
         title,
         description,
         price,
-        categoryId,
         instructorId,
         slug,
+        level: levelOne,
+        thumbnail: thumbnailOne,
+        image: imageOne,
+        shortDescription: shortDescriptionOne,
+        duration: durationOne,
       }),
     )
   })

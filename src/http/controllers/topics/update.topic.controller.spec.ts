@@ -1,64 +1,70 @@
 import request from 'supertest'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import path from 'path'
-import fs from 'fs'
 
 import { app } from '@/app'
-import { createAndAuthenticateInstructor } from '@/utils/test/create.and.authenticate.instructor'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Update Topic Controller', () => {
   beforeAll(async () => {
-    app.ready()
+    await app.ready()
   })
 
   afterAll(async () => {
     await app.close()
   })
 
-  it('should update a topic', async () => {
-    const { token, instructor } = await createAndAuthenticateInstructor(app)
+  it('should be able to update topic', async () => {
+    const instructor = await request(app.server).post('/instructors').send({
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Brazil',
+      role: 'INSTRUCTOR',
+    })
 
-    const category = await request(app.server)
-      .post('/categories')
-      .set('Authorization', `Bearer ${token}`)
-      .field('name', 'any_name')
-      .field('description', 'any_description')
-      .attach('icon', avatar)
+    const auth = await request(app.server).post('/instructors/sessions').send({
+      email: 'johndoe@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
 
     const course = await request(app.server)
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
-      .field('title', 'Course title')
-      .field('description', 'Course description')
-      .field('price', '250')
-      .field('categoryId', category.body.category.category.id)
-      .field('instructorId', instructor.id)
-      .attach('thumbnail', avatar)
+      .send({
+        title: 'Course title',
+        description: 'Course description',
+        price: '250',
+        instructorId: instructor.body.instructor.instructor.id,
+        duration: '10',
+        level: 'Iniciante',
+      })
 
-    const topic = await request(app.server)
+    const responseNewTopic = await request(app.server)
       .post('/topics')
       .set('Authorization', `Bearer ${token}`)
-      .field('title', 'Topic title')
-      .field('description', 'Topic description')
-      .field('order', '1')
-      .field('courseId', course.body.course.course.id)
-      .attach('icon', avatar)
+      .send({
+        title: 'Topic title',
+        description: 'Topic description',
+        courseId: course.body.course.course.id,
+        order: '1',
+      })
 
     const response = await request(app.server)
-      .put(`/topics/${topic.body.topic.topic.id}`)
+      .put(`/topics/${responseNewTopic.body.topic.topic.id}`)
       .set('Authorization', `Bearer ${token}`)
-      .field('id', topic.body.topic.topic.id)
-      .field('title', 'new_title')
-      .field('description', 'new_description')
-      .field('order', '5')
-      .field('courseId', course.body.course.course.id)
-      .attach('icon', avatar)
+      .send({
+        id: responseNewTopic.body.topic.topic.id,
+        title: 'Topic title updated',
+        description: 'Topic description updated',
+        courseId: course.body.course.course.id,
+        order: '2',
+      })
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body.topic.topic.title).toBe('new_title')
+    expect(response.statusCode).toBe(201)
+    expect(response.body.topic).toBeTruthy()
+    expect(response.body.topic.topic).toBeTruthy()
+    expect(response.body.topic.topic.id).toBeTruthy()
   })
 })

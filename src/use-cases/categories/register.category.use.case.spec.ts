@@ -27,6 +27,12 @@ describe('Register Category Use Case', () => {
       name: 'any_name',
       description: 'any_description',
       icon: 'any_icon',
+      administratorId: 'any_administrator_id',
+      courseId: 'any_course_id',
+      studentId: 'any_student_id',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      id: 'any_id',
     })
 
     await expect(

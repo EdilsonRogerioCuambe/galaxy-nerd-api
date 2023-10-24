@@ -8,8 +8,12 @@ interface RegisterCourseUseCaseProps {
   description?: string
   price: string
   thumbnail?: string
+  image?: string
+  level: string
+  duration: string
   instructorId: string
-  categoryId?: string
+  languages?: string[]
+  shortDescription?: string
 }
 
 interface RegisterCourseUseCaseResponse {
@@ -24,7 +28,12 @@ export class RegisterCourseUseCase {
     description,
     price,
     instructorId,
-    categoryId,
+    thumbnail,
+    languages,
+    duration,
+    image,
+    level,
+    shortDescription,
   }: RegisterCourseUseCaseProps): Promise<RegisterCourseUseCaseResponse> {
     const courseAlreadyExists = await this.coursesRepository.findByTitle(title)
 
@@ -40,7 +49,14 @@ export class RegisterCourseUseCase {
       price,
       slug,
       instructorId,
-      categoryId,
+      thumbnail,
+      image,
+      level,
+      duration,
+      shortDescription,
+      languages: {
+        connect: languages?.map((language) => ({ id: language })),
+      },
     })
 
     return { course }

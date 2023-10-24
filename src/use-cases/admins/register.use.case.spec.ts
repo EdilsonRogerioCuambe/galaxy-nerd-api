@@ -1,4 +1,4 @@
-import { it, expect, describe, beforeEach, afterEach } from 'vitest'
+import { it, expect, describe, beforeEach } from 'vitest'
 import { RegisterAdminUseCase } from './register.use.case'
 import { compare } from 'bcryptjs'
 import { InMemoryAdminsRepository } from '@/repositories/in-memory-repositories/in.memory.admins.repository'
@@ -19,7 +19,7 @@ describe('register admin use case', () => {
       email: 'any_email',
       password: 'any_password',
       avatar: 'any_avatar',
-      socialLinks: ['any_social_link', 'any_social_link'],
+      banner: 'any_banner',
       role: 'ADMIN',
       biography: 'any_biography',
       location: 'any_location',
@@ -36,7 +36,7 @@ describe('register admin use case', () => {
       email: 'any_email',
       password: 'any_password',
       avatar: 'any_avatar',
-      socialLinks: ['any_social_link', 'any_social_link'],
+      banner: 'any_banner',
       role: 'ADMIN',
       biography: 'any_biography',
       location: 'any_location',
@@ -48,7 +48,7 @@ describe('register admin use case', () => {
         email: 'any_email',
         password: 'any_password',
         avatar: 'any_avatar',
-        socialLinks: ['any_social_link', 'any_social_link'],
+        banner: 'any_banner',
         role: 'ADMIN',
         biography: 'any_biography',
         location: 'any_location',
@@ -60,26 +60,26 @@ describe('register admin use case', () => {
     const { admin } = await sut.execute({
       name: 'any_name',
       email: 'any_email',
+      banner: 'any_banner',
       password: 'any_password',
       avatar: 'any_avatar',
-      socialLinks: ['any_social_link', 'any_social_link'],
       role: 'ADMIN',
       biography: 'any_biography',
       location: 'any_location',
     })
 
     expect(admin).toEqual({
-      id: expect.any(String),
+      id: 'any_id',
       name: 'any_name',
       email: 'any_email',
-      password: expect.any(String),
+      password: admin.password,
+      banner: 'any_banner',
       avatar: 'any_avatar',
-      socialLinks: ['any_social_link', 'any_social_link'],
       role: 'ADMIN',
       biography: 'any_biography',
       location: 'any_location',
-      createdAt: expect.any(Date),
-      updatedAt: expect.any(Date),
+      createdAt: admin.createdAt,
+      updatedAt: admin.updatedAt,
     })
     expect(admin.password).not.toBe('any_password')
     expect(admin.password).toHaveLength(60)

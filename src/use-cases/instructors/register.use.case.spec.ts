@@ -23,10 +23,10 @@ describe('register instructor use case', () => {
       email: 'any_email',
       password: 'any_password',
       avatar: 'any_avatar',
-      socialLinks: ['any_social_link', 'any_social_link'],
       role: 'INSTRUCTOR',
       biography: 'any_biography',
       location: 'any_location',
+      banner: 'any_banner',
     })
 
     const instructorPasswordIsHashed = await compare(
@@ -43,10 +43,10 @@ describe('register instructor use case', () => {
       email: 'any_email',
       password: 'any_password',
       avatar: 'any_avatar',
-      socialLinks: ['any_social_link', 'any_social_link'],
       role: 'INSTRUCTOR',
       biography: 'any_biography',
       location: 'any_location',
+      banner: 'any_banner',
     })
 
     expect(async () => {
@@ -55,10 +55,10 @@ describe('register instructor use case', () => {
         email: 'any_email',
         password: 'any_password',
         avatar: 'any_avatar',
-        socialLinks: ['any_social_link', 'any_social_link'],
         role: 'INSTRUCTOR',
         biography: 'any_biography',
         location: 'any_location',
+        banner: 'any_banner',
       })
     }).rejects.toBeInstanceOf(InstructorAlreadyExistsError)
   })

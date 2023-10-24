@@ -21,7 +21,6 @@ describe('Get Instructor Profile Use Case', () => {
       biography: 'any_biography',
       location: 'any_location',
       role: 'INSTRUCTOR',
-      socialLinks: ['any_social_link'],
     })
 
     const response = await sut.execute({

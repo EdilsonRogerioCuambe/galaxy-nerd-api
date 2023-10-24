@@ -30,7 +30,6 @@ describe('Authenticate instructors use case', () => {
       avatar: 'any_avatar',
       biography: 'any_biography',
       location: 'any_location',
-      socialLinks: ['any_social_link'],
       role: 'INSTRUCTOR',
     })
 
@@ -50,7 +49,6 @@ describe('Authenticate instructors use case', () => {
       avatar: 'any_avatar',
       biography: 'any_biography',
       location: 'any_location',
-      socialLinks: ['any_social_link'],
       role: 'INSTRUCTOR',
     })
 

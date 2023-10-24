@@ -21,7 +21,6 @@ describe('Delete Admin Use Case', () => {
       avatar: 'any_avatar',
       biography: 'any_biography',
       location: 'any_location',
-      socialLinks: ['any_social_link'],
     })
 
     await sut.execute({ adminId: admin.id })

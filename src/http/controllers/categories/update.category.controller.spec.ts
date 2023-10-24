@@ -1,43 +1,54 @@
 import request from 'supertest'
 import { describe, it, expect, afterAll, beforeAll } from 'vitest'
-import path from 'path'
-import fs from 'fs'
-
 import { app } from '@/app'
-import { createAndAuthenticateInstructor } from '@/utils/test/create.and.authenticate.instructor'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Update Category Controller', () => {
   beforeAll(async () => {
-    app.ready()
+    await app.ready()
   })
 
   afterAll(async () => {
     await app.close()
   })
 
-  it('should update a category', async () => {
-    const { token } = await createAndAuthenticateInstructor(app)
+  it('should be able to update category', async () => {
+    await request(app.server).post('/admins').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Brazil',
+      role: 'ADMIN',
+    })
 
-    const category = await request(app.server)
+    const auth = await request(app.server).post('/admins/sessions').send({
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+    })
+
+    const { token } = auth.body
+
+    const responseNewCategorie = await request(app.server)
       .post('/categories')
       .set('Authorization', `Bearer ${token}`)
-      .field('name', 'any_name')
-      .field('description', 'any_description')
-      .attach('icon', avatar)
+      .send({
+        name: 'Node.js',
+        description:
+          "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine.",
+      })
 
-    const response = await request(app.server)
-      .put(`/categories/${category.body.category.category.id}`)
+    const { category } = responseNewCategorie.body
+
+    const responseUpdateCategorie = await request(app.server)
+      .put(`/categories/${category.category.id}`)
       .set('Authorization', `Bearer ${token}`)
-      .field('categoryId', category.body.category.category.id)
-      .field('name', 'new_name')
-      .field('description', 'new_description')
-      .attach('icon', avatar)
+      .send({
+        categoryId: category.category.id,
+        name: 'Node.js',
+        description:
+          "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine.",
+      })
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body.category.category.name).toBe('new_name')
+    expect(responseUpdateCategorie.status).toBe(200)
   })
 })

@@ -17,7 +17,7 @@ export class InMemoryAdminsRepository implements AdminsRepository {
       avatar: data.avatar as string | null,
       biography: data.biography as string | null,
       location: data.location as string | null,
-      socialLinks: data.socialLinks as string[],
+      banner: data.banner as string | null,
       role: data.role as Role,
       createdAt: this.admins[admin].createdAt,
       updatedAt: new Date(),
@@ -59,8 +59,8 @@ export class InMemoryAdminsRepository implements AdminsRepository {
       avatar: data.avatar || null,
       biography: data.biography || null,
       location: data.location || null,
-      socialLinks: (data.socialLinks as string[]) || null,
       role: Role.ADMIN,
+      banner: data.banner || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     }

@@ -1,12 +1,6 @@
 import { app } from '@/app'
 import request from 'supertest'
-import path from 'path'
-import fs from 'fs'
 import { it, describe, expect, afterAll, beforeAll } from 'vitest'
-
-const avatar = fs.readFileSync(
-  path.resolve(__dirname, '..', 'tests', 'assets', 'avatar.png'),
-)
 
 describe('Delete Instructor Controller', () => {
   beforeAll(async () => {
@@ -18,21 +12,25 @@ describe('Delete Instructor Controller', () => {
   })
 
   it('should be able to delete instructor', async () => {
-    const instructor = await request(app.server)
-      .post('/instructors')
-      .field('name', 'John Doe')
-      .field('email', 'johndoe@gmail.com')
-      .field('password', '@17Edilson17')
-      .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
-      .field('role', 'ADMIN')
-      .field('location', 'Lagos')
-      .attach('avatar', avatar)
+    const instructor = await request(app.server).post('/instructors').send({
+      name: 'John Doe',
+      email: 'edilson@gmail.com',
+      password: '@17Edilson17',
+      biography: 'I am a developer',
+      location: 'Lagos',
+      role: 'INSTRUCTOR',
+    })
 
-    const auth = await request(app.server).post('/instructors/sessions').send({
-      email: 'johndoe@gmail.com',
+    await request(app.server).post('/admins').send({
+      name: 'Matheus',
+      email: 'mateus@gmail.com',
+      password: '@17Edilson17',
+      role: 'ADMIN',
+      biography: 'I am a developer',
+    })
+
+    const auth = await request(app.server).post('/admins/sessions').send({
+      email: 'mateus@gmail.com',
       password: '@17Edilson17',
     })
 

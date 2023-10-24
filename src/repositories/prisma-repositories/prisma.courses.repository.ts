@@ -19,7 +19,18 @@ export class PrismaCoursesRepository implements CoursesRepository {
   }
 
   async findAll() {
-    const courses = await prisma.course.findMany()
+    const courses = await prisma.course.findMany({
+      include: {
+        instructor: true,
+        languages: true,
+        topics: {
+          include: {
+            lessons: true,
+          },
+        },
+        enrollments: true,
+      },
+    })
 
     return courses
   }
@@ -27,6 +38,25 @@ export class PrismaCoursesRepository implements CoursesRepository {
   async findById(id: string) {
     const course = await prisma.course.findUnique({
       where: { id },
+      include: {
+        instructor: true,
+        languages: true,
+        favorites: true,
+        topics: {
+          include: {
+            lessons: {
+              include: {
+                forum: {
+                  include: {
+                    student: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        enrollments: true,
+      },
     })
 
     return course
@@ -35,6 +65,17 @@ export class PrismaCoursesRepository implements CoursesRepository {
   async findBySlug(slug: string) {
     const course = await prisma.course.findUnique({
       where: { slug },
+      include: {
+        instructor: true,
+        languages: true,
+        favorites: true,
+        topics: {
+          include: {
+            lessons: true,
+          },
+        },
+        enrollments: true,
+      },
     })
 
     return course
@@ -51,6 +92,17 @@ export class PrismaCoursesRepository implements CoursesRepository {
   async findByTitle(title: string) {
     const course = await prisma.course.findUnique({
       where: { title },
+      include: {
+        instructor: true,
+        languages: true,
+        favorites: true,
+        topics: {
+          include: {
+            lessons: true,
+          },
+        },
+        enrollments: true,
+      },
     })
 
     return course
