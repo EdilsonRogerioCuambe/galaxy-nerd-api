@@ -21,7 +21,6 @@ describe('Get Admin Profile Use Case', () => {
       biography: 'any_biography',
       location: 'any_location',
       role: 'ADMIN',
-      socialLinks: ['any_social_link'],
     })
 
     const response = await sut.execute({

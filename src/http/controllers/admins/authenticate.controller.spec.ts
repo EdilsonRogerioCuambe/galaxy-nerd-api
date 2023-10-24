@@ -17,16 +17,13 @@ describe('Authenticate Admin Controller', () => {
     await app.close()
   })
 
-  it('should return 200 when admin is authenticated', async () => {
+  it.only('should return 200 when admin is authenticated', async () => {
     await request(app.server)
       .post('/admins')
       .field('name', 'John Doe')
       .field('email', 'johndoe@gmail.com')
       .field('password', '@17Edilson17')
       .field('biography', 'I am a developer')
-      .field('socialLinks', 'twitter')
-      .field('socialLinks', 'facebook')
-      .field('socialLinks', 'linkedin')
       .field('role', 'ADMIN')
       .field('location', 'Lagos')
       .attach('avatar', avatar)

@@ -31,7 +31,6 @@ describe('Authenticate Student Use Case', () => {
       avatar: 'any_avatar',
       biography: 'any_biography',
       location: 'any_location',
-      socialLinks: ['any_social_link'],
     })
 
     const { student } = await sut.execute({
@@ -51,7 +50,6 @@ describe('Authenticate Student Use Case', () => {
       avatar: 'any_avatar',
       biography: 'any_biography',
       location: 'any_location',
-      socialLinks: ['any_social_link'],
     })
 
     const promise = sut.execute({

@@ -14,12 +14,15 @@ describe('Update Course Use Case', () => {
   })
 
   it('should update a course', async () => {
-    const title = 'title'
-    const description = 'description'
-    const price = 'price'
-    const thumbnail = 'thumbnail'
-    const categoryId = 'category_id'
-    const instructorId = 'instructor_id'
+    const title = 'any_title'
+    const description = 'any_description'
+    const price = '0'
+    const instructorId = 'any_instructor_id'
+    const levelOne = 'any_level'
+    const thumbnailOne = 'any_thumbnail'
+    const imageOne = 'any_image'
+    const shortDescriptionOne = 'any_short_description'
+    const durationOne = 'any_duration'
 
     const slug = slugify({ slug: title })
 
@@ -28,16 +31,22 @@ describe('Update Course Use Case', () => {
       description,
       price,
       slug,
-      thumbnail,
-      categoryId,
       instructorId,
+      level: levelOne,
+      thumbnail: thumbnailOne,
+      image: imageOne,
+      shortDescription: shortDescriptionOne,
+      duration: durationOne,
     })
 
     const newDescription = 'new_description'
     const newPrice = 'new_price'
     const newThumbnail = 'new_thumbnail'
-    const newCategoryId = 'new_category_id'
     const newInstructorId = 'instructor_id'
+    const newLevel = 'new_level'
+    const newImage = 'new_image'
+    const newShortDescription = 'new_short_description'
+    const newDuration = 'new_duration'
 
     const response = await sut.execute({
       courseId: course.id,
@@ -45,8 +54,11 @@ describe('Update Course Use Case', () => {
       description: newDescription,
       price: newPrice,
       thumbnail: newThumbnail,
-      categoryId: newCategoryId,
       instructorId: newInstructorId,
+      level: newLevel,
+      image: newImage,
+      shortDescription: newShortDescription,
+      duration: newDuration,
     })
 
     expect(response.course).toEqual({
@@ -56,11 +68,13 @@ describe('Update Course Use Case', () => {
       price: 'new_price',
       slug: course.slug,
       instructorId: 'instructor_id',
-      categoryId: 'new_category_id',
       thumbnail: response.course.thumbnail,
-      studentId: undefined,
       createdAt: course.createdAt,
       updatedAt: response.course.updatedAt,
+      level: 'new_level',
+      image: 'new_image',
+      shortDescription: 'new_short_description',
+      duration: 'new_duration',
     })
   })
 
@@ -71,8 +85,11 @@ describe('Update Course Use Case', () => {
       description: 'new_description',
       price: 'new_price',
       thumbnail: 'new_thumbnail',
-      categoryId: 'new_category_id',
       instructorId: 'new_instructor_id',
+      level: 'new_level',
+      image: 'new_image',
+      shortDescription: 'new_short_description',
+      duration: 'new_duration',
     })
 
     await expect(promise).rejects.toBeInstanceOf(CourseNotFoundError)

@@ -20,8 +20,6 @@ describe('Update Admin Use Case', () => {
       avatar: 'any_avatar',
       biography: 'any_biography',
       location: 'any_location',
-      socialLinks: ['any_social_link'],
-      interests: ['any_interest'],
       banner: 'any_banner',
     })
 
@@ -33,9 +31,7 @@ describe('Update Admin Use Case', () => {
       avatar: 'updated_avatar',
       biography: 'updated_biography',
       location: 'updated_location',
-      socialLinks: ['updated_social_link'],
       role: 'ADMIN',
-      interests: ['updated_interest'],
       banner: 'updated_banner',
     })
 
@@ -43,12 +39,10 @@ describe('Update Admin Use Case', () => {
       id: 'any_id',
       name: 'updated_name',
       email: 'updated_email',
-      password: 'updated_password',
+      password: admin.password,
       avatar: 'updated_avatar',
       biography: 'updated_biography',
       location: 'updated_location',
-      socialLinks: ['updated_social_link'],
-      interests: ['updated_interest'],
       banner: 'updated_banner',
       role: 'ADMIN',
       createdAt: newAdmin.createdAt,

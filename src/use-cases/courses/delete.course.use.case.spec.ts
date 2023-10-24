@@ -17,7 +17,6 @@ describe('Delete Course Use Case', () => {
     const title = 'any_title'
     const description = 'any_description'
     const price = '0'
-    const categoryId = 'any_category_id'
     const instructorId = 'any_instructor_id'
     const thumbnail = 'any_thumbnail'
 
@@ -29,7 +28,6 @@ describe('Delete Course Use Case', () => {
       price,
       slug,
       instructorId,
-      categoryId,
       thumbnail,
     })
 

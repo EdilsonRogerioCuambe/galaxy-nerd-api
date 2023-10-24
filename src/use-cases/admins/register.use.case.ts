@@ -10,7 +10,6 @@ interface RegisterAdminUseCaseProps {
   avatar?: string
   biography?: string
   location?: string
-  socialLinks?: string[]
   banner?: string
   role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 }
@@ -29,7 +28,6 @@ export class RegisterAdminUseCase {
     avatar,
     biography,
     location,
-    socialLinks,
     role,
     banner,
   }: RegisterAdminUseCaseProps): Promise<RegisterAdminUseCaseResponse> {
@@ -48,7 +46,6 @@ export class RegisterAdminUseCase {
       avatar,
       biography,
       location,
-      socialLinks,
       role,
       banner,
     })

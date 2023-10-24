@@ -12,7 +12,7 @@ interface RegisterCourseUseCaseProps {
   level: string
   duration: string
   instructorId: string
-  languages: string[]
+  languages?: string[]
   shortDescription?: string
 }
 
@@ -55,7 +55,7 @@ export class RegisterCourseUseCase {
       duration,
       shortDescription,
       languages: {
-        connect: languages.map((language) => ({ id: language })),
+        connect: languages?.map((language) => ({ id: language })),
       },
     })
 

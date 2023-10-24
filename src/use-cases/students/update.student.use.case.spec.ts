@@ -22,8 +22,6 @@ describe('Update Student Use Case', () => {
       avatar: 'any_avatar',
       biography: 'any_biography',
       location: 'any_location',
-      socialLinks: ['any_social_link'],
-      interests: ['any_interest'],
     })
 
     const updatedStudent = await sut.execute({
@@ -34,12 +32,6 @@ describe('Update Student Use Case', () => {
       avatar: 'updated_avatar',
       biography: 'updated_biography',
       location: 'updated_location',
-      socialLinks: ['updated_social_link'],
-      interests: [
-        'updated_interest',
-        'updated_interest_2',
-        'updated_interest_3',
-      ],
       studentId: student.id,
     })
 
@@ -55,12 +47,6 @@ describe('Update Student Use Case', () => {
     expect(updatedStudent.student.avatar).toBe('updated_avatar')
     expect(updatedStudent.student.biography).toBe('updated_biography')
     expect(updatedStudent.student.location).toBe('updated_location')
-    expect(updatedStudent.student.socialLinks).toEqual(['updated_social_link'])
-    expect(updatedStudent.student.interests).toEqual([
-      'updated_interest',
-      'updated_interest_2',
-      'updated_interest_3',
-    ])
   })
 
   it('should not be able to update a student if it does not exist', async () => {
@@ -73,8 +59,6 @@ describe('Update Student Use Case', () => {
         avatar: 'any_avatar',
         biography: 'any_biography',
         location: 'any_location',
-        socialLinks: ['any_social_link'],
-        interests: ['any_interest'],
         studentId: 'invalid_id',
       }),
     ).rejects.toBeInstanceOf(StudentNotFoundError)

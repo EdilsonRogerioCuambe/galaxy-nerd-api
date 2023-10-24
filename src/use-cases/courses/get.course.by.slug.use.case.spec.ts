@@ -17,8 +17,12 @@ describe('Get Course By Slug Use Case', () => {
     const title = 'any_title'
     const description = 'any_description'
     const price = '0'
-    const categoryId = 'any_category_id'
     const instructorId = 'any_instructor_id'
+    const level = 'any_level'
+    const thumbnail = 'any_thumbnail'
+    const image = 'any_image'
+    const shortDescription = 'any_short_description'
+    const duration = 'any_duration'
 
     const slug = slugify({ slug: title })
 
@@ -26,16 +30,24 @@ describe('Get Course By Slug Use Case', () => {
       title,
       description,
       price,
-      categoryId,
       instructorId,
       slug,
+      level,
+      thumbnail,
+      image,
+      shortDescription,
+      duration,
     })
 
     const titleTwo = 'any_title_two'
     const descriptionTwo = 'any_description_two'
     const priceTwo = '0'
-    const categoryIdTwo = 'any_category_id_two'
     const instructorIdTwo = 'any_instructor_id_two'
+    const levelTwo = 'any_level'
+    const thumbnailTwo = 'any_thumbnail'
+    const imageTwo = 'any_image'
+    const shortDescriptionTwo = 'any_short_description'
+    const durationTwo = 'any_duration'
 
     const slugTwo = slugify({ slug: titleTwo })
 
@@ -43,9 +55,13 @@ describe('Get Course By Slug Use Case', () => {
       title: titleTwo,
       description: descriptionTwo,
       price: priceTwo,
-      categoryId: categoryIdTwo,
       instructorId: instructorIdTwo,
       slug: slugTwo,
+      level: levelTwo,
+      thumbnail: thumbnailTwo,
+      image: imageTwo,
+      shortDescription: shortDescriptionTwo,
+      duration: durationTwo,
     })
 
     const response = await sut.execute({ slug })
@@ -56,9 +72,13 @@ describe('Get Course By Slug Use Case', () => {
         title,
         description,
         price,
-        categoryId,
         instructorId,
         slug,
+        level,
+        thumbnail,
+        image,
+        shortDescription,
+        duration,
       }),
     )
   })

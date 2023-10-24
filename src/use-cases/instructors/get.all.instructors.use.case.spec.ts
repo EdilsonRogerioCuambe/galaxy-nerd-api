@@ -20,7 +20,6 @@ describe('Get All Instructors Use Case', () => {
       biography: 'any_biography',
       location: 'any_location',
       role: 'ADMIN',
-      socialLinks: ['any_socialLinks'],
     })
 
     await instructorsRepository.create({
@@ -31,7 +30,6 @@ describe('Get All Instructors Use Case', () => {
       biography: 'any_biography_1',
       location: 'any_location_1',
       role: 'ADMIN',
-      socialLinks: ['any_socialLinks_1'],
     })
 
     const response = await sut.execute()

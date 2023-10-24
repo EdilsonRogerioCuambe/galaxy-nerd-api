@@ -23,12 +23,10 @@ describe('register instructor use case', () => {
       email: 'any_email',
       password: 'any_password',
       avatar: 'any_avatar',
-      socialLinks: ['any_social_link', 'any_social_link'],
       role: 'INSTRUCTOR',
       biography: 'any_biography',
       location: 'any_location',
       banner: 'any_banner',
-      interests: ['any_interest', 'any_interest'],
     })
 
     const instructorPasswordIsHashed = await compare(
@@ -45,10 +43,8 @@ describe('register instructor use case', () => {
       email: 'any_email',
       password: 'any_password',
       avatar: 'any_avatar',
-      socialLinks: ['any_social_link', 'any_social_link'],
       role: 'INSTRUCTOR',
       biography: 'any_biography',
-      interests: ['any_interest', 'any_interest'],
       location: 'any_location',
       banner: 'any_banner',
     })
@@ -59,12 +55,10 @@ describe('register instructor use case', () => {
         email: 'any_email',
         password: 'any_password',
         avatar: 'any_avatar',
-        socialLinks: ['any_social_link', 'any_social_link'],
         role: 'INSTRUCTOR',
         biography: 'any_biography',
         location: 'any_location',
         banner: 'any_banner',
-        interests: ['any_interest', 'any_interest'],
       })
     }).rejects.toBeInstanceOf(InstructorAlreadyExistsError)
   })
