@@ -14,20 +14,8 @@ export async function forumsRoutes(app: FastifyInstance) {
     },
     createForumController,
   )
-  app.get(
-    '/forums/:id',
-    {
-      onRequest: [verifyJwt],
-    },
-    getForumByIdController,
-  )
-  app.get(
-    '/forums/slug/:slug',
-    {
-      onRequest: [verifyJwt],
-    },
-    getForumBySlugController,
-  )
+  app.get('/forums/:id', getForumByIdController)
+  app.get('/forums/slug/:slug', getForumBySlugController)
   app.delete(
     '/forums/:id',
     {

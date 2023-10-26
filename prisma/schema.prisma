@@ -33,18 +33,19 @@ model Administrator {
 }
 
 model Instructor {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
   avatar    String?
   biography String?
   location  String?
   banner    String?
-  role      Role     @default(INSTRUCTOR)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Role      @default(INSTRUCTOR)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   courses   Course[]
+  Answers   Answers[]
 
   @@map("instructors")
 }
@@ -251,14 +252,22 @@ model Forum {
 }
 
 model Answers {
-  id        String   @id @default(uuid())
-  body      String
-  forum     Forum?   @relation(fields: [forumId], references: [id])
-  forumId   String?
-  student   Student? @relation(fields: [studentId], references: [id])
-  studentId String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String      @id @default(uuid())
+  content      String
+  parent       Answers?    @relation("AnswersToAnswers", fields: [parentId], references: [id])
+  parentId     String?
+  forum        Forum?      @relation(fields: [forumId], references: [id])
+  forumId      String?
+  upvotes      Int         @default(0)
+  downvotes    Int         @default(0)
+  student      Student?    @relation(fields: [studentId], references: [id])
+  studentId    String?
+  instructor   Instructor? @relation(fields: [instructorId], references: [id])
+  instructorId String?
+  isAnswer     Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  children     Answers[]   @relation("AnswersToAnswers")
 
   @@map("answers")
 }
