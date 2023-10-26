@@ -5,13 +5,7 @@ import { getAllAnswersController } from './get.all.answers.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 
 export async function answersRoutes(app: FastifyInstance) {
-  app.post(
-    '/answers',
-    {
-      onRequest: [verifyJwt],
-    },
-    createAnswerController,
-  )
+  app.post('/answers', createAnswerController)
   app.get(
     '/answers/:id/children',
     {

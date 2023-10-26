@@ -20,7 +20,11 @@ export class PrismaForunsRepository implements ForunsRepository {
   }
 
   async findAll() {
-    const forums = await prisma.forum.findMany()
+    const forums = await prisma.forum.findMany({
+      include: {
+        answers: true,
+      },
+    })
 
     return forums
   }
@@ -41,9 +45,44 @@ export class PrismaForunsRepository implements ForunsRepository {
   }
 
   async findBySlug(slug: string) {
+    const getNestedAnswers = async (parentId: string | null) => {
+      const answers = await prisma.answers.findMany({
+        where: { parentId },
+        include: {
+          children: true,
+          instructor: true,
+          student: true,
+          parent: true,
+        },
+      })
+
+      for (const answer of answers) {
+        if (answer.children.length > 0) {
+          const children = await getNestedAnswers(answer.id)
+          answer.children = children
+        }
+      }
+
+      return answers
+    }
+
     const forum = await prisma.forum.findUnique({
       where: { slug },
+      include: {
+        answers: {
+          include: {
+            children: true,
+            instructor: true,
+            student: true,
+            parent: true,
+          },
+        },
+      },
     })
+
+    if (forum) {
+      forum.answers = await getNestedAnswers(null)
+    }
 
     return forum
   }
