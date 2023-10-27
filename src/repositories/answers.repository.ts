@@ -7,5 +7,6 @@ export interface AnswersRepository {
   delete(id: string): Promise<Answers | null>
   update(id: string, data: Prisma.AnswersUpdateInput): Promise<Answers>
   findChildren(id: string): Promise<Answers[] | null>
+  findByForumId(forumId: string): Promise<Answers[]>
   findParent(id: string): Promise<Answers | null>
 }

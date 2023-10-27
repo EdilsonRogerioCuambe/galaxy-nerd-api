@@ -85,6 +85,36 @@ export class PrismaAnswersRepository implements AnswersRepository {
     return answers
   }
 
+  async findByForumId(forumId: string) {
+    const findChildrenRecursive = async (
+      parentId: string | null,
+      forumId: string,
+    ) => {
+      const answers = await prisma.answers.findMany({
+        where: { parentId, forumId },
+        include: {
+          children: true,
+          parent: true,
+          instructor: true,
+          student: true,
+        },
+      })
+
+      for (const answer of answers) {
+        if (answer.children.length > 0) {
+          const children = await findChildrenRecursive(answer.id, forumId)
+          answer.children = children
+        }
+      }
+
+      return answers
+    }
+
+    const answers = await findChildrenRecursive(null, forumId)
+
+    return answers
+  }
+
   async findParent(id: string) {
     const findParentRecursive = async (childId: string) => {
       const answer = await prisma.answers.findUnique({
