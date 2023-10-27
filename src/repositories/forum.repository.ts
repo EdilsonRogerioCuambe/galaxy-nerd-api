@@ -8,4 +8,5 @@ export interface ForunsRepository {
   update(id: string, data: Prisma.ForumUncheckedUpdateInput): Promise<Forum>
   findBySlug(slug: string): Promise<Forum | null>
   findByTitle(title: string): Promise<Forum | null>
+  findAllForumsByLessonId(lessonId: string): Promise<Forum[]>
 }

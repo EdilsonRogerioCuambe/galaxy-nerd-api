@@ -90,6 +90,18 @@ export class PrismaForunsRepository implements ForunsRepository {
     return forum
   }
 
+  async findAllForumsByLessonId(lessonId: string) {
+    const forums = await prisma.forum.findMany({
+      where: { lessonId },
+      include: {
+        answers: true,
+        student: true,
+      },
+    })
+
+    return forums
+  }
+
   async findByTitle(title: string) {
     const forum = await prisma.forum.findUnique({
       where: { title },
