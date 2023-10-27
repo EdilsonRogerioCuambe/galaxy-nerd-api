@@ -3,6 +3,7 @@ import { createAnswerController } from './create.anwser.controller'
 import { getChildrenAnswersController } from './get.children.answers.controller'
 import { getAllAnswersController } from './get.all.answers.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
+import { updateAnswerController } from './update.anwer.controller'
 
 export async function answersRoutes(app: FastifyInstance) {
   app.post('/answers', createAnswerController)
@@ -20,4 +21,5 @@ export async function answersRoutes(app: FastifyInstance) {
     },
     getAllAnswersController,
   )
+  app.put('/answers/:id', updateAnswerController)
 }

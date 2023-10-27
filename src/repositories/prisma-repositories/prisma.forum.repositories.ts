@@ -45,9 +45,12 @@ export class PrismaForunsRepository implements ForunsRepository {
   }
 
   async findBySlug(slug: string) {
-    const getNestedAnswers = async (parentId: string | null) => {
+    const getNestedAnswers = async (
+      parentId: string | null,
+      forumId: string,
+    ) => {
       const answers = await prisma.answers.findMany({
-        where: { parentId },
+        where: { parentId, forumId },
         include: {
           children: true,
           instructor: true,
@@ -58,7 +61,7 @@ export class PrismaForunsRepository implements ForunsRepository {
 
       for (const answer of answers) {
         if (answer.children.length > 0) {
-          const children = await getNestedAnswers(answer.id)
+          const children = await getNestedAnswers(answer.id, forumId)
           answer.children = children
         }
       }
@@ -81,7 +84,7 @@ export class PrismaForunsRepository implements ForunsRepository {
     })
 
     if (forum) {
-      forum.answers = await getNestedAnswers(null)
+      forum.answers = await getNestedAnswers(null, forum.id)
     }
 
     return forum
