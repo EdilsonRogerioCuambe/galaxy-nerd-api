@@ -46,6 +46,7 @@ model Instructor {
   updatedAt DateTime  @updatedAt
   courses   Course[]
   Answers   Answers[]
+  Vote      Vote[]
 
   @@map("instructors")
 }
@@ -115,6 +116,7 @@ model Student {
   youtube        String?
   website        String?
   github         String?
+  Vote           Vote[]
 
   @@map("students")
 }
@@ -258,8 +260,6 @@ model Answers {
   parentId     String?
   forum        Forum?      @relation(fields: [forumId], references: [id])
   forumId      String?
-  upvotes      Int         @default(0)
-  downvotes    Int         @default(0)
   student      Student?    @relation(fields: [studentId], references: [id])
   studentId    String?
   instructor   Instructor? @relation(fields: [instructorId], references: [id])
@@ -268,6 +268,27 @@ model Answers {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   children     Answers[]   @relation("AnswersToAnswers")
+  vote         Vote[]
 
   @@map("answers")
+}
+
+model Vote {
+  id           String      @id @default(uuid())
+  voteType     VoteType
+  student      Student?    @relation(fields: [studentId], references: [id])
+  studentId    String?
+  instructor   Instructor? @relation(fields: [instructorId], references: [id])
+  instructorId String?
+  answer       Answers?    @relation(fields: [answerId], references: [id])
+  answerId     String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@map("votes")
+}
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
 }

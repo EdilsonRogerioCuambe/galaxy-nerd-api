@@ -97,6 +97,7 @@ export class PrismaAnswersRepository implements AnswersRepository {
           parent: true,
           instructor: true,
           student: true,
+          vote: true,
         },
       })
 
