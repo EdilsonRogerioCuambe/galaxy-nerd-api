@@ -91,32 +91,33 @@ model Rating {
 }
 
 model Student {
-  id             String           @id @default(uuid())
-  name           String
-  email          String           @unique
-  password       String
-  avatar         String?
-  biography      String?
-  location       String?
-  banner         String?
-  role           Role             @default(STUDENT)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  courseProgress CourseProgress[]
-  forum          Forum[]
-  answers        Answers[]
-  enrollments    Enrollment[]
-  favorites      Favorite[]
-  interests      Category[]
-  ratings        Rating[]
-  facebook       String?
-  twitter        String?
-  instagram      String?
-  linkedin       String?
-  youtube        String?
-  website        String?
-  github         String?
-  Vote           Vote[]
+  id               String             @id @default(uuid())
+  name             String
+  email            String             @unique
+  password         String
+  avatar           String?
+  biography        String?
+  location         String?
+  banner           String?
+  role             Role               @default(STUDENT)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  courseProgress   CourseProgress[]
+  forum            Forum[]
+  answers          Answers[]
+  enrollments      Enrollment[]
+  favorites        Favorite[]
+  interests        Category[]
+  ratings          Rating[]
+  facebook         String?
+  twitter          String?
+  instagram        String?
+  linkedin         String?
+  youtube          String?
+  website          String?
+  github           String?
+  vote             Vote[]
+  studentQuizScore StudentQuizScore[]
 
   @@map("students")
 }
@@ -210,17 +211,44 @@ model Category {
 }
 
 model Quiz {
-  id          String   @id @default(uuid())
-  title       String
-  description String?
-  lesson      Lesson?  @relation(fields: [lessonId], references: [id])
-  lessonId    String?
-  options     String[]
-  answer      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String             @id @default(uuid())
+  title            String
+  description      String?
+  lesson           Lesson?            @relation(fields: [lessonId], references: [id])
+  lessonId         String?
+  answer           String
+  points           Int
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  quizOptions      QuizOption[]
+  studentQuizScore StudentQuizScore[]
 
   @@map("quizzes")
+}
+
+model QuizOption {
+  id        String   @id @default(uuid())
+  option    String
+  isCorrect Boolean
+  quiz      Quiz?    @relation(fields: [quizId], references: [id])
+  quizId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("quiz_options")
+}
+
+model StudentQuizScore {
+  id        String   @id @default(uuid())
+  score     Int
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String?
+  quiz      Quiz?    @relation(fields: [quizId], references: [id])
+  quizId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("student_quiz_scores")
 }
 
 model CourseProgress {
