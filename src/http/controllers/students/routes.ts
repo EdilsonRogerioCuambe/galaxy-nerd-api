@@ -8,16 +8,13 @@ import { deleteStudentController } from './delete.student.controller'
 import { update } from './update.student.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
+import { addStudentScoreController } from './add.student.score.controller'
 
 export async function studentsRoutes(app: FastifyInstance) {
   app.post('/students', register)
   app.post('/students/sessions', authenticateStudentController)
-  app.get('/students', { onRequest: verifyJwt }, getAllStudentsController)
-  app.get(
-    '/students/:studentId',
-    { onRequest: verifyJwt },
-    getStudentProfileController,
-  )
+  app.get('/students', getAllStudentsController)
+  app.get('/students/:studentId', getStudentProfileController)
   app.put(
     '/students/:studentId',
     {
@@ -30,4 +27,5 @@ export async function studentsRoutes(app: FastifyInstance) {
     { onRequest: [verifyJwt, verifyUserRole('ADMIN')] },
     deleteStudentController,
   )
+  app.post('/students/:studentId/scores', addStudentScoreController)
 }

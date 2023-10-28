@@ -14,6 +14,9 @@ export class PrismaStudentRepository implements StudentsRepository {
   async findById(id: string) {
     const student = await prisma.student.findUnique({
       where: { id },
+      include: {
+        studentQuizScore: true,
+      },
     })
 
     return student
@@ -37,7 +40,11 @@ export class PrismaStudentRepository implements StudentsRepository {
   }
 
   async findAll() {
-    const students = await prisma.student.findMany()
+    const students = await prisma.student.findMany({
+      include: {
+        studentQuizScore: true,
+      },
+    })
 
     return students
   }
