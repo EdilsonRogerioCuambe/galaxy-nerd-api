@@ -91,33 +91,41 @@ model Rating {
 }
 
 model Student {
-  id               String             @id @default(uuid())
-  name             String
-  email            String             @unique
-  password         String
-  avatar           String?
-  biography        String?
-  location         String?
-  banner           String?
-  role             Role               @default(STUDENT)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  courseProgress   CourseProgress[]
-  forum            Forum[]
-  answers          Answers[]
-  enrollments      Enrollment[]
-  favorites        Favorite[]
-  interests        Category[]
-  ratings          Rating[]
-  facebook         String?
-  twitter          String?
-  instagram        String?
-  linkedin         String?
-  youtube          String?
-  website          String?
-  github           String?
-  vote             Vote[]
-  studentQuizScore StudentQuizScore[]
+  id             String               @id @default(uuid())
+  name           String
+  email          String               @unique
+  password       String
+  avatar         String?
+  biography      String?
+  location       String?
+  banner         String?
+  phone          String?
+  profession     String?
+  birthDate      DateTime?
+  works          String[]
+  skills         String[]
+  hobbies        String[]
+  role           Role                 @default(STUDENT)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  courseProgress CourseProgress[]
+  forum          Forum[]
+  answers        Answers[]
+  enrollments    Enrollment[]
+  favorites      Favorite[]
+  interests      Category[]
+  ratings        Rating[]
+  facebook       String?
+  twitter        String?
+  instagram      String?
+  linkedin       String?
+  youtube        String?
+  website        String?
+  github         String?
+  vote           Vote[]
+  scores         StudentQuizScore[]
+  achievements   StudentAchievement[]
+  lessonProgress LessonProgress[]
 
   @@map("students")
 }
@@ -161,21 +169,22 @@ model Topic {
 }
 
 model Lesson {
-  id          String     @id @default(uuid())
-  title       String     @unique
-  description String?
-  videoUrl    String
-  duration    String
-  slug        String     @unique
-  order       String
-  links       String[]
-  topic       Topic      @relation(fields: [topicId], references: [id])
-  topicId     String
-  documents   Document[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  quiz        Quiz[]
-  forum       Forum[]
+  id             String           @id @default(uuid())
+  title          String           @unique
+  description    String?
+  videoUrl       String
+  duration       String
+  slug           String           @unique
+  order          String
+  links          String[]
+  topic          Topic            @relation(fields: [topicId], references: [id])
+  topicId        String
+  documents      Document[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  quiz           Quiz[]
+  forum          Forum[]
+  progress LessonProgress[]
 
   @@map("lessons")
 }
@@ -314,6 +323,44 @@ model Vote {
   updatedAt    DateTime    @updatedAt
 
   @@map("votes")
+}
+
+model Achievement {
+  id          String               @id @default(uuid())
+  name        String
+  description String
+  points      Int // Pontos necessários para ganhar a conquista
+  icon        String? // URL do ícone da conquista
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  students    StudentAchievement[]
+
+  @@map("achievements")
+}
+
+model StudentAchievement {
+  id            String      @id @default(uuid())
+  student       Student     @relation(fields: [studentId], references: [id])
+  studentId     String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  achievementId String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("student_achievements")
+}
+
+model LessonProgress {
+  id        String   @id @default(uuid())
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  lessonId  String
+  watched   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("lesson_progresses")
 }
 
 enum VoteType {

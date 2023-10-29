@@ -19,6 +19,12 @@ interface RegisterStudentUseCaseProps {
   github?: string
   website?: string
   interests?: string[]
+  skills?: string[]
+  works?: string[]
+  hobbies?: string[]
+  birthDate?: string
+  profession?: string
+  phone?: string
   role: 'ADMIN' | 'INSTRUCTOR' | 'STUDENT'
 }
 
@@ -46,6 +52,12 @@ export class RegisterStudentUseCase {
     youtube,
     github,
     website,
+    skills,
+    works,
+    hobbies,
+    birthDate,
+    profession,
+    phone,
   }: RegisterStudentUseCaseProps): Promise<RegisterStudentUseCaseResponse> {
     const hashedPassword = await hash(password, 12)
 
@@ -74,6 +86,12 @@ export class RegisterStudentUseCase {
       interests: {
         connect: interests?.map((interest) => ({ id: interest })),
       },
+      skills,
+      works,
+      hobbies,
+      birthDate,
+      profession,
+      phone,
     })
 
     return { student }

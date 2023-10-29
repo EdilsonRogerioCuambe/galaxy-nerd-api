@@ -11,6 +11,7 @@ interface UpdateLessonUseCaseProps {
   videoUrl?: string
   duration?: string
   lessonId: string
+  isWatched?: boolean
 }
 
 interface UpdateLessonUseCaseResponse {
@@ -28,6 +29,7 @@ export class UpdateLessonUseCase {
     videoUrl,
     duration,
     lessonId,
+    isWatched,
   }: UpdateLessonUseCaseProps): Promise<UpdateLessonUseCaseResponse> {
     const lesson = await this.lessonsRepository.findById(lessonId)
 
@@ -51,6 +53,7 @@ export class UpdateLessonUseCase {
       order: order || lesson.order,
       videoUrl: videoUrl || lesson.videoUrl,
       duration: duration || lesson.duration,
+      isWatched: isWatched || lesson.isWatched,
     })
 
     return { lesson: updatedLesson }

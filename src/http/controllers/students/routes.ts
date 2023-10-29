@@ -9,6 +9,8 @@ import { update } from './update.student.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 import { addStudentScoreController } from './add.student.score.controller'
+import { createLessonProgressController } from './create.lesson.progress.controller'
+import { updateLessonProgressController } from './update.lesson.progress.controller'
 
 export async function studentsRoutes(app: FastifyInstance) {
   app.post('/students', register)
@@ -28,4 +30,9 @@ export async function studentsRoutes(app: FastifyInstance) {
     deleteStudentController,
   )
   app.post('/students/:studentId/scores', addStudentScoreController)
+  app.post(
+    '/students/:studentId/lessons-progress',
+    createLessonProgressController,
+  )
+  app.put('/students/lessons-progress', updateLessonProgressController)
 }

@@ -18,7 +18,7 @@ export async function lessonsRoutes(app: FastifyInstance) {
   app.put(
     '/lessons/:lessonId',
     {
-      onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')],
+      onRequest: [verifyJwt],
     },
     updateLessonController,
   )

@@ -34,6 +34,12 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     youtube: z.string().optional(),
     github: z.string().optional(),
     website: z.string().optional(),
+    skills: z.array(z.string()).optional(),
+    works: z.array(z.string()).optional(),
+    hobbies: z.array(z.string()).optional(),
+    birthDate: z.string().optional(),
+    profession: z.string().optional(),
+    phone: z.string().optional(),
   })
 
   const {
@@ -53,6 +59,12 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     youtube,
     github,
     website,
+    skills,
+    works,
+    hobbies,
+    birthDate,
+    profession,
+    phone,
   } = schema.parse(request.body)
 
   let avatarFileName = ''
@@ -107,6 +119,12 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       youtube,
       github,
       website,
+      skills,
+      works,
+      hobbies,
+      birthDate,
+      profession,
+      phone,
     })
 
     return reply.status(201).send({ student })

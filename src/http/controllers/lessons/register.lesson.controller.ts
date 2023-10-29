@@ -30,7 +30,6 @@ export async function registerLessonController(
     request.body,
   )
 
-  // excluir dois pontos, caracteres especiais e espaços no titulo que vai para o video
   const videoFileName = `${title
     .replace(/:/g, '')
     .replace(/ /g, '-')
