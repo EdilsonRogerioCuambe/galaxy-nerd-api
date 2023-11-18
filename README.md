@@ -1,4 +1,47 @@
 # API GalaxyNerd
+## Comandos
+
+### 1. Inicializar o Projeto
+
+Para iniciar o projeto, utilize o seguinte comando:
+
+```bash
+docker-compose up
+````
+Este comando usará o Docker Compose para configurar e iniciar os containers necessários.
+
+### 2. Listar Containers Ativos
+Para listar os containers ativos, utilize o seguinte comando:
+
+````bash
+docker ps
+````
+### 3. Iniciar um Container Específico
+Para iniciar um container específico, substitua [id do container] pelo ID real do container e execute o seguinte comando:
+```bash
+docker start [id do container]
+```
+### 4. Gerar Prisma Client
+Para gerar o Prisma Client, utilize o seguinte comando:
+
+```bash
+npx prisma generate
+```
+Este comando gera as classes TypeScript com base no seu schema do banco de dados.
+
+### 5. Migrar o Banco de Dados (Desenvolvimento)
+Para realizar migrações no banco de dados em ambiente de desenvolvimento, utilize o seguinte comando:
+
+```bash
+npx prisma migrate dev
+```
+### 6. Iniciar o Servidor em Modo de Desenvolvimento
+Para iniciar o servidor em modo de desenvolvimento, utilize o seguinte comando:
+
+```bash
+npm run dev
+```
+Este comando iniciará o servidor e proporcionará um ambiente de desenvolvimento para a Galaxy Nerd API.
 
 ## Regras de Negócio (RNs)
 
