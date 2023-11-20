@@ -15,7 +15,11 @@ export class PrismaStudentRepository implements StudentsRepository {
     const student = await prisma.student.findUnique({
       where: { id },
       include: {
-        scores: true,
+        scores: {
+          include: {
+            quiz: true,
+          },
+        },
         lessonProgress: true,
         interests: true,
       },

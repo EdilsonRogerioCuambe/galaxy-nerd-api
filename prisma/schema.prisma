@@ -169,22 +169,22 @@ model Topic {
 }
 
 model Lesson {
-  id             String           @id @default(uuid())
-  title          String           @unique
-  description    String?
-  videoUrl       String
-  duration       String
-  slug           String           @unique
-  order          String
-  links          String[]
-  topic          Topic            @relation(fields: [topicId], references: [id])
-  topicId        String
-  documents      Document[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  quiz           Quiz[]
-  forum          Forum[]
-  progress LessonProgress[]
+  id          String           @id @default(uuid())
+  title       String           @unique
+  description String?
+  videoUrl    String
+  duration    String
+  slug        String           @unique
+  order       String
+  links       String[]
+  topic       Topic            @relation(fields: [topicId], references: [id])
+  topicId     String
+  documents   Document[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  quiz        Quiz[]
+  forum       Forum[]
+  progress    LessonProgress[]
 
   @@map("lessons")
 }

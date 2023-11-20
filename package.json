@@ -59,11 +59,15 @@
     "bcryptjs": "2.4.3",
     "cloudinary": "1.40.0",
     "dotenv": "16.3.1",
+    "execa": "8.0.1",
     "fastify": "4.22.2",
     "fastify-multer": "2.0.3",
+    "mkdirp": "3.0.1",
     "multer-s3": "3.0.1",
     "multer-storage-cloudinary": "4.0.0",
+    "node-cmd": "5.0.0",
     "nodemailer": "6.9.5",
+    "piston-client": "1.0.2",
     "stripe": "13.5.0",
     "zod": "3.22.2"
   }
