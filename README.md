@@ -6,7 +6,7 @@
 Para iniciar o projeto, utilize o seguinte comando:
 
 ```bash
-docker-compose up
+docker compose up
 ````
 Este comando usará o Docker Compose para configurar e iniciar os containers necessários.
 
