@@ -23,6 +23,7 @@ import { answersRoutes } from './http/controllers/answers/routes'
 import { votesRoutes } from './http/controllers/votes/routes'
 import quizzesRoutes from './http/controllers/quizzes/routes'
 import { compilerRoutes } from './http/controllers/compiler/routes'
+import { problemsRoutes } from './http/controllers/problems/routes'
 
 export const app = fastify({
   bodyLimit: 1024 * 1024 * 1024, // 1GB
@@ -111,6 +112,7 @@ app.register(answersRoutes)
 app.register(votesRoutes)
 app.register(quizzesRoutes)
 app.register(compilerRoutes)
+app.register(problemsRoutes)
 
 app.setErrorHandler((error, _request, reply) => {
   if (error instanceof ZodError) {

@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify'
-import { compileFileController } from './compile.file.controller'
-import { compileFileControllerPost } from './post.code.to.compile'
+import { compilerController } from './compiler'
+import { compileTestsController } from './compile.tests.controller'
 
 export async function compilerRoutes(app: FastifyInstance) {
-  app.get('/compile', compileFileController)
-  app.post('/compile/run', compileFileControllerPost)
+  app.post('/compile', compilerController)
+  app.post('/compile-tests', compileTestsController)
 }

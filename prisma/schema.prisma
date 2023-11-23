@@ -185,8 +185,33 @@ model Lesson {
   quiz        Quiz[]
   forum       Forum[]
   progress    LessonProgress[]
+  problems    Problem[]
 
   @@map("lessons")
+}
+
+model Example {
+  id          String   @id @default(uuid())
+  inputText   String
+  outputText  String
+  explanation String
+  img         String?
+  problem     Problem? @relation(fields: [problemId], references: [id])
+  problemId   String?
+}
+
+model Problem {
+  id                  String    @id @default(uuid())
+  title               String
+  problemStatement    String
+  examples            Example[]
+  constraints         String
+  order               String
+  starterCode         String
+  handlerFunction     String
+  starterFunctionName String
+  lesson              Lesson?   @relation(fields: [lessonId], references: [id])
+  lessonId            String?
 }
 
 model Document {
