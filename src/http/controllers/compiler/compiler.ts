@@ -103,7 +103,7 @@ export async function compilerController(
         if (stream) {
           stream.on('data', (chunk) => {
             output.push(chunk.toString())
-            console.log(chunk.toString())
+            console.log(output)
           })
           stream.on('error', (error) => {
             console.log(error)
