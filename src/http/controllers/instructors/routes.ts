@@ -9,6 +9,7 @@ import { update } from './update.instructor.controller'
 import { refresh } from './refresh'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
+import { authenticateInstructorUsingGoogleController } from './authenticate.instructor.using.google.controller'
 
 export async function instructorsRoutes(app: FastifyInstance) {
   app.post('/instructors/sessions', authenticateInstructorController)
@@ -21,11 +22,15 @@ export async function instructorsRoutes(app: FastifyInstance) {
     },
     update,
   )
-  app.get('/instructors', { onRequest: [verifyJwt] }, getAllInstructors)
+  app.get('/instructors', getAllInstructors)
   app.delete(
     '/instructors/:instructorId',
     { onRequest: [verifyJwt, verifyUserRole('ADMIN')] },
     deleteInstructorController,
   )
   app.put('/instructor/token/refresh', refresh)
+  app.post(
+    '/instructor/auth/google',
+    authenticateInstructorUsingGoogleController,
+  )
 }

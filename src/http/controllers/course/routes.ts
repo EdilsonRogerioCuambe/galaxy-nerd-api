@@ -7,6 +7,7 @@ import { getCourseController } from './get.course.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 import { getCourseBySlugController } from './get.course.by.slug.controller'
+import { createCourseUsingClassroomController } from './create.course.using.classroom.controller'
 
 export async function coursesRoutes(app: FastifyInstance) {
   app.post('/courses', registerCourseController)
@@ -25,4 +26,6 @@ export async function coursesRoutes(app: FastifyInstance) {
     { onRequest: [verifyJwt, verifyUserRole('INSTRUCTOR')] },
     deleteCourseController,
   )
+
+  app.post('/classroom/create-course', createCourseUsingClassroomController)
 }
