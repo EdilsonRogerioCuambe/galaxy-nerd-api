@@ -9,6 +9,7 @@ import { profileAdminController } from './profile.controller'
 import { verifyJwt } from '@/http/middlewares/verify.jwt'
 import { verifyUserRole } from '@/http/middlewares/verify.user.role'
 import { refresh } from './refresh.admin'
+import { authenticateAdminUsingGoogleController } from './autenticate.admin.using.google.controller'
 
 export async function adminsRoutes(app: FastifyInstance) {
   app.post('/admins', register)
@@ -48,4 +49,5 @@ export async function adminsRoutes(app: FastifyInstance) {
     deleteAdminController,
   )
   app.patch('/admin/token/refresh', refresh)
+  app.post('/admin/auth/google', authenticateAdminUsingGoogleController)
 }

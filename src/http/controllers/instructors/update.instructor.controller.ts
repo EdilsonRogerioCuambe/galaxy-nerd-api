@@ -21,7 +21,10 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
       .string()
       .regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,32}$/)
       .optional(),
-    role: z.enum(['ADMIN', 'INSTRUCTOR', 'STUDENT']).default('INSTRUCTOR'),
+    role: z
+      .enum(['ADMIN', 'INSTRUCTOR', 'STUDENT'])
+      .default('INSTRUCTOR')
+      .optional(),
     biography: z.string().optional(),
     location: z.string().optional(),
     avatar: z.string().optional(),
