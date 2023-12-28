@@ -27,7 +27,7 @@ export async function registerCourseController(
     studentId: z.string().optional(),
     shortDescription: z.string().optional(),
     languages: z.array(z.string()).optional(),
-    level: z.enum(['Iniciante', 'Intermediário', 'Avançado']),
+    level: z.enum(['Básico', 'Intermediário', 'Avançado']),
     duration: z.string(),
     thumbnail: z.string().optional(),
     image: z.string().optional(),
