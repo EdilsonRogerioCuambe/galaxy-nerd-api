@@ -37,7 +37,7 @@ describe('Update Course Controller', () => {
         price: '250',
         instructorId: newInstructor.body.instructor.instructor.id,
         duration: '10',
-        level: 'Iniciante',
+        level: 'Básico',
       })
 
     const updateCourse = await request(app.server)
@@ -49,7 +49,7 @@ describe('Update Course Controller', () => {
         price: '250',
         instructorId: newInstructor.body.instructor.instructor.id,
         duration: '10',
-        level: 'Iniciante',
+        level: 'Básico',
         courseId: course.body.course.course.id,
       })
 
